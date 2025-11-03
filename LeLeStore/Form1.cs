@@ -41,7 +41,7 @@ namespace LeLeStore
             if (menuExpand == false)
             {
                 menuContainer.Height += 10;
-                if (menuContainer.Height >= 160)
+                if (menuContainer.Height >= 151)
                 {
                     menuTransition.Stop();
                     menuExpand = true;
@@ -51,7 +51,7 @@ namespace LeLeStore
             else
             {
                 menuContainer.Height -= 10;
-                if (menuContainer.Height <= 53)
+                if (menuContainer.Height <= 55)
                 {
                     menuTransition.Stop();
                     menuExpand = false;
@@ -61,10 +61,15 @@ namespace LeLeStore
         bool sidebarExpand = true;
         private void sidebarTransition_Tick(object sender, EventArgs e)
         {
+            const int minWidth = 35;
+            const int maxWidth = 251;
+            const int step = 5;
             if (sidebarExpand)
             {
-                sidebar.Width -= 10;
-                if (sidebar.Width <= 52)
+                int newWidth = Math.Max(minWidth, flowLayoutPanel1.Width - step);
+                flowLayoutPanel1.Width = newWidth;
+
+                if (newWidth <= minWidth)
                 {
                     sidebarExpand = false;
                     sidebarTransition.Stop();
@@ -73,8 +78,10 @@ namespace LeLeStore
             }
             else
             {
-                sidebar.Width += 10;
-                if (sidebar.Width >= 251)
+                int newWidth = Math.Min(maxWidth, flowLayoutPanel1.Width + step);
+                flowLayoutPanel1.Width = newWidth;
+
+                if (newWidth >= maxWidth)
                 {
                     sidebarExpand = true;
                     sidebarTransition.Stop();
@@ -101,6 +108,11 @@ namespace LeLeStore
         private void btnHam_Click(object sender, EventArgs e)
         {
             sidebarTransition.Start();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

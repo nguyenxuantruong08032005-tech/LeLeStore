@@ -51,9 +51,9 @@
             this.button8 = new System.Windows.Forms.Button();
             this.panel5 = new System.Windows.Forms.Panel();
             this.button5 = new System.Windows.Forms.Button();
-            this.panel6 = new System.Windows.Forms.Panel();
-            this.button6 = new System.Windows.Forms.Button();
             this.btnHam = new System.Windows.Forms.PictureBox();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.button2 = new System.Windows.Forms.Button();
             this.sidebar.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -64,8 +64,8 @@
             this.panel7.SuspendLayout();
             this.panel8.SuspendLayout();
             this.panel5.SuspendLayout();
-            this.panel6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnHam)).BeginInit();
+            this.panel6.SuspendLayout();
             this.SuspendLayout();
             // 
             // sidebar
@@ -118,10 +118,10 @@
             // 
             this.flowLayoutPanel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
             this.flowLayoutPanel1.Controls.Add(this.panel2);
-            this.flowLayoutPanel1.Controls.Add(this.menuContainer);
-            this.flowLayoutPanel1.Controls.Add(this.panel5);
-            this.flowLayoutPanel1.Controls.Add(this.panel4);
             this.flowLayoutPanel1.Controls.Add(this.panel3);
+            this.flowLayoutPanel1.Controls.Add(this.panel4);
+            this.flowLayoutPanel1.Controls.Add(this.panel5);
+            this.flowLayoutPanel1.Controls.Add(this.menuContainer);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 43);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
@@ -134,7 +134,7 @@
             this.panel2.Controls.Add(this.button1);
             this.panel2.Location = new System.Drawing.Point(3, 33);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(303, 62);
+            this.panel2.Size = new System.Drawing.Size(248, 53);
             this.panel2.TabIndex = 3;
             // 
             // button1
@@ -194,7 +194,7 @@
             // panel3
             // 
             this.panel3.Controls.Add(this.button3);
-            this.panel3.Location = new System.Drawing.Point(0, 257);
+            this.panel3.Location = new System.Drawing.Point(0, 89);
             this.panel3.Margin = new System.Windows.Forms.Padding(0);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(248, 53);
@@ -220,7 +220,7 @@
             // panel4
             // 
             this.panel4.Controls.Add(this.button4);
-            this.panel4.Location = new System.Drawing.Point(0, 204);
+            this.panel4.Location = new System.Drawing.Point(0, 142);
             this.panel4.Margin = new System.Windows.Forms.Padding(0);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(248, 53);
@@ -247,21 +247,21 @@
             // 
             this.menuContainer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(33)))), ((int)(((byte)(36)))));
             this.menuContainer.Controls.Add(this.panel1);
-            this.menuContainer.Controls.Add(this.panel7);
             this.menuContainer.Controls.Add(this.panel8);
-            this.menuContainer.Location = new System.Drawing.Point(0, 98);
+            this.menuContainer.Controls.Add(this.panel6);
+            this.menuContainer.Location = new System.Drawing.Point(0, 248);
             this.menuContainer.Margin = new System.Windows.Forms.Padding(0);
             this.menuContainer.Name = "menuContainer";
-            this.menuContainer.Size = new System.Drawing.Size(248, 53);
+            this.menuContainer.Size = new System.Drawing.Size(248, 64);
             this.menuContainer.TabIndex = 6;
             // 
             // panel7
             // 
             this.panel7.Controls.Add(this.button7);
-            this.panel7.Location = new System.Drawing.Point(0, 62);
+            this.panel7.Location = new System.Drawing.Point(295, 215);
             this.panel7.Margin = new System.Windows.Forms.Padding(0);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(330, 62);
+            this.panel7.Size = new System.Drawing.Size(248, 53);
             this.panel7.TabIndex = 6;
             // 
             // button7
@@ -284,10 +284,10 @@
             // panel8
             // 
             this.panel8.Controls.Add(this.button8);
-            this.panel8.Location = new System.Drawing.Point(0, 124);
+            this.panel8.Location = new System.Drawing.Point(0, 62);
             this.panel8.Margin = new System.Windows.Forms.Padding(0);
             this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(330, 62);
+            this.panel8.Size = new System.Drawing.Size(248, 53);
             this.panel8.TabIndex = 7;
             // 
             // button8
@@ -303,14 +303,14 @@
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(326, 120);
             this.button8.TabIndex = 4;
-            this.button8.Text = "         Sub menu 2";
+            this.button8.Text = "         Sub menu 1";
             this.button8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button8.UseVisualStyleBackColor = false;
             // 
             // panel5
             // 
             this.panel5.Controls.Add(this.button5);
-            this.panel5.Location = new System.Drawing.Point(0, 151);
+            this.panel5.Location = new System.Drawing.Point(0, 195);
             this.panel5.Margin = new System.Windows.Forms.Padding(0);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(248, 53);
@@ -332,32 +332,7 @@
             this.button5.Text = "         Logout";
             this.button5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button5.UseVisualStyleBackColor = false;
-            // 
-            // panel6
-            // 
-            this.panel6.Controls.Add(this.button6);
-            this.panel6.Location = new System.Drawing.Point(754, 300);
-            this.panel6.Margin = new System.Windows.Forms.Padding(0);
-            this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(330, 62);
-            this.panel6.TabIndex = 6;
-            // 
-            // button6
-            // 
-            this.button6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
-            this.button6.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
-            this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button6.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button6.ForeColor = System.Drawing.Color.White;
-            this.button6.Image = ((System.Drawing.Image)(resources.GetObject("button6.Image")));
-            this.button6.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button6.Location = new System.Drawing.Point(0, -46);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(326, 151);
-            this.button6.TabIndex = 4;
-            this.button6.Text = "         Menu";
-            this.button6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button6.UseVisualStyleBackColor = false;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // btnHam
             // 
@@ -370,14 +345,39 @@
             this.btnHam.TabStop = false;
             this.btnHam.Click += new System.EventHandler(this.btnHam_Click);
             // 
+            // panel6
+            // 
+            this.panel6.Controls.Add(this.button2);
+            this.panel6.Location = new System.Drawing.Point(0, 115);
+            this.panel6.Margin = new System.Windows.Forms.Padding(0);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(248, 53);
+            this.panel6.TabIndex = 8;
+            // 
+            // button2
+            // 
+            this.button2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(33)))), ((int)(((byte)(36)))));
+            this.button2.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
+            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button2.ForeColor = System.Drawing.Color.White;
+            this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
+            this.button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button2.Location = new System.Drawing.Point(0, -46);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(326, 120);
+            this.button2.TabIndex = 4;
+            this.button2.Text = "         Sub menu 2";
+            this.button2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button2.UseVisualStyleBackColor = false;
+            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1189, 691);
-            this.Controls.Add(this.panel6);
             this.Controls.Add(this.flowLayoutPanel1);
+            this.Controls.Add(this.panel7);
             this.Controls.Add(this.sidebar);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "Form1";
@@ -394,8 +394,8 @@
             this.panel7.ResumeLayout(false);
             this.panel8.ResumeLayout(false);
             this.panel5.ResumeLayout(false);
-            this.panel6.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.btnHam)).EndInit();
+            this.panel6.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -419,13 +419,13 @@
         private System.Windows.Forms.FlowLayoutPanel menuContainer;
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.Panel panel6;
-        private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Panel panel7;
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Panel panel8;
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.PictureBox btnHam;
+        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.Button button2;
     }
 }
 
