@@ -12,9 +12,16 @@ namespace LeLeStore
 {
     public partial class Form1 : Form
     {
+        formDashBoard dashBoard;
+        formSubmenu1 submenu1;
+        formSubmenu2 submenu2;
+        formAbout about;
+        formSettings settings;
+       
         public Form1()
         {
             InitializeComponent();
+            mdiProp();
         }
 
        
@@ -36,12 +43,17 @@ namespace LeLeStore
 
      
         bool menuExpand = false;
+        private void mdiProp()
+        {
+            this.SetBevel(false);
+            Controls.OfType<MdiClient>().FirstOrDefault().BackColor = Color.FromArgb(232, 234, 237);
+        }
         private void menuTransition_Tick(object sender, EventArgs e)
         {
             if (menuExpand == false)
             {
                 menuContainer.Height += 10;
-                if (menuContainer.Height >= 151)
+                if (menuContainer.Height >= 168)
                 {
                     menuTransition.Stop();
                     menuExpand = true;
@@ -61,7 +73,7 @@ namespace LeLeStore
         bool sidebarExpand = true;
         private void sidebarTransition_Tick(object sender, EventArgs e)
         {
-            const int minWidth = 35;
+            const int minWidth = 47;
             const int maxWidth = 251;
             const int step = 5;
             if (sidebarExpand)
@@ -73,7 +85,12 @@ namespace LeLeStore
                 {
                     sidebarExpand = false;
                     sidebarTransition.Stop();
-                    
+                    pnDashdoard.Width = sidebar.Width;
+                    pnAbout.Width = sidebar.Width;
+                    pnSettings.Width = sidebar.Width;
+                    pnLogout.Width = sidebar.Width;
+                    menuContainer.Width = sidebar.Width;
+
                 }
             }
             else
@@ -86,15 +103,32 @@ namespace LeLeStore
                     sidebarExpand = true;
                     sidebarTransition.Stop();
                     
+                    pnDashdoard.Width = sidebar.Width;
+                    pnAbout.Width = sidebar.Width;
+                    pnSettings.Width = sidebar.Width;
+                    pnLogout.Width = sidebar.Width;
+                    menuContainer.Width = sidebar.Width;
                 }
             }
         }
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-
+            if (dashBoard == null)
+            {
+                dashBoard = new formDashBoard();
+                dashBoard.FormClosed += Dashboard_FormClosed;
+                dashBoard.MdiParent = this;
+                dashBoard.Show();
+            }else
+            {
+                dashBoard.Activate();
+            }
         }
-
+        private void Dashboard_FormClosed(object sender, EventArgs e)
+        {
+            dashBoard = null;
+        }
         private void menu_Click(object sender, EventArgs e)
         {
             menuTransition.Start();
@@ -112,7 +146,88 @@ namespace LeLeStore
 
         private void button5_Click(object sender, EventArgs e)
         {
+           
+        }
 
+        private void sbmenu1_Click(object sender, EventArgs e)
+        {
+            if(submenu1 == null)
+            {
+                submenu1 = new formSubmenu1();
+                submenu1.FormClosed += Submenu1_FormClosed;
+                submenu1.MdiParent = this;
+                submenu1.Dock = DockStyle.Fill;
+                submenu1.Show();
+            }
+            else
+            {
+                submenu1.Activate();
+            }
+        }
+        private void Submenu1_FormClosed(object sender, EventArgs e)
+        {
+            submenu1 = null;
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (about == null)
+            {
+                about = new formAbout();
+                about.FormClosed += About_FormClosed;
+                about.MdiParent = this;
+                about.Dock = DockStyle.Fill;
+                about.Show();
+            }
+            else
+            {
+                submenu1.Activate();
+            }
+        }
+        private void About_FormClosed(object sender, EventArgs e)
+        {
+            about = null;
+        }
+
+        private void sbmenu2_Click(object sender, EventArgs e)
+        {
+            if (submenu2 == null)
+            {
+                submenu2 = new formSubmenu2();
+                submenu2.FormClosed += Submenu2_FormClosed;
+                submenu2.MdiParent = this;
+                submenu1.Dock = DockStyle.Fill;
+                submenu2.Show();
+            }
+            else
+            {
+                submenu1.Activate();
+            }
+        }
+        private void Submenu2_FormClosed(object sender, EventArgs e)
+        {
+            submenu2 = null;
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+
+            if (settings == null)
+            {
+                settings = new formSettings();
+                settings.FormClosed += Settings_FormClosed;
+                settings.MdiParent = this;
+                settings.Dock = DockStyle.Fill;
+                settings.Show();
+            }
+            else
+            {
+                submenu1.Activate();
+            }
+        }
+        private void Settings_FormClosed(object sender, EventArgs e)
+        {
+            settings = null;
         }
     }
 }
