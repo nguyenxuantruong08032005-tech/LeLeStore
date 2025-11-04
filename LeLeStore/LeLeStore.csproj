@@ -144,9 +144,15 @@
     <Compile Include="formSubmenu2.Designer.cs">
       <DependentUpon>formSubmenu2.cs</DependentUpon>
     </Compile>
+    <Compile Include="GStoreDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GStoreDataSet.xsd</DependentUpon>
+    </Compile>
     <Compile Include="mdiProperties.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserRole.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -178,6 +184,17 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="GStoreDataSet.xsc">
+      <DependentUpon>GStoreDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="GStoreDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>GStoreDataSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="GStoreDataSet.xss">
+      <DependentUpon>GStoreDataSet.xsd</DependentUpon>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

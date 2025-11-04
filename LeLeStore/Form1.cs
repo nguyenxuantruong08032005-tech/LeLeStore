@@ -12,19 +12,49 @@ namespace LeLeStore
 {
     public partial class Form1 : Form
     {
+        private readonly UserRole _role;
+        private readonly string _username;
         formDashBoard dashBoard;
         formSubmenu1 submenu1;
         formSubmenu2 submenu2;
         formAbout about;
         formSettings settings;
-       
-        public Form1()
+
+        public Form1() : this(UserRole.QuanLy, string.Empty)
         {
-            InitializeComponent();
-            mdiProp();
         }
 
-       
+        public Form1(UserRole role, string username)
+        {
+            _role = role;
+            _username = username ?? string.Empty;
+
+            InitializeComponent();
+            mdiProp();
+            ApplyRolePermissions();
+            UpdateTitle();
+        }
+        private void ApplyRolePermissions()
+        {
+            panel8.Visible = _role != UserRole.Kho;
+            panel6.Visible = _role != UserRole.BanHang;
+            pnSettings.Visible = _role == UserRole.QuanLy;
+        }
+
+        private void UpdateTitle()
+        {
+            string roleName = _role.ToDisplayName();
+            string header = $"LeLeStore - {roleName}";
+
+            if (!string.IsNullOrWhiteSpace(_username))
+            {
+                header += $" ({_username})";
+            }
+
+            label1.Text = header;
+            Text = header;
+        }
+
 
         private void panel2_Paint(object sender, PaintEventArgs e)
         {
@@ -149,7 +179,7 @@ namespace LeLeStore
 
         private void button5_Click(object sender, EventArgs e)
         {
-           
+            Close();
         }
 
         private void sbmenu1_Click(object sender, EventArgs e)
