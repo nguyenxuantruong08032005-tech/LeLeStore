@@ -50,10 +50,13 @@ namespace LeLeStore
         }
         private void menuTransition_Tick(object sender, EventArgs e)
         {
+            const int minHeight = 55;
+            const int maxHeight = 168;
+            const int step = 25;
             if (menuExpand == false)
             {
-                menuContainer.Height += 10;
-                if (menuContainer.Height >= 168)
+                menuContainer.Height = Math.Min(menuContainer.Height + step, maxHeight);
+                if (menuContainer.Height >= maxHeight)
                 {
                     menuTransition.Stop();
                     menuExpand = true;
@@ -62,8 +65,8 @@ namespace LeLeStore
             }
             else
             {
-                menuContainer.Height -= 10;
-                if (menuContainer.Height <= 55)
+                menuContainer.Height = Math.Max(menuContainer.Height - step, minHeight); ;
+                if (menuContainer.Height <= minHeight)
                 {
                     menuTransition.Stop();
                     menuExpand = false;
