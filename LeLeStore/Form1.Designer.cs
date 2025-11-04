@@ -44,10 +44,10 @@
             this.sbmenu1 = new System.Windows.Forms.Button();
             this.panel6 = new System.Windows.Forms.Panel();
             this.sbmenu2 = new System.Windows.Forms.Button();
-            this.pnAbout = new System.Windows.Forms.Panel();
-            this.button3 = new System.Windows.Forms.Button();
             this.pnSettings = new System.Windows.Forms.Panel();
             this.button4 = new System.Windows.Forms.Button();
+            this.pnAbout = new System.Windows.Forms.Panel();
+            this.button3 = new System.Windows.Forms.Button();
             this.pnLogout = new System.Windows.Forms.Panel();
             this.button5 = new System.Windows.Forms.Button();
             this.menuTransition = new System.Windows.Forms.Timer(this.components);
@@ -60,8 +60,8 @@
             this.panel1.SuspendLayout();
             this.panel8.SuspendLayout();
             this.panel6.SuspendLayout();
-            this.pnAbout.SuspendLayout();
             this.pnSettings.SuspendLayout();
+            this.pnAbout.SuspendLayout();
             this.pnLogout.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -127,9 +127,9 @@
             this.flowLayoutPanel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
             this.flowLayoutPanel1.Controls.Add(this.pnDashdoard);
             this.flowLayoutPanel1.Controls.Add(this.menuContainer);
-            this.flowLayoutPanel1.Controls.Add(this.pnSettings);
-            this.flowLayoutPanel1.Controls.Add(this.pnAbout);
             this.flowLayoutPanel1.Controls.Add(this.pnLogout);
+            this.flowLayoutPanel1.Controls.Add(this.pnAbout);
+            this.flowLayoutPanel1.Controls.Add(this.pnSettings);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 53);
@@ -225,7 +225,7 @@
             this.sbmenu1.Name = "sbmenu1";
             this.sbmenu1.Size = new System.Drawing.Size(326, 120);
             this.sbmenu1.TabIndex = 4;
-            this.sbmenu1.Text = "         Sub menu 1";
+            this.sbmenu1.Text = "              Sub menu 1";
             this.sbmenu1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.sbmenu1.UseVisualStyleBackColor = false;
             this.sbmenu1.Click += new System.EventHandler(this.sbmenu1_Click);
@@ -242,20 +242,49 @@
             // sbmenu2
             // 
             this.sbmenu2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(33)))), ((int)(((byte)(36)))));
+            this.sbmenu2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.sbmenu2.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
             this.sbmenu2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.sbmenu2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.sbmenu2.ForeColor = System.Drawing.Color.White;
             this.sbmenu2.Image = ((System.Drawing.Image)(resources.GetObject("sbmenu2.Image")));
             this.sbmenu2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.sbmenu2.Location = new System.Drawing.Point(0, -46);
+            this.sbmenu2.Location = new System.Drawing.Point(0, 0);
             this.sbmenu2.Name = "sbmenu2";
-            this.sbmenu2.Size = new System.Drawing.Size(326, 120);
+            this.sbmenu2.Size = new System.Drawing.Size(248, 53);
             this.sbmenu2.TabIndex = 4;
-            this.sbmenu2.Text = "         Sub menu 2";
+            this.sbmenu2.Text = "              Sub menu 2";
             this.sbmenu2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.sbmenu2.UseVisualStyleBackColor = false;
             this.sbmenu2.Click += new System.EventHandler(this.sbmenu2_Click);
+            // 
+            // pnSettings
+            // 
+            this.pnSettings.Controls.Add(this.button4);
+            this.pnSettings.Location = new System.Drawing.Point(0, 248);
+            this.pnSettings.Margin = new System.Windows.Forms.Padding(0);
+            this.pnSettings.Name = "pnSettings";
+            this.pnSettings.Size = new System.Drawing.Size(248, 53);
+            this.pnSettings.TabIndex = 5;
+            // 
+            // button4
+            // 
+            this.button4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
+            this.button4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.button4.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
+            this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button4.ForeColor = System.Drawing.Color.White;
+            this.button4.Image = ((System.Drawing.Image)(resources.GetObject("button4.Image")));
+            this.button4.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button4.Location = new System.Drawing.Point(0, 0);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(248, 53);
+            this.button4.TabIndex = 4;
+            this.button4.Text = "             Settings";
+            this.button4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button4.UseVisualStyleBackColor = false;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // pnAbout
             // 
@@ -269,52 +298,26 @@
             // button3
             // 
             this.button3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
+            this.button3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.button3.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button3.ForeColor = System.Drawing.Color.White;
             this.button3.Image = ((System.Drawing.Image)(resources.GetObject("button3.Image")));
             this.button3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button3.Location = new System.Drawing.Point(0, -46);
+            this.button3.Location = new System.Drawing.Point(0, 0);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(326, 151);
+            this.button3.Size = new System.Drawing.Size(248, 53);
             this.button3.TabIndex = 4;
             this.button3.Text = "             About";
             this.button3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button3.UseVisualStyleBackColor = false;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
-            // pnSettings
-            // 
-            this.pnSettings.Controls.Add(this.button4);
-            this.pnSettings.Location = new System.Drawing.Point(0, 142);
-            this.pnSettings.Margin = new System.Windows.Forms.Padding(0);
-            this.pnSettings.Name = "pnSettings";
-            this.pnSettings.Size = new System.Drawing.Size(248, 53);
-            this.pnSettings.TabIndex = 5;
-            // 
-            // button4
-            // 
-            this.button4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
-            this.button4.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
-            this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button4.ForeColor = System.Drawing.Color.White;
-            this.button4.Image = ((System.Drawing.Image)(resources.GetObject("button4.Image")));
-            this.button4.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button4.Location = new System.Drawing.Point(0, -46);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(326, 151);
-            this.button4.TabIndex = 4;
-            this.button4.Text = "             Settings";
-            this.button4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button4.UseVisualStyleBackColor = false;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
-            // 
             // pnLogout
             // 
             this.pnLogout.Controls.Add(this.button5);
-            this.pnLogout.Location = new System.Drawing.Point(0, 248);
+            this.pnLogout.Location = new System.Drawing.Point(0, 142);
             this.pnLogout.Margin = new System.Windows.Forms.Padding(0);
             this.pnLogout.Name = "pnLogout";
             this.pnLogout.Size = new System.Drawing.Size(248, 53);
@@ -323,15 +326,16 @@
             // button5
             // 
             this.button5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
+            this.button5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.button5.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
             this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button5.ForeColor = System.Drawing.Color.White;
             this.button5.Image = ((System.Drawing.Image)(resources.GetObject("button5.Image")));
             this.button5.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button5.Location = new System.Drawing.Point(0, -46);
+            this.button5.Location = new System.Drawing.Point(0, 0);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(326, 151);
+            this.button5.Size = new System.Drawing.Size(248, 53);
             this.button5.TabIndex = 4;
             this.button5.Text = "             Logout";
             this.button5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -368,8 +372,8 @@
             this.panel1.ResumeLayout(false);
             this.panel8.ResumeLayout(false);
             this.panel6.ResumeLayout(false);
-            this.pnAbout.ResumeLayout(false);
             this.pnSettings.ResumeLayout(false);
+            this.pnAbout.ResumeLayout(false);
             this.pnLogout.ResumeLayout(false);
             this.ResumeLayout(false);
 

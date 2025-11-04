@@ -85,11 +85,11 @@ namespace LeLeStore
                 {
                     sidebarExpand = false;
                     sidebarTransition.Stop();
-                    pnDashdoard.Width = sidebar.Width;
-                    pnAbout.Width = sidebar.Width;
-                    pnSettings.Width = sidebar.Width;
-                    pnLogout.Width = sidebar.Width;
-                    menuContainer.Width = sidebar.Width;
+                    pnDashdoard.Width = flowLayoutPanel1.Width;
+                    pnAbout.Width = flowLayoutPanel1.Width;
+                    pnSettings.Width = flowLayoutPanel1.Width;
+                    pnLogout.Width = flowLayoutPanel1.Width;
+                    menuContainer.Width = flowLayoutPanel1.Width;
 
                 }
             }
@@ -102,12 +102,12 @@ namespace LeLeStore
                 {
                     sidebarExpand = true;
                     sidebarTransition.Stop();
-                    
-                    pnDashdoard.Width = sidebar.Width;
-                    pnAbout.Width = sidebar.Width;
-                    pnSettings.Width = sidebar.Width;
-                    pnLogout.Width = sidebar.Width;
-                    menuContainer.Width = sidebar.Width;
+
+                    pnDashdoard.Width = flowLayoutPanel1.Width;
+                    pnAbout.Width = flowLayoutPanel1.Width;
+                    pnSettings.Width = flowLayoutPanel1.Width;
+                    pnLogout.Width = flowLayoutPanel1.Width;
+                    menuContainer.Width = flowLayoutPanel1.Width;
                 }
             }
         }
@@ -181,7 +181,7 @@ namespace LeLeStore
             }
             else
             {
-                submenu1.Activate();
+                about.Activate();
             }
         }
         private void About_FormClosed(object sender, EventArgs e)
@@ -222,7 +222,7 @@ namespace LeLeStore
             }
             else
             {
-                submenu1.Activate();
+                settings.Activate();
             }
         }
         private void Settings_FormClosed(object sender, EventArgs e)
