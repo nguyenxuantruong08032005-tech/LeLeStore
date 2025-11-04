@@ -196,12 +196,12 @@ namespace LeLeStore
                 submenu2 = new formSubmenu2();
                 submenu2.FormClosed += Submenu2_FormClosed;
                 submenu2.MdiParent = this;
-                submenu1.Dock = DockStyle.Fill;
+                submenu2.Dock = DockStyle.Fill;
                 submenu2.Show();
             }
             else
             {
-                submenu1.Activate();
+                submenu2.Activate();
             }
         }
         private void Submenu2_FormClosed(object sender, EventArgs e)

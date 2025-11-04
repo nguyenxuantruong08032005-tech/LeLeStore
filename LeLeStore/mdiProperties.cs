@@ -14,7 +14,7 @@ namespace LeLeStore
         [DllImport("user32.dll")]
         private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwLong);
         [DllImport("user32.dll")]
-        private static extern int SetWindowPos(int hWnd, IntPtr hWndInserAfter, int X, int Y, int cx, int cy, uint uFlags);
+        private static extern int SetWindowPos(IntPtr hWnd, IntPtr hWndInserAfter, int X, int Y, int cx, int cy, uint uFlags);
         private const int GWL_EXSTYLE = -20;
         private const int WS_EX_CLIENTEDGE = 0x200;
         private const uint SWP_NOSIZE = 0x0001;
@@ -38,7 +38,7 @@ namespace LeLeStore
                     }
                     else
                     {
-                        windowLong &= WS_EX_CLIENTEDGE;
+                        windowLong &= ~WS_EX_CLIENTEDGE;
                     }
                     SetWindowLong(c.Handle, GWL_EXSTYLE, windowLong);
                     SetWindowPos(client.Handle, IntPtr.Zero, 0, 0, 0, 0, SWO_NOACTIVATE | SWP_NOMOVE | SWP_NOZORDER | SWO_NOOWNERZORDER | SWP_FRAMECHANGED);
