@@ -359,8 +359,8 @@ namespace LeLeStore
         private void menuTransition2_Tick(object sender, EventArgs e)
         {
             const int minHeight = 55;
-            const int maxHeight = 168;
-            const int step = 25;
+            const int maxHeight = 210;
+            const int step = 15;
             if (menuExpand2 == false)
             {
                 menuContainer2.Height = Math.Min(menuContainer2.Height + step, maxHeight);
@@ -380,6 +380,11 @@ namespace LeLeStore
                     menuExpand2 = false;
                 }
             }
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            menuTransition2.Start();
         }
     }
 }

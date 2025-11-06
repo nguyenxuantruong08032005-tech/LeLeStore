@@ -201,7 +201,7 @@
             // pnLogout
             // 
             this.pnLogout.Controls.Add(this.button5);
-            this.pnLogout.Location = new System.Drawing.Point(0, 507);
+            this.pnLogout.Location = new System.Drawing.Point(0, 509);
             this.pnLogout.Margin = new System.Windows.Forms.Padding(0);
             this.pnLogout.Name = "pnLogout";
             this.pnLogout.Size = new System.Drawing.Size(248, 53);
@@ -255,7 +255,7 @@
             // pnEmployeeSalary
             // 
             this.pnEmployeeSalary.Controls.Add(this.btnEmployeeSalary);
-            this.pnEmployeeSalary.Location = new System.Drawing.Point(0, 401);
+            this.pnEmployeeSalary.Location = new System.Drawing.Point(0, 403);
             this.pnEmployeeSalary.Margin = new System.Windows.Forms.Padding(0);
             this.pnEmployeeSalary.Name = "pnEmployeeSalary";
             this.pnEmployeeSalary.Size = new System.Drawing.Size(248, 53);
@@ -264,7 +264,7 @@
             // pnDashDoard
             // 
             this.pnDashDoard.Controls.Add(this.btnDashBoard);
-            this.pnDashDoard.Location = new System.Drawing.Point(0, 454);
+            this.pnDashDoard.Location = new System.Drawing.Point(0, 456);
             this.pnDashDoard.Margin = new System.Windows.Forms.Padding(0);
             this.pnDashDoard.Name = "pnDashDoard";
             this.pnDashDoard.Size = new System.Drawing.Size(248, 53);
@@ -507,7 +507,7 @@
             this.menuContainer2.Location = new System.Drawing.Point(0, 348);
             this.menuContainer2.Margin = new System.Windows.Forms.Padding(0);
             this.menuContainer2.Name = "menuContainer2";
-            this.menuContainer2.Size = new System.Drawing.Size(248, 53);
+            this.menuContainer2.Size = new System.Drawing.Size(248, 55);
             this.menuContainer2.TabIndex = 9;
             // 
             // panel2
@@ -535,6 +535,7 @@
             this.button1.Text = "             Kho Hàng";
             this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button1.UseVisualStyleBackColor = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
             // panel3
             // 
