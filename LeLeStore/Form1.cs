@@ -438,7 +438,7 @@ namespace LeLeStore
             }
         }
 
-        private void button1_Click_1(object sender, EventArgs e)
+        private void menu2_Click_1(object sender, EventArgs e)
         {
             menuTransition2.Start();
         }
