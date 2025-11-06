@@ -34,11 +34,31 @@ namespace LeLeStore
             _username = username ?? string.Empty;
 
             InitializeComponent();
+            flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
+            flowLayoutPanel1.WrapContents = false;   // không quấn sang cột khác
+            flowLayoutPanel1.AutoScroll = true;    // tùy chọn: có thể cuộn nếu thiếu chỗ
+
             mdiProp();
+            ApplySidebarWidths();
             InitializeSidebarButtons();
             SetSidebarButtonState(true);
             ApplyRolePermissions();
             UpdateTitle();
+
+        }
+        private void ApplySidebarWidths()
+        {
+            int w = flowLayoutPanel1.ClientSize.Width;
+
+            void Apply(Control parent)
+            {
+                foreach (Control c in parent.Controls)
+                {
+                    if (c is Panel) c.Width = w;   // panel chứa button
+                    Apply(c);                      // lỡ có panel lồng panel
+                }
+            }
+            Apply(flowLayoutPanel1);
         }
         private void ApplyRolePermissions()
         {
@@ -124,15 +144,7 @@ namespace LeLeStore
                 {
                     sidebarExpand = false;
                     sidebarTransition.Stop();
-                    pnDashDoard.Width = flowLayoutPanel1.Width;
-                    pUser.Width = flowLayoutPanel1.Width;
-                    pnProduct.Width = flowLayoutPanel1.Width;
-                    pnClient.Width = flowLayoutPanel1.Width;
-                    pnEmployeeSalary.Width = flowLayoutPanel1.Width;
-                    pnPayMent.Width = flowLayoutPanel1.Width;
-                    pnSupplier.Width = flowLayoutPanel1.Width;
-                    pnLogout.Width = flowLayoutPanel1.Width;
-                    menuContainer.Width = flowLayoutPanel1.Width;
+                    ApplySidebarWidths();
                     SetSidebarButtonState(false);
 
                 }
@@ -146,16 +158,7 @@ namespace LeLeStore
                 {
                     sidebarExpand = true;
                     sidebarTransition.Stop();
-
-                    pnDashDoard.Width = flowLayoutPanel1.Width;
-                    pUser.Width = flowLayoutPanel1.Width;
-                    pnProduct.Width = flowLayoutPanel1.Width;
-                    pnClient.Width = flowLayoutPanel1.Width;
-                    pnEmployeeSalary.Width = flowLayoutPanel1.Width;
-                    pnPayMent.Width = flowLayoutPanel1.Width;
-                    pnSupplier.Width = flowLayoutPanel1.Width;
-                    pnLogout.Width = flowLayoutPanel1.Width;
-                    menuContainer.Width = flowLayoutPanel1.Width;
+                    ApplySidebarWidths();
                     SetSidebarButtonState(true);
                 }
             }
