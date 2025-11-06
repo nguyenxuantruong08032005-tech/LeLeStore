@@ -23,6 +23,9 @@ namespace LeLeStore
         formSupplier supplier;
         formEmployeeSalary salary;
         formPayMent payment;
+        formPhieuNhap nhap;
+        formPhieuXuat xuat;
+        formTonKho tonkho;
         private readonly Dictionary<Button, string> _sidebarButtonTexts = new Dictionary<Button, string>();
         public Form1() : this(UserRole.QuanLy, string.Empty)
         {
@@ -132,7 +135,7 @@ namespace LeLeStore
         bool sidebarExpand = true;
         private void sidebarTransition_Tick(object sender, EventArgs e)
         {
-            const int minWidth = 47;
+            const int minWidth = 55;
             const int maxWidth = 251;
             const int step = 5;
             if (sidebarExpand)
@@ -444,6 +447,63 @@ namespace LeLeStore
         private void menu2_Click_1(object sender, EventArgs e)
         {
             menuTransition2.Start();
+        }
+
+        private void ptnTonKho_Click(object sender, EventArgs e)
+        {
+            if (tonkho == null)
+            {
+                tonkho = new formTonKho();
+                tonkho.FormClosed += TonKho_FormClosed;
+                tonkho.MdiParent = this;
+                tonkho.Show();
+            }
+            else
+            {
+                tonkho.Activate();
+            }
+        }
+        private void TonKho_FormClosed(object sender, EventArgs e)
+        {
+            tonkho = null;
+        }
+
+        private void btnPN_Click(object sender, EventArgs e)
+        {
+            if (nhap == null)
+            {
+                nhap = new formPhieuNhap();
+                nhap.FormClosed += PhieuNhap_FormClosed;
+                nhap.MdiParent = this;
+                nhap.Show();
+            }
+            else
+            {
+                nhap.Activate();
+            }
+        }
+        private void PhieuNhap_FormClosed(object sender, EventArgs e)
+        {
+            nhap = null;
+        }
+
+        private void btnPX_Click(object sender, EventArgs e)
+        {
+            if (xuat == null)
+            {
+                xuat = new formPhieuXuat();
+                xuat.FormClosed += PhieuXuat_FormClosed;
+                xuat.MdiParent = this;
+                xuat.Show();
+            }
+            else
+            {
+                xuat.Activate();
+            }
+        }
+        private void PhieuXuat_FormClosed(object sender, EventArgs e)
+        {
+            xuat = null;
         }
     }
 }
