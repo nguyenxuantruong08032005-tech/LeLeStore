@@ -108,11 +108,11 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="formAbout.cs">
+    <Compile Include="formClient.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="formAbout.Designer.cs">
-      <DependentUpon>formAbout.cs</DependentUpon>
+    <Compile Include="formClient.Designer.cs">
+      <DependentUpon>formClient.cs</DependentUpon>
     </Compile>
     <Compile Include="formDashBoard.cs">
       <SubType>Form</SubType>
@@ -120,29 +120,59 @@
     <Compile Include="formDashBoard.Designer.cs">
       <DependentUpon>formDashBoard.cs</DependentUpon>
     </Compile>
+    <Compile Include="formEmployeeSalary.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="formEmployeeSalary.Designer.cs">
+      <DependentUpon>formEmployeeSalary.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormLogin.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FormLogin.Designer.cs">
       <DependentUpon>FormLogin.cs</DependentUpon>
     </Compile>
-    <Compile Include="formSettings.cs">
+    <Compile Include="formPayMent.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="formSettings.Designer.cs">
-      <DependentUpon>formSettings.cs</DependentUpon>
+    <Compile Include="formPayMent.Designer.cs">
+      <DependentUpon>formPayMent.cs</DependentUpon>
     </Compile>
-    <Compile Include="formSubmenu1.cs">
+    <Compile Include="formPoint.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="formSubmenu1.Designer.cs">
-      <DependentUpon>formSubmenu1.cs</DependentUpon>
+    <Compile Include="formPoint.Designer.cs">
+      <DependentUpon>formPoint.cs</DependentUpon>
     </Compile>
-    <Compile Include="formSubmenu2.cs">
+    <Compile Include="formProduct.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="formSubmenu2.Designer.cs">
-      <DependentUpon>formSubmenu2.cs</DependentUpon>
+    <Compile Include="formProduct.Designer.cs">
+      <DependentUpon>formProduct.cs</DependentUpon>
+    </Compile>
+    <Compile Include="formStaff.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="formStaff.Designer.cs">
+      <DependentUpon>formStaff.cs</DependentUpon>
+    </Compile>
+    <Compile Include="formSupplier.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="formSupplier.Designer.cs">
+      <DependentUpon>formSupplier.cs</DependentUpon>
+    </Compile>
+    <Compile Include="formUpdateClient.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="formUpdateClient.Designer.cs">
+      <DependentUpon>formUpdateClient.cs</DependentUpon>
+    </Compile>
+    <Compile Include="formUser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="formUser.Designer.cs">
+      <DependentUpon>formUser.cs</DependentUpon>
     </Compile>
     <Compile Include="GStoreDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -156,23 +186,38 @@
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="formAbout.resx">
-      <DependentUpon>formAbout.cs</DependentUpon>
+    <EmbeddedResource Include="formClient.resx">
+      <DependentUpon>formClient.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="formDashBoard.resx">
       <DependentUpon>formDashBoard.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="formEmployeeSalary.resx">
+      <DependentUpon>formEmployeeSalary.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormLogin.resx">
       <DependentUpon>FormLogin.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="formSettings.resx">
-      <DependentUpon>formSettings.cs</DependentUpon>
+    <EmbeddedResource Include="formPayMent.resx">
+      <DependentUpon>formPayMent.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="formSubmenu1.resx">
-      <DependentUpon>formSubmenu1.cs</DependentUpon>
+    <EmbeddedResource Include="formPoint.resx">
+      <DependentUpon>formPoint.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="formSubmenu2.resx">
-      <DependentUpon>formSubmenu2.cs</DependentUpon>
+    <EmbeddedResource Include="formProduct.resx">
+      <DependentUpon>formProduct.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="formStaff.resx">
+      <DependentUpon>formStaff.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="formSupplier.resx">
+      <DependentUpon>formSupplier.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="formUpdateClient.resx">
+      <DependentUpon>formUpdateClient.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="formUser.resx">
+      <DependentUpon>formUser.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -223,6 +268,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\if_quit_37278.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-user-30.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-users-64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-users-100.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

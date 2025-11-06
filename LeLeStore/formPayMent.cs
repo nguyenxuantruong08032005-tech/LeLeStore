@@ -10,16 +10,16 @@ using System.Windows.Forms;
 
 namespace LeLeStore
 {
-    public partial class formSubmenu2 : Form
+    public partial class formPayMent : Form
     {
-        public formSubmenu2()
+        public formPayMent()
         {
             InitializeComponent();
         }
 
-        private void formSubmenu2_Load(object sender, EventArgs e)
+        private void label1_Click(object sender, EventArgs e)
         {
-            this.ControlBox = false;
+
         }
     }
 }

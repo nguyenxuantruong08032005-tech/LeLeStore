@@ -15,11 +15,14 @@ namespace LeLeStore
         private readonly UserRole _role;
         private readonly string _username;
         formDashBoard dashBoard;
-        formSubmenu1 submenu1;
-        formSubmenu2 submenu2;
-        formAbout about;
-        formSettings settings;
-
+        formPoint point;
+        formUpdateClient updateclient;
+        formUser user;
+        formProduct product;
+        formStaff staff;
+        formSupplier supplier;
+        formEmployeeSalary salary;
+        formPayMent payment;
         public Form1() : this(UserRole.QuanLy, string.Empty)
         {
         }
@@ -38,7 +41,7 @@ namespace LeLeStore
         {
             panel8.Visible = _role != UserRole.Kho;
             panel6.Visible = _role != UserRole.BanHang;
-            pnSettings.Visible = _role == UserRole.QuanLy;
+            pnProduct.Visible = _role == UserRole.QuanLy;
         }
 
         private void UpdateTitle()
@@ -118,9 +121,13 @@ namespace LeLeStore
                 {
                     sidebarExpand = false;
                     sidebarTransition.Stop();
-                    pnDashdoard.Width = flowLayoutPanel1.Width;
-                    pnAbout.Width = flowLayoutPanel1.Width;
-                    pnSettings.Width = flowLayoutPanel1.Width;
+                    pnDashDoard.Width = flowLayoutPanel1.Width;
+                    pUser.Width = flowLayoutPanel1.Width;
+                    pnProduct.Width = flowLayoutPanel1.Width;
+                    pnClient.Width = flowLayoutPanel1.Width;
+                    pnEmployeeSalary.Width = flowLayoutPanel1.Width;
+                    pnPayMent.Width = flowLayoutPanel1.Width;
+                    pnSupplier.Width = flowLayoutPanel1.Width;
                     pnLogout.Width = flowLayoutPanel1.Width;
                     menuContainer.Width = flowLayoutPanel1.Width;
 
@@ -136,32 +143,20 @@ namespace LeLeStore
                     sidebarExpand = true;
                     sidebarTransition.Stop();
 
-                    pnDashdoard.Width = flowLayoutPanel1.Width;
-                    pnAbout.Width = flowLayoutPanel1.Width;
-                    pnSettings.Width = flowLayoutPanel1.Width;
+                    pnDashDoard.Width = flowLayoutPanel1.Width;
+                    pUser.Width = flowLayoutPanel1.Width;
+                    pnProduct.Width = flowLayoutPanel1.Width;
+                    pnClient.Width = flowLayoutPanel1.Width;
+                    pnEmployeeSalary.Width = flowLayoutPanel1.Width;
+                    pnPayMent.Width = flowLayoutPanel1.Width;
+                    pnSupplier.Width = flowLayoutPanel1.Width;
                     pnLogout.Width = flowLayoutPanel1.Width;
                     menuContainer.Width = flowLayoutPanel1.Width;
                 }
             }
         }
 
-        private void button1_Click_1(object sender, EventArgs e)
-        {
-            if (dashBoard == null)
-            {
-                dashBoard = new formDashBoard();
-                dashBoard.FormClosed += Dashboard_FormClosed;
-                dashBoard.MdiParent = this;
-                dashBoard.Show();
-            }else
-            {
-                dashBoard.Activate();
-            }
-        }
-        private void Dashboard_FormClosed(object sender, EventArgs e)
-        {
-            dashBoard = null;
-        }
+     
         private void menu_Click(object sender, EventArgs e)
         {
             menuTransition.Start();
@@ -182,85 +177,209 @@ namespace LeLeStore
             Close();
         }
 
-        private void sbmenu1_Click(object sender, EventArgs e)
+        private void btnUpdateClient_Click(object sender, EventArgs e)
         {
-            if(submenu1 == null)
+            if(updateclient == null)
             {
-                submenu1 = new formSubmenu1();
-                submenu1.FormClosed += Submenu1_FormClosed;
-                submenu1.MdiParent = this;
-                submenu1.Dock = DockStyle.Fill;
-                submenu1.Show();
+                updateclient = new formUpdateClient();
+                updateclient.FormClosed += UpdateClient_FormClosed;
+                updateclient.MdiParent = this;
+                updateclient.Dock = DockStyle.Fill;
+                updateclient.Show();
             }
             else
             {
-                submenu1.Activate();
+                updateclient.Activate();
             }
         }
-        private void Submenu1_FormClosed(object sender, EventArgs e)
+        private void UpdateClient_FormClosed(object sender, EventArgs e)
         {
-            submenu1 = null;
+            updateclient = null;
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            if (about == null)
+            if (user == null)
             {
-                about = new formAbout();
-                about.FormClosed += About_FormClosed;
-                about.MdiParent = this;
-                about.Dock = DockStyle.Fill;
-                about.Show();
+                user = new formUser();
+                user.FormClosed += About_FormClosed;
+                user.MdiParent = this;
+                user.Dock = DockStyle.Fill;
+                user.Show();
             }
             else
             {
-                about.Activate();
+                user.Activate();
             }
         }
         private void About_FormClosed(object sender, EventArgs e)
         {
-            about = null;
+            user = null;
         }
 
         private void sbmenu2_Click(object sender, EventArgs e)
         {
-            if (submenu2 == null)
+            if (point == null)
             {
-                submenu2 = new formSubmenu2();
-                submenu2.FormClosed += Submenu2_FormClosed;
-                submenu2.MdiParent = this;
-                submenu2.Dock = DockStyle.Fill;
-                submenu2.Show();
+                point = new formPoint();
+                point.FormClosed += Point_FormClosed;
+                point.MdiParent = this;
+                point.Dock = DockStyle.Fill;
+                point.Show();
             }
             else
             {
-                submenu2.Activate();
+                point.Activate();
             }
         }
-        private void Submenu2_FormClosed(object sender, EventArgs e)
+        private void Point_FormClosed(object sender, EventArgs e)
         {
-            submenu2 = null;
+            point = null;
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
 
-            if (settings == null)
+            if (product == null)
             {
-                settings = new formSettings();
-                settings.FormClosed += Settings_FormClosed;
-                settings.MdiParent = this;
-                settings.Dock = DockStyle.Fill;
-                settings.Show();
+                product = new formProduct();
+                product.FormClosed += Product_FormClosed;
+                product.MdiParent = this;
+                product.Dock = DockStyle.Fill;
+                product.Show();
             }
             else
             {
-                settings.Activate();
+                product.Activate();
             }
         }
-        private void Settings_FormClosed(object sender, EventArgs e)
+        private void Product_FormClosed(object sender, EventArgs e)
         {
-            settings = null;
+            product = null;
+        }
+
+        private void btnStaff_Click(object sender, EventArgs e)
+        {
+            if (staff == null)
+            {
+                staff = new formStaff();
+                staff.FormClosed += Staff_FormClosed;
+                staff.MdiParent = this;
+                staff.Dock = DockStyle.Fill;
+                staff.Show();
+            }
+            else
+            {
+                staff.Activate();
+            }
+        }
+        private void Staff_FormClosed(object sender, EventArgs e)
+        {
+            staff = null;
+        }
+
+        private void btnSupplier_Click(object sender, EventArgs e)
+        {
+            if (supplier == null)
+            {
+                supplier = new formSupplier();
+                supplier.FormClosed += Supplier_FormClosed;
+                supplier.MdiParent = this;
+                supplier.Dock = DockStyle.Fill;
+                supplier.Show();
+            }
+            else
+            {
+                supplier.Activate();
+            }
+        }
+        private void Supplier_FormClosed(object sender, EventArgs e)
+        {
+            supplier = null;
+        }
+
+        private void btnEmployeeSalary_Click(object sender, EventArgs e)
+        {
+            if (salary == null)
+            {
+                salary = new formEmployeeSalary();
+                salary.FormClosed += EmployeeSalary_FormClosed;
+                salary.MdiParent = this;
+                salary.Dock = DockStyle.Fill;
+                salary.Show();
+            }
+            else
+            {
+                salary.Activate();
+            }
+        }
+        private void EmployeeSalary_FormClosed(object sender, EventArgs e)
+        {
+            salary = null;
+        }
+
+        private void btnDashBoard_Click(object sender, EventArgs e)
+        {
+            if (dashBoard == null)
+            {
+                dashBoard = new formDashBoard();
+                dashBoard.FormClosed += Dashboard_FormClosed;
+                dashBoard.MdiParent = this;
+                dashBoard.Show();
+            }
+            else
+            {
+                dashBoard.Activate();
+            }
+        }
+        private void Dashboard_FormClosed(object sender, EventArgs e)
+        {
+            dashBoard = null;
+        }
+
+        private void btnPayMent_Click(object sender, EventArgs e)
+        {
+            if (payment == null)
+            {
+                payment = new formPayMent();
+                payment.FormClosed += PayMent_FormClosed;
+                payment.MdiParent = this;
+                payment.Show();
+            }
+            else
+            {
+                payment.Activate();
+            }
+        }
+        private void PayMent_FormClosed(object sender, EventArgs e)
+        {
+            payment = null;
+        }
+        bool menuExpand2 = false;
+        private void menuTransition2_Tick(object sender, EventArgs e)
+        {
+            const int minHeight = 55;
+            const int maxHeight = 168;
+            const int step = 25;
+            if (menuExpand2 == false)
+            {
+                menuContainer2.Height = Math.Min(menuContainer2.Height + step, maxHeight);
+                if (menuContainer2.Height >= maxHeight)
+                {
+                    menuTransition2.Stop();
+                    menuExpand2 = true;
+                }
+
+            }
+            else
+            {
+                menuContainer2.Height = Math.Max(menuContainer2.Height - step, minHeight); ;
+                if (menuContainer2.Height <= minHeight)
+                {
+                    menuTransition2.Stop();
+                    menuExpand2 = false;
+                }
+            }
         }
     }
 }

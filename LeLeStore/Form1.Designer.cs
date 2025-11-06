@@ -31,38 +31,65 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.sidebar = new System.Windows.Forms.Panel();
-            this.btnHam = new System.Windows.Forms.PictureBox();
             this.nightControlBox1 = new ReaLTaiizor.Controls.NightControlBox();
             this.label1 = new System.Windows.Forms.Label();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.pnDashdoard = new System.Windows.Forms.Panel();
-            this.button = new System.Windows.Forms.Button();
             this.menuContainer = new System.Windows.Forms.FlowLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.menu = new System.Windows.Forms.Button();
             this.panel8 = new System.Windows.Forms.Panel();
-            this.sbmenu1 = new System.Windows.Forms.Button();
             this.panel6 = new System.Windows.Forms.Panel();
-            this.sbmenu2 = new System.Windows.Forms.Button();
             this.pnLogout = new System.Windows.Forms.Panel();
-            this.button5 = new System.Windows.Forms.Button();
-            this.pnAbout = new System.Windows.Forms.Panel();
-            this.button3 = new System.Windows.Forms.Button();
-            this.pnSettings = new System.Windows.Forms.Panel();
-            this.button4 = new System.Windows.Forms.Button();
+            this.pUser = new System.Windows.Forms.Panel();
+            this.pnProduct = new System.Windows.Forms.Panel();
             this.menuTransition = new System.Windows.Forms.Timer(this.components);
             this.sidebarTransition = new System.Windows.Forms.Timer(this.components);
+            this.pnClient = new System.Windows.Forms.Panel();
+            this.pnSupplier = new System.Windows.Forms.Panel();
+            this.pnEmployeeSalary = new System.Windows.Forms.Panel();
+            this.pnDashDoard = new System.Windows.Forms.Panel();
+            this.button3 = new System.Windows.Forms.Button();
+            this.btnStaff = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
+            this.btnSupplier = new System.Windows.Forms.Button();
+            this.menu = new System.Windows.Forms.Button();
+            this.btnUpdate = new System.Windows.Forms.Button();
+            this.btnPoint = new System.Windows.Forms.Button();
+            this.btnDashBoard = new System.Windows.Forms.Button();
+            this.btnHam = new System.Windows.Forms.PictureBox();
+            this.btnEmployeeSalary = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
+            this.pnPayMent = new System.Windows.Forms.Panel();
+            this.btnPayMent = new System.Windows.Forms.Button();
+            this.menuContainer2 = new System.Windows.Forms.FlowLayoutPanel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.button1 = new System.Windows.Forms.Button();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.ptnTonKho = new System.Windows.Forms.Button();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.btnPN = new System.Windows.Forms.Button();
+            this.menuTransition2 = new System.Windows.Forms.Timer(this.components);
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.btnPX = new System.Windows.Forms.Button();
             this.sidebar.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.btnHam)).BeginInit();
             this.flowLayoutPanel1.SuspendLayout();
-            this.pnDashdoard.SuspendLayout();
             this.menuContainer.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel8.SuspendLayout();
             this.panel6.SuspendLayout();
             this.pnLogout.SuspendLayout();
-            this.pnAbout.SuspendLayout();
-            this.pnSettings.SuspendLayout();
+            this.pUser.SuspendLayout();
+            this.pnProduct.SuspendLayout();
+            this.pnClient.SuspendLayout();
+            this.pnSupplier.SuspendLayout();
+            this.pnEmployeeSalary.SuspendLayout();
+            this.pnDashDoard.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.btnHam)).BeginInit();
+            this.pnPayMent.SuspendLayout();
+            this.menuContainer2.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.panel3.SuspendLayout();
+            this.panel4.SuspendLayout();
+            this.panel5.SuspendLayout();
             this.SuspendLayout();
             // 
             // sidebar
@@ -76,17 +103,6 @@
             this.sidebar.Name = "sidebar";
             this.sidebar.Size = new System.Drawing.Size(1189, 53);
             this.sidebar.TabIndex = 0;
-            // 
-            // btnHam
-            // 
-            this.btnHam.Image = ((System.Drawing.Image)(resources.GetObject("btnHam.Image")));
-            this.btnHam.Location = new System.Drawing.Point(0, 7);
-            this.btnHam.Name = "btnHam";
-            this.btnHam.Size = new System.Drawing.Size(65, 40);
-            this.btnHam.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.btnHam.TabIndex = 7;
-            this.btnHam.TabStop = false;
-            this.btnHam.Click += new System.EventHandler(this.btnHam_Click);
             // 
             // nightControlBox1
             // 
@@ -125,11 +141,16 @@
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
-            this.flowLayoutPanel1.Controls.Add(this.pnDashdoard);
+            this.flowLayoutPanel1.Controls.Add(this.pUser);
+            this.flowLayoutPanel1.Controls.Add(this.pnClient);
+            this.flowLayoutPanel1.Controls.Add(this.pnProduct);
+            this.flowLayoutPanel1.Controls.Add(this.pnSupplier);
+            this.flowLayoutPanel1.Controls.Add(this.pnPayMent);
             this.flowLayoutPanel1.Controls.Add(this.menuContainer);
+            this.flowLayoutPanel1.Controls.Add(this.menuContainer2);
+            this.flowLayoutPanel1.Controls.Add(this.pnEmployeeSalary);
+            this.flowLayoutPanel1.Controls.Add(this.pnDashDoard);
             this.flowLayoutPanel1.Controls.Add(this.pnLogout);
-            this.flowLayoutPanel1.Controls.Add(this.pnAbout);
-            this.flowLayoutPanel1.Controls.Add(this.pnSettings);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 53);
@@ -138,39 +159,13 @@
             this.flowLayoutPanel1.Size = new System.Drawing.Size(251, 638);
             this.flowLayoutPanel1.TabIndex = 1;
             // 
-            // pnDashdoard
-            // 
-            this.pnDashdoard.Controls.Add(this.button);
-            this.pnDashdoard.Location = new System.Drawing.Point(3, 33);
-            this.pnDashdoard.Name = "pnDashdoard";
-            this.pnDashdoard.Size = new System.Drawing.Size(248, 53);
-            this.pnDashdoard.TabIndex = 3;
-            // 
-            // button
-            // 
-            this.button.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
-            this.button.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
-            this.button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button.ForeColor = System.Drawing.Color.White;
-            this.button.Image = ((System.Drawing.Image)(resources.GetObject("button.Image")));
-            this.button.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button.Location = new System.Drawing.Point(0, -46);
-            this.button.Name = "button";
-            this.button.Size = new System.Drawing.Size(326, 151);
-            this.button.TabIndex = 4;
-            this.button.Text = "            Dashdoard";
-            this.button.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button.UseVisualStyleBackColor = false;
-            this.button.Click += new System.EventHandler(this.button1_Click_1);
-            // 
             // menuContainer
             // 
             this.menuContainer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(33)))), ((int)(((byte)(36)))));
             this.menuContainer.Controls.Add(this.panel1);
             this.menuContainer.Controls.Add(this.panel8);
             this.menuContainer.Controls.Add(this.panel6);
-            this.menuContainer.Location = new System.Drawing.Point(0, 89);
+            this.menuContainer.Location = new System.Drawing.Point(0, 295);
             this.menuContainer.Margin = new System.Windows.Forms.Padding(0);
             this.menuContainer.Name = "menuContainer";
             this.menuContainer.Size = new System.Drawing.Size(248, 53);
@@ -185,6 +180,172 @@
             this.panel1.Size = new System.Drawing.Size(330, 62);
             this.panel1.TabIndex = 5;
             // 
+            // panel8
+            // 
+            this.panel8.Controls.Add(this.btnUpdate);
+            this.panel8.Location = new System.Drawing.Point(0, 62);
+            this.panel8.Margin = new System.Windows.Forms.Padding(0);
+            this.panel8.Name = "panel8";
+            this.panel8.Size = new System.Drawing.Size(248, 53);
+            this.panel8.TabIndex = 7;
+            // 
+            // panel6
+            // 
+            this.panel6.Controls.Add(this.btnPoint);
+            this.panel6.Location = new System.Drawing.Point(0, 115);
+            this.panel6.Margin = new System.Windows.Forms.Padding(0);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(248, 53);
+            this.panel6.TabIndex = 8;
+            // 
+            // pnLogout
+            // 
+            this.pnLogout.Controls.Add(this.button5);
+            this.pnLogout.Location = new System.Drawing.Point(0, 507);
+            this.pnLogout.Margin = new System.Windows.Forms.Padding(0);
+            this.pnLogout.Name = "pnLogout";
+            this.pnLogout.Size = new System.Drawing.Size(248, 53);
+            this.pnLogout.TabIndex = 6;
+            // 
+            // pUser
+            // 
+            this.pUser.Controls.Add(this.button3);
+            this.pUser.Location = new System.Drawing.Point(0, 30);
+            this.pUser.Margin = new System.Windows.Forms.Padding(0);
+            this.pUser.Name = "pUser";
+            this.pUser.Size = new System.Drawing.Size(248, 53);
+            this.pUser.TabIndex = 5;
+            // 
+            // pnProduct
+            // 
+            this.pnProduct.Controls.Add(this.button4);
+            this.pnProduct.Location = new System.Drawing.Point(0, 136);
+            this.pnProduct.Margin = new System.Windows.Forms.Padding(0);
+            this.pnProduct.Name = "pnProduct";
+            this.pnProduct.Size = new System.Drawing.Size(248, 53);
+            this.pnProduct.TabIndex = 5;
+            // 
+            // menuTransition
+            // 
+            this.menuTransition.Tick += new System.EventHandler(this.menuTransition_Tick);
+            // 
+            // sidebarTransition
+            // 
+            this.sidebarTransition.Interval = 10;
+            this.sidebarTransition.Tick += new System.EventHandler(this.sidebarTransition_Tick);
+            // 
+            // pnClient
+            // 
+            this.pnClient.Controls.Add(this.btnStaff);
+            this.pnClient.Location = new System.Drawing.Point(0, 83);
+            this.pnClient.Margin = new System.Windows.Forms.Padding(0);
+            this.pnClient.Name = "pnClient";
+            this.pnClient.Size = new System.Drawing.Size(248, 53);
+            this.pnClient.TabIndex = 6;
+            // 
+            // pnSupplier
+            // 
+            this.pnSupplier.Controls.Add(this.btnSupplier);
+            this.pnSupplier.Location = new System.Drawing.Point(0, 189);
+            this.pnSupplier.Margin = new System.Windows.Forms.Padding(0);
+            this.pnSupplier.Name = "pnSupplier";
+            this.pnSupplier.Size = new System.Drawing.Size(248, 53);
+            this.pnSupplier.TabIndex = 7;
+            // 
+            // pnEmployeeSalary
+            // 
+            this.pnEmployeeSalary.Controls.Add(this.btnEmployeeSalary);
+            this.pnEmployeeSalary.Location = new System.Drawing.Point(0, 401);
+            this.pnEmployeeSalary.Margin = new System.Windows.Forms.Padding(0);
+            this.pnEmployeeSalary.Name = "pnEmployeeSalary";
+            this.pnEmployeeSalary.Size = new System.Drawing.Size(248, 53);
+            this.pnEmployeeSalary.TabIndex = 8;
+            // 
+            // pnDashDoard
+            // 
+            this.pnDashDoard.Controls.Add(this.btnDashBoard);
+            this.pnDashDoard.Location = new System.Drawing.Point(0, 454);
+            this.pnDashDoard.Margin = new System.Windows.Forms.Padding(0);
+            this.pnDashDoard.Name = "pnDashDoard";
+            this.pnDashDoard.Size = new System.Drawing.Size(248, 53);
+            this.pnDashDoard.TabIndex = 9;
+            // 
+            // button3
+            // 
+            this.button3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
+            this.button3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.button3.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
+            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button3.ForeColor = System.Drawing.Color.White;
+            this.button3.Image = ((System.Drawing.Image)(resources.GetObject("button3.Image")));
+            this.button3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button3.Location = new System.Drawing.Point(0, 0);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(248, 53);
+            this.button3.TabIndex = 4;
+            this.button3.Text = "             Người Dùng";
+            this.button3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button3.UseVisualStyleBackColor = false;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // btnStaff
+            // 
+            this.btnStaff.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
+            this.btnStaff.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnStaff.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
+            this.btnStaff.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnStaff.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnStaff.ForeColor = System.Drawing.Color.White;
+            this.btnStaff.Image = ((System.Drawing.Image)(resources.GetObject("btnStaff.Image")));
+            this.btnStaff.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnStaff.Location = new System.Drawing.Point(0, 0);
+            this.btnStaff.Name = "btnStaff";
+            this.btnStaff.Size = new System.Drawing.Size(248, 53);
+            this.btnStaff.TabIndex = 4;
+            this.btnStaff.Text = "             Nhân Viên";
+            this.btnStaff.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnStaff.UseVisualStyleBackColor = false;
+            this.btnStaff.Click += new System.EventHandler(this.btnStaff_Click);
+            // 
+            // button4
+            // 
+            this.button4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
+            this.button4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.button4.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
+            this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button4.ForeColor = System.Drawing.Color.White;
+            this.button4.Image = ((System.Drawing.Image)(resources.GetObject("button4.Image")));
+            this.button4.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button4.Location = new System.Drawing.Point(0, 0);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(248, 53);
+            this.button4.TabIndex = 4;
+            this.button4.Text = "             Hàng hóa";
+            this.button4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button4.UseVisualStyleBackColor = false;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // btnSupplier
+            // 
+            this.btnSupplier.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
+            this.btnSupplier.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnSupplier.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
+            this.btnSupplier.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSupplier.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSupplier.ForeColor = System.Drawing.Color.White;
+            this.btnSupplier.Image = ((System.Drawing.Image)(resources.GetObject("btnSupplier.Image")));
+            this.btnSupplier.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnSupplier.Location = new System.Drawing.Point(0, 0);
+            this.btnSupplier.Name = "btnSupplier";
+            this.btnSupplier.Size = new System.Drawing.Size(248, 53);
+            this.btnSupplier.TabIndex = 4;
+            this.btnSupplier.Text = "             Nhà Cung Cấp";
+            this.btnSupplier.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnSupplier.UseVisualStyleBackColor = false;
+            this.btnSupplier.Click += new System.EventHandler(this.btnSupplier_Click);
+            // 
             // menu
             // 
             this.menu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
@@ -198,74 +359,96 @@
             this.menu.Name = "menu";
             this.menu.Size = new System.Drawing.Size(326, 151);
             this.menu.TabIndex = 4;
-            this.menu.Text = "             Menu";
+            this.menu.Text = "             Khách Hàng";
             this.menu.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.menu.UseVisualStyleBackColor = false;
             this.menu.Click += new System.EventHandler(this.menu_Click);
             // 
-            // panel8
+            // btnUpdate
             // 
-            this.panel8.Controls.Add(this.sbmenu1);
-            this.panel8.Location = new System.Drawing.Point(0, 62);
-            this.panel8.Margin = new System.Windows.Forms.Padding(0);
-            this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(248, 53);
-            this.panel8.TabIndex = 7;
+            this.btnUpdate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(33)))), ((int)(((byte)(36)))));
+            this.btnUpdate.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
+            this.btnUpdate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnUpdate.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnUpdate.ForeColor = System.Drawing.Color.White;
+            this.btnUpdate.Image = ((System.Drawing.Image)(resources.GetObject("btnUpdate.Image")));
+            this.btnUpdate.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnUpdate.Location = new System.Drawing.Point(0, -46);
+            this.btnUpdate.Name = "btnUpdate";
+            this.btnUpdate.Size = new System.Drawing.Size(326, 120);
+            this.btnUpdate.TabIndex = 4;
+            this.btnUpdate.Text = "              Cập Nhật Thông Tin";
+            this.btnUpdate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnUpdate.UseVisualStyleBackColor = false;
+            this.btnUpdate.Click += new System.EventHandler(this.btnUpdateClient_Click);
             // 
-            // sbmenu1
+            // btnPoint
             // 
-            this.sbmenu1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(33)))), ((int)(((byte)(36)))));
-            this.sbmenu1.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
-            this.sbmenu1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.sbmenu1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.sbmenu1.ForeColor = System.Drawing.Color.White;
-            this.sbmenu1.Image = ((System.Drawing.Image)(resources.GetObject("sbmenu1.Image")));
-            this.sbmenu1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.sbmenu1.Location = new System.Drawing.Point(0, -46);
-            this.sbmenu1.Name = "sbmenu1";
-            this.sbmenu1.Size = new System.Drawing.Size(326, 120);
-            this.sbmenu1.TabIndex = 4;
-            this.sbmenu1.Text = "              Sub menu 1";
-            this.sbmenu1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.sbmenu1.UseVisualStyleBackColor = false;
-            this.sbmenu1.Click += new System.EventHandler(this.sbmenu1_Click);
+            this.btnPoint.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(33)))), ((int)(((byte)(36)))));
+            this.btnPoint.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnPoint.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
+            this.btnPoint.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPoint.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPoint.ForeColor = System.Drawing.Color.White;
+            this.btnPoint.Image = ((System.Drawing.Image)(resources.GetObject("btnPoint.Image")));
+            this.btnPoint.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnPoint.Location = new System.Drawing.Point(0, 0);
+            this.btnPoint.Name = "btnPoint";
+            this.btnPoint.Size = new System.Drawing.Size(248, 53);
+            this.btnPoint.TabIndex = 4;
+            this.btnPoint.Text = "              Tích Điểm";
+            this.btnPoint.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnPoint.UseVisualStyleBackColor = false;
+            this.btnPoint.Click += new System.EventHandler(this.sbmenu2_Click);
             // 
-            // panel6
+            // btnDashBoard
             // 
-            this.panel6.Controls.Add(this.sbmenu2);
-            this.panel6.Location = new System.Drawing.Point(0, 115);
-            this.panel6.Margin = new System.Windows.Forms.Padding(0);
-            this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(248, 53);
-            this.panel6.TabIndex = 8;
+            this.btnDashBoard.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
+            this.btnDashBoard.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnDashBoard.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
+            this.btnDashBoard.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDashBoard.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnDashBoard.ForeColor = System.Drawing.Color.White;
+            this.btnDashBoard.Image = ((System.Drawing.Image)(resources.GetObject("btnDashBoard.Image")));
+            this.btnDashBoard.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnDashBoard.Location = new System.Drawing.Point(0, 0);
+            this.btnDashBoard.Name = "btnDashBoard";
+            this.btnDashBoard.Size = new System.Drawing.Size(248, 53);
+            this.btnDashBoard.TabIndex = 4;
+            this.btnDashBoard.Text = "             Báo cáo, thống kê";
+            this.btnDashBoard.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnDashBoard.UseVisualStyleBackColor = false;
+            this.btnDashBoard.Click += new System.EventHandler(this.btnDashBoard_Click);
             // 
-            // sbmenu2
+            // btnHam
             // 
-            this.sbmenu2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(33)))), ((int)(((byte)(36)))));
-            this.sbmenu2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.sbmenu2.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
-            this.sbmenu2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.sbmenu2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.sbmenu2.ForeColor = System.Drawing.Color.White;
-            this.sbmenu2.Image = ((System.Drawing.Image)(resources.GetObject("sbmenu2.Image")));
-            this.sbmenu2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.sbmenu2.Location = new System.Drawing.Point(0, 0);
-            this.sbmenu2.Name = "sbmenu2";
-            this.sbmenu2.Size = new System.Drawing.Size(248, 53);
-            this.sbmenu2.TabIndex = 4;
-            this.sbmenu2.Text = "              Sub menu 2";
-            this.sbmenu2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.sbmenu2.UseVisualStyleBackColor = false;
-            this.sbmenu2.Click += new System.EventHandler(this.sbmenu2_Click);
+            this.btnHam.Image = ((System.Drawing.Image)(resources.GetObject("btnHam.Image")));
+            this.btnHam.Location = new System.Drawing.Point(0, 7);
+            this.btnHam.Name = "btnHam";
+            this.btnHam.Size = new System.Drawing.Size(65, 40);
+            this.btnHam.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.btnHam.TabIndex = 7;
+            this.btnHam.TabStop = false;
+            this.btnHam.Click += new System.EventHandler(this.btnHam_Click);
             // 
-            // pnLogout
+            // btnEmployeeSalary
             // 
-            this.pnLogout.Controls.Add(this.button5);
-            this.pnLogout.Location = new System.Drawing.Point(0, 142);
-            this.pnLogout.Margin = new System.Windows.Forms.Padding(0);
-            this.pnLogout.Name = "pnLogout";
-            this.pnLogout.Size = new System.Drawing.Size(248, 53);
-            this.pnLogout.TabIndex = 6;
+            this.btnEmployeeSalary.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
+            this.btnEmployeeSalary.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnEmployeeSalary.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
+            this.btnEmployeeSalary.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnEmployeeSalary.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnEmployeeSalary.ForeColor = System.Drawing.Color.White;
+            this.btnEmployeeSalary.Image = ((System.Drawing.Image)(resources.GetObject("btnEmployeeSalary.Image")));
+            this.btnEmployeeSalary.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnEmployeeSalary.Location = new System.Drawing.Point(0, 0);
+            this.btnEmployeeSalary.Name = "btnEmployeeSalary";
+            this.btnEmployeeSalary.Size = new System.Drawing.Size(248, 53);
+            this.btnEmployeeSalary.TabIndex = 4;
+            this.btnEmployeeSalary.Text = "             Tính Lương";
+            this.btnEmployeeSalary.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnEmployeeSalary.UseVisualStyleBackColor = false;
+            this.btnEmployeeSalary.Click += new System.EventHandler(this.btnEmployeeSalary_Click);
             // 
             // button5
             // 
@@ -286,70 +469,156 @@
             this.button5.UseVisualStyleBackColor = false;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
-            // pnAbout
+            // pnPayMent
             // 
-            this.pnAbout.Controls.Add(this.button3);
-            this.pnAbout.Location = new System.Drawing.Point(0, 195);
-            this.pnAbout.Margin = new System.Windows.Forms.Padding(0);
-            this.pnAbout.Name = "pnAbout";
-            this.pnAbout.Size = new System.Drawing.Size(248, 53);
-            this.pnAbout.TabIndex = 5;
+            this.pnPayMent.Controls.Add(this.btnPayMent);
+            this.pnPayMent.Location = new System.Drawing.Point(0, 242);
+            this.pnPayMent.Margin = new System.Windows.Forms.Padding(0);
+            this.pnPayMent.Name = "pnPayMent";
+            this.pnPayMent.Size = new System.Drawing.Size(248, 53);
+            this.pnPayMent.TabIndex = 9;
             // 
-            // button3
+            // btnPayMent
             // 
-            this.button3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
-            this.button3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button3.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
-            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.ForeColor = System.Drawing.Color.White;
-            this.button3.Image = ((System.Drawing.Image)(resources.GetObject("button3.Image")));
-            this.button3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button3.Location = new System.Drawing.Point(0, 0);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(248, 53);
-            this.button3.TabIndex = 4;
-            this.button3.Text = "             About";
-            this.button3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button3.UseVisualStyleBackColor = false;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.btnPayMent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
+            this.btnPayMent.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnPayMent.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
+            this.btnPayMent.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPayMent.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPayMent.ForeColor = System.Drawing.Color.White;
+            this.btnPayMent.Image = ((System.Drawing.Image)(resources.GetObject("btnPayMent.Image")));
+            this.btnPayMent.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnPayMent.Location = new System.Drawing.Point(0, 0);
+            this.btnPayMent.Name = "btnPayMent";
+            this.btnPayMent.Size = new System.Drawing.Size(248, 53);
+            this.btnPayMent.TabIndex = 4;
+            this.btnPayMent.Text = "             Thanh Toán";
+            this.btnPayMent.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnPayMent.UseVisualStyleBackColor = false;
+            this.btnPayMent.Click += new System.EventHandler(this.btnPayMent_Click);
             // 
-            // pnSettings
+            // menuContainer2
             // 
-            this.pnSettings.Controls.Add(this.button4);
-            this.pnSettings.Location = new System.Drawing.Point(0, 248);
-            this.pnSettings.Margin = new System.Windows.Forms.Padding(0);
-            this.pnSettings.Name = "pnSettings";
-            this.pnSettings.Size = new System.Drawing.Size(248, 53);
-            this.pnSettings.TabIndex = 5;
+            this.menuContainer2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(33)))), ((int)(((byte)(36)))));
+            this.menuContainer2.Controls.Add(this.panel2);
+            this.menuContainer2.Controls.Add(this.panel3);
+            this.menuContainer2.Controls.Add(this.panel4);
+            this.menuContainer2.Controls.Add(this.panel5);
+            this.menuContainer2.Location = new System.Drawing.Point(0, 348);
+            this.menuContainer2.Margin = new System.Windows.Forms.Padding(0);
+            this.menuContainer2.Name = "menuContainer2";
+            this.menuContainer2.Size = new System.Drawing.Size(248, 53);
+            this.menuContainer2.TabIndex = 9;
             // 
-            // button4
+            // panel2
             // 
-            this.button4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
-            this.button4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button4.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
-            this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button4.ForeColor = System.Drawing.Color.White;
-            this.button4.Image = ((System.Drawing.Image)(resources.GetObject("button4.Image")));
-            this.button4.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button4.Location = new System.Drawing.Point(0, 0);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(248, 53);
-            this.button4.TabIndex = 4;
-            this.button4.Text = "             Settings";
-            this.button4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button4.UseVisualStyleBackColor = false;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.panel2.Controls.Add(this.button1);
+            this.panel2.Location = new System.Drawing.Point(0, 0);
+            this.panel2.Margin = new System.Windows.Forms.Padding(0);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(330, 62);
+            this.panel2.TabIndex = 5;
             // 
-            // menuTransition
+            // button1
             // 
-            this.menuTransition.Tick += new System.EventHandler(this.menuTransition_Tick);
+            this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
+            this.button1.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.ForeColor = System.Drawing.Color.White;
+            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
+            this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button1.Location = new System.Drawing.Point(0, -46);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(326, 151);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "             Kho Hàng";
+            this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button1.UseVisualStyleBackColor = false;
             // 
-            // sidebarTransition
+            // panel3
             // 
-            this.sidebarTransition.Interval = 10;
-            this.sidebarTransition.Tick += new System.EventHandler(this.sidebarTransition_Tick);
+            this.panel3.Controls.Add(this.ptnTonKho);
+            this.panel3.Location = new System.Drawing.Point(0, 62);
+            this.panel3.Margin = new System.Windows.Forms.Padding(0);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(248, 53);
+            this.panel3.TabIndex = 7;
+            // 
+            // ptnTonKho
+            // 
+            this.ptnTonKho.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(33)))), ((int)(((byte)(36)))));
+            this.ptnTonKho.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
+            this.ptnTonKho.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ptnTonKho.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ptnTonKho.ForeColor = System.Drawing.Color.White;
+            this.ptnTonKho.Image = ((System.Drawing.Image)(resources.GetObject("ptnTonKho.Image")));
+            this.ptnTonKho.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.ptnTonKho.Location = new System.Drawing.Point(0, -46);
+            this.ptnTonKho.Name = "ptnTonKho";
+            this.ptnTonKho.Size = new System.Drawing.Size(326, 120);
+            this.ptnTonKho.TabIndex = 4;
+            this.ptnTonKho.Text = "              Tồn Kho";
+            this.ptnTonKho.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.ptnTonKho.UseVisualStyleBackColor = false;
+            // 
+            // panel4
+            // 
+            this.panel4.Controls.Add(this.btnPN);
+            this.panel4.Location = new System.Drawing.Point(0, 115);
+            this.panel4.Margin = new System.Windows.Forms.Padding(0);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(248, 53);
+            this.panel4.TabIndex = 8;
+            // 
+            // btnPN
+            // 
+            this.btnPN.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(33)))), ((int)(((byte)(36)))));
+            this.btnPN.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnPN.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
+            this.btnPN.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPN.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPN.ForeColor = System.Drawing.Color.White;
+            this.btnPN.Image = ((System.Drawing.Image)(resources.GetObject("btnPN.Image")));
+            this.btnPN.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnPN.Location = new System.Drawing.Point(0, 0);
+            this.btnPN.Name = "btnPN";
+            this.btnPN.Size = new System.Drawing.Size(248, 53);
+            this.btnPN.TabIndex = 4;
+            this.btnPN.Text = "              Phiếu Nhập";
+            this.btnPN.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnPN.UseVisualStyleBackColor = false;
+            // 
+            // menuTransition2
+            // 
+            this.menuTransition2.Tick += new System.EventHandler(this.menuTransition2_Tick);
+            // 
+            // panel5
+            // 
+            this.panel5.Controls.Add(this.btnPX);
+            this.panel5.Location = new System.Drawing.Point(0, 168);
+            this.panel5.Margin = new System.Windows.Forms.Padding(0);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(248, 53);
+            this.panel5.TabIndex = 9;
+            // 
+            // btnPX
+            // 
+            this.btnPX.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(33)))), ((int)(((byte)(36)))));
+            this.btnPX.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnPX.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
+            this.btnPX.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPX.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPX.ForeColor = System.Drawing.Color.White;
+            this.btnPX.Image = ((System.Drawing.Image)(resources.GetObject("btnPX.Image")));
+            this.btnPX.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnPX.Location = new System.Drawing.Point(0, 0);
+            this.btnPX.Name = "btnPX";
+            this.btnPX.Size = new System.Drawing.Size(248, 53);
+            this.btnPX.TabIndex = 4;
+            this.btnPX.Text = "              Phiếu Xuất";
+            this.btnPX.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnPX.UseVisualStyleBackColor = false;
             // 
             // Form1
             // 
@@ -365,16 +634,25 @@
             this.Load += new System.EventHandler(this.Form1_Load);
             this.sidebar.ResumeLayout(false);
             this.sidebar.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.btnHam)).EndInit();
             this.flowLayoutPanel1.ResumeLayout(false);
-            this.pnDashdoard.ResumeLayout(false);
             this.menuContainer.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel8.ResumeLayout(false);
             this.panel6.ResumeLayout(false);
             this.pnLogout.ResumeLayout(false);
-            this.pnAbout.ResumeLayout(false);
-            this.pnSettings.ResumeLayout(false);
+            this.pUser.ResumeLayout(false);
+            this.pnProduct.ResumeLayout(false);
+            this.pnClient.ResumeLayout(false);
+            this.pnSupplier.ResumeLayout(false);
+            this.pnEmployeeSalary.ResumeLayout(false);
+            this.pnDashDoard.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.btnHam)).EndInit();
+            this.pnPayMent.ResumeLayout(false);
+            this.menuContainer2.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
+            this.panel3.ResumeLayout(false);
+            this.panel4.ResumeLayout(false);
+            this.panel5.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -385,24 +663,42 @@
         private System.Windows.Forms.Label label1;
         private ReaLTaiizor.Controls.NightControlBox nightControlBox1;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private System.Windows.Forms.Panel pnDashdoard;
         private System.Windows.Forms.Timer menuTransition;
         private System.Windows.Forms.Timer sidebarTransition;
-        private System.Windows.Forms.Button button;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button menu;
-        private System.Windows.Forms.Panel pnAbout;
+        private System.Windows.Forms.Panel pUser;
         private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Panel pnSettings;
+        private System.Windows.Forms.Panel pnProduct;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.FlowLayoutPanel menuContainer;
         private System.Windows.Forms.Panel pnLogout;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Panel panel8;
-        private System.Windows.Forms.Button sbmenu1;
+        private System.Windows.Forms.Button btnUpdate;
         private System.Windows.Forms.PictureBox btnHam;
         private System.Windows.Forms.Panel panel6;
-        private System.Windows.Forms.Button sbmenu2;
+        private System.Windows.Forms.Button btnPoint;
+        private System.Windows.Forms.Panel pnClient;
+        private System.Windows.Forms.Button btnStaff;
+        private System.Windows.Forms.Panel pnSupplier;
+        private System.Windows.Forms.Button btnSupplier;
+        private System.Windows.Forms.Panel pnEmployeeSalary;
+        private System.Windows.Forms.Button btnEmployeeSalary;
+        private System.Windows.Forms.Panel pnDashDoard;
+        private System.Windows.Forms.Button btnDashBoard;
+        private System.Windows.Forms.Panel pnPayMent;
+        private System.Windows.Forms.Button btnPayMent;
+        private System.Windows.Forms.FlowLayoutPanel menuContainer2;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Button ptnTonKho;
+        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.Button btnPN;
+        private System.Windows.Forms.Timer menuTransition2;
+        private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Button btnPX;
     }
 }
 

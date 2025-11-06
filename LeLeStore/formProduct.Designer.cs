@@ -1,6 +1,6 @@
 ﻿namespace LeLeStore
 {
-    partial class formSubmenu2
+    partial class formProduct
     {
         /// <summary>
         /// Required designer variable.
@@ -34,22 +34,21 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(493, 253);
+            this.label1.Location = new System.Drawing.Point(406, 274);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(62, 20);
+            this.label1.Size = new System.Drawing.Size(64, 20);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Menu 2";
+            this.label1.Text = "Product";
             // 
-            // formSubmenu2
+            // formProduct
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1074, 578);
+            this.ClientSize = new System.Drawing.Size(905, 552);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Name = "formSubmenu2";
-            this.Text = "Submenu2";
-            this.Load += new System.EventHandler(this.formSubmenu2_Load);
+            this.Name = "formProduct";
+            this.Text = "formProduct";
             this.ResumeLayout(false);
             this.PerformLayout();
 

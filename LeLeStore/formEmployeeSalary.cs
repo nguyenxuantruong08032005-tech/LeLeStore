@@ -10,16 +10,11 @@ using System.Windows.Forms;
 
 namespace LeLeStore
 {
-    public partial class formSettings : Form
+    public partial class formEmployeeSalary : Form
     {
-        public formSettings()
+        public formEmployeeSalary()
         {
             InitializeComponent();
-        }
-
-        private void formSettings_Load(object sender, EventArgs e)
-        {
-            this.ControlBox = false;
         }
     }
 }

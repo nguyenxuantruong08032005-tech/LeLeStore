@@ -1,6 +1,6 @@
 ﻿namespace LeLeStore
 {
-    partial class formAbout
+    partial class formStaff
     {
         /// <summary>
         /// Required designer variable.
@@ -34,21 +34,21 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(470, 277);
+            this.label1.Location = new System.Drawing.Point(427, 280);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(52, 20);
+            this.label1.Size = new System.Drawing.Size(44, 20);
             this.label1.TabIndex = 0;
-            this.label1.Text = "About";
+            this.label1.Text = "Staff";
             // 
-            // formAbout
+            // formStaff
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(1052, 559);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(910, 577);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Name = "formAbout";
-            this.Text = "About";
-            this.Load += new System.EventHandler(this.formAbout_Load);
+            this.Name = "formStaff";
+            this.Text = "formStaff";
             this.ResumeLayout(false);
             this.PerformLayout();
 

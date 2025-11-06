@@ -10,16 +10,11 @@ using System.Windows.Forms;
 
 namespace LeLeStore
 {
-    public partial class formAbout : Form
+    public partial class formProduct : Form
     {
-        public formAbout()
+        public formProduct()
         {
             InitializeComponent();
-        }
-
-        private void formAbout_Load(object sender, EventArgs e)
-        {
-            this.ControlBox = false;
         }
     }
 }
