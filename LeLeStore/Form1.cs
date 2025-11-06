@@ -23,6 +23,7 @@ namespace LeLeStore
         formSupplier supplier;
         formEmployeeSalary salary;
         formPayMent payment;
+        private readonly Dictionary<Button, string> _sidebarButtonTexts = new Dictionary<Button, string>();
         public Form1() : this(UserRole.QuanLy, string.Empty)
         {
         }
@@ -34,6 +35,8 @@ namespace LeLeStore
 
             InitializeComponent();
             mdiProp();
+            InitializeSidebarButtons();
+            SetSidebarButtonState(true);
             ApplyRolePermissions();
             UpdateTitle();
         }
@@ -130,6 +133,7 @@ namespace LeLeStore
                     pnSupplier.Width = flowLayoutPanel1.Width;
                     pnLogout.Width = flowLayoutPanel1.Width;
                     menuContainer.Width = flowLayoutPanel1.Width;
+                    SetSidebarButtonState(false);
 
                 }
             }
@@ -152,11 +156,63 @@ namespace LeLeStore
                     pnSupplier.Width = flowLayoutPanel1.Width;
                     pnLogout.Width = flowLayoutPanel1.Width;
                     menuContainer.Width = flowLayoutPanel1.Width;
+                    SetSidebarButtonState(true);
                 }
             }
         }
 
-     
+        private void InitializeSidebarButtons()
+        {
+            foreach (var button in EnumerateSidebarButtons(flowLayoutPanel1))
+            {
+                if (!_sidebarButtonTexts.ContainsKey(button))
+                {
+                    _sidebarButtonTexts.Add(button, button.Text);
+                }
+            }
+        }
+
+        private static IEnumerable<Button> EnumerateSidebarButtons(Control parent)
+        {
+            foreach (Control control in parent.Controls)
+            {
+                if (control is Button button)
+                {
+                    yield return button;
+                }
+                else
+                {
+                    foreach (var child in EnumerateSidebarButtons(control))
+                    {
+                        yield return child;
+                    }
+                }
+            }
+        }
+
+        private void SetSidebarButtonState(bool expanded)
+        {
+            foreach (var entry in _sidebarButtonTexts)
+            {
+                var button = entry.Key;
+                if (expanded)
+                {
+                    button.Text = entry.Value;
+                    button.ImageAlign = ContentAlignment.MiddleLeft;
+                    button.TextAlign = ContentAlignment.MiddleLeft;
+                    button.Padding = Padding.Empty;
+                }
+                else
+                {
+                    button.Text = string.Empty;
+                    button.ImageAlign = ContentAlignment.MiddleCenter;
+                    button.TextAlign = ContentAlignment.MiddleCenter;
+                    button.Padding = Padding.Empty;
+                }
+            }
+        }
+
+
         private void menu_Click(object sender, EventArgs e)
         {
             menuTransition.Start();

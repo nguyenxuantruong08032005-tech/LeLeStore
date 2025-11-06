@@ -141,16 +141,16 @@
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
-            this.flowLayoutPanel1.Controls.Add(this.pUser);
-            this.flowLayoutPanel1.Controls.Add(this.pnClient);
-            this.flowLayoutPanel1.Controls.Add(this.pnProduct);
-            this.flowLayoutPanel1.Controls.Add(this.pnSupplier);
-            this.flowLayoutPanel1.Controls.Add(this.pnPayMent);
-            this.flowLayoutPanel1.Controls.Add(this.menuContainer);
-            this.flowLayoutPanel1.Controls.Add(this.menuContainer2);
-            this.flowLayoutPanel1.Controls.Add(this.pnEmployeeSalary);
-            this.flowLayoutPanel1.Controls.Add(this.pnDashDoard);
             this.flowLayoutPanel1.Controls.Add(this.pnLogout);
+            this.flowLayoutPanel1.Controls.Add(this.pUser);
+            this.flowLayoutPanel1.Controls.Add(this.menuContainer2);
+            this.flowLayoutPanel1.Controls.Add(this.menuContainer);
+            this.flowLayoutPanel1.Controls.Add(this.pnEmployeeSalary);
+            this.flowLayoutPanel1.Controls.Add(this.pnPayMent);
+            this.flowLayoutPanel1.Controls.Add(this.pnDashDoard);
+            this.flowLayoutPanel1.Controls.Add(this.pnSupplier);
+            this.flowLayoutPanel1.Controls.Add(this.pnProduct);
+            this.flowLayoutPanel1.Controls.Add(this.pnClient);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 53);
@@ -165,7 +165,7 @@
             this.menuContainer.Controls.Add(this.panel1);
             this.menuContainer.Controls.Add(this.panel8);
             this.menuContainer.Controls.Add(this.panel6);
-            this.menuContainer.Location = new System.Drawing.Point(0, 295);
+            this.menuContainer.Location = new System.Drawing.Point(0, 191);
             this.menuContainer.Margin = new System.Windows.Forms.Padding(0);
             this.menuContainer.Name = "menuContainer";
             this.menuContainer.Size = new System.Drawing.Size(248, 53);
@@ -201,7 +201,7 @@
             // pnLogout
             // 
             this.pnLogout.Controls.Add(this.button5);
-            this.pnLogout.Location = new System.Drawing.Point(0, 509);
+            this.pnLogout.Location = new System.Drawing.Point(0, 30);
             this.pnLogout.Margin = new System.Windows.Forms.Padding(0);
             this.pnLogout.Name = "pnLogout";
             this.pnLogout.Size = new System.Drawing.Size(248, 53);
@@ -210,7 +210,7 @@
             // pUser
             // 
             this.pUser.Controls.Add(this.button3);
-            this.pUser.Location = new System.Drawing.Point(0, 30);
+            this.pUser.Location = new System.Drawing.Point(0, 83);
             this.pUser.Margin = new System.Windows.Forms.Padding(0);
             this.pUser.Name = "pUser";
             this.pUser.Size = new System.Drawing.Size(248, 53);
@@ -219,7 +219,7 @@
             // pnProduct
             // 
             this.pnProduct.Controls.Add(this.button4);
-            this.pnProduct.Location = new System.Drawing.Point(0, 136);
+            this.pnProduct.Location = new System.Drawing.Point(0, 456);
             this.pnProduct.Margin = new System.Windows.Forms.Padding(0);
             this.pnProduct.Name = "pnProduct";
             this.pnProduct.Size = new System.Drawing.Size(248, 53);
@@ -237,7 +237,7 @@
             // pnClient
             // 
             this.pnClient.Controls.Add(this.btnStaff);
-            this.pnClient.Location = new System.Drawing.Point(0, 83);
+            this.pnClient.Location = new System.Drawing.Point(0, 509);
             this.pnClient.Margin = new System.Windows.Forms.Padding(0);
             this.pnClient.Name = "pnClient";
             this.pnClient.Size = new System.Drawing.Size(248, 53);
@@ -246,7 +246,7 @@
             // pnSupplier
             // 
             this.pnSupplier.Controls.Add(this.btnSupplier);
-            this.pnSupplier.Location = new System.Drawing.Point(0, 189);
+            this.pnSupplier.Location = new System.Drawing.Point(0, 403);
             this.pnSupplier.Margin = new System.Windows.Forms.Padding(0);
             this.pnSupplier.Name = "pnSupplier";
             this.pnSupplier.Size = new System.Drawing.Size(248, 53);
@@ -255,7 +255,7 @@
             // pnEmployeeSalary
             // 
             this.pnEmployeeSalary.Controls.Add(this.btnEmployeeSalary);
-            this.pnEmployeeSalary.Location = new System.Drawing.Point(0, 403);
+            this.pnEmployeeSalary.Location = new System.Drawing.Point(0, 244);
             this.pnEmployeeSalary.Margin = new System.Windows.Forms.Padding(0);
             this.pnEmployeeSalary.Name = "pnEmployeeSalary";
             this.pnEmployeeSalary.Size = new System.Drawing.Size(248, 53);
@@ -264,7 +264,7 @@
             // pnDashDoard
             // 
             this.pnDashDoard.Controls.Add(this.btnDashBoard);
-            this.pnDashDoard.Location = new System.Drawing.Point(0, 456);
+            this.pnDashDoard.Location = new System.Drawing.Point(0, 350);
             this.pnDashDoard.Margin = new System.Windows.Forms.Padding(0);
             this.pnDashDoard.Name = "pnDashDoard";
             this.pnDashDoard.Size = new System.Drawing.Size(248, 53);
@@ -472,7 +472,7 @@
             // pnPayMent
             // 
             this.pnPayMent.Controls.Add(this.btnPayMent);
-            this.pnPayMent.Location = new System.Drawing.Point(0, 242);
+            this.pnPayMent.Location = new System.Drawing.Point(0, 297);
             this.pnPayMent.Margin = new System.Windows.Forms.Padding(0);
             this.pnPayMent.Name = "pnPayMent";
             this.pnPayMent.Size = new System.Drawing.Size(248, 53);
@@ -504,7 +504,7 @@
             this.menuContainer2.Controls.Add(this.panel3);
             this.menuContainer2.Controls.Add(this.panel4);
             this.menuContainer2.Controls.Add(this.panel5);
-            this.menuContainer2.Location = new System.Drawing.Point(0, 348);
+            this.menuContainer2.Location = new System.Drawing.Point(0, 136);
             this.menuContainer2.Margin = new System.Windows.Forms.Padding(0);
             this.menuContainer2.Name = "menuContainer2";
             this.menuContainer2.Size = new System.Drawing.Size(248, 55);
