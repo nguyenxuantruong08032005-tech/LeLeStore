@@ -191,6 +191,7 @@
             this.dataGridView1.RowTemplate.Height = 28;
             this.dataGridView1.Size = new System.Drawing.Size(944, 327);
             this.dataGridView1.TabIndex = 22;
+            this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
             // 
             // maNhanVienDataGridViewTextBoxColumn
             // 
@@ -274,6 +275,7 @@
             this.btnSua.TabIndex = 23;
             this.btnSua.Text = "SỬA";
             this.btnSua.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnSua.Click += new System.EventHandler(this.btnSua_Click);
             // 
             // btnXoa
             // 
@@ -294,6 +296,7 @@
             this.btnXoa.TabIndex = 24;
             this.btnXoa.Text = "XÓA";
             this.btnXoa.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnXoa.Click += new System.EventHandler(this.btnXoa_Click);
             // 
             // btnLuu
             // 
@@ -314,6 +317,7 @@
             this.btnLuu.TabIndex = 25;
             this.btnLuu.Text = "LƯU";
             this.btnLuu.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnLuu.Click += new System.EventHandler(this.btnLuu_Click);
             // 
             // btnThem
             // 
@@ -334,6 +338,7 @@
             this.btnThem.TabIndex = 26;
             this.btnThem.Text = "THÊM";
             this.btnThem.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnThem.Click += new System.EventHandler(this.btnThem_Click);
             // 
             // formStaff
             // 
