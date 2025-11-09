@@ -16,9 +16,7 @@ namespace LeLeStore
         public formUser()
         {
             InitializeComponent();
-            btnSua.Click += btnSua_Click_1;
-            btnLuu.Click += btnLuu_Click;
-            btnXoa.Click += btnXoa_Click;
+           
 
         }
 
