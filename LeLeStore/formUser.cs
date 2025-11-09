@@ -105,10 +105,7 @@ namespace LeLeStore
                     MessageBox.Show("Đã lưu thay đổi vào cơ sở dữ liệu.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.nguoiDungTableAdapter.Fill(this.gStoreDataSet.NguoiDung);
                 }
-                else
-                {
-                    MessageBox.Show("Không có thay đổi nào được lưu.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
+              
             }
             catch (Exception ex)
             {
