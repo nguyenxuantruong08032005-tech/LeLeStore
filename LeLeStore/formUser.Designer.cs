@@ -34,12 +34,12 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.button1 = new ReaLTaiizor.Controls.Button();
-            this.button2 = new ReaLTaiizor.Controls.Button();
+            this.txtMaDung = new System.Windows.Forms.TextBox();
+            this.txtTenDN = new System.Windows.Forms.TextBox();
+            this.txtMK = new System.Windows.Forms.TextBox();
+            this.txtVaiTro = new System.Windows.Forms.TextBox();
+            this.btnSua = new ReaLTaiizor.Controls.Button();
+            this.btnXoa = new ReaLTaiizor.Controls.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.maNguoiDungDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tenDangNhapDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -48,7 +48,7 @@
             this.nguoiDungBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gStoreDataSet = new LeLeStore.GStoreDataSet();
             this.nguoiDungTableAdapter = new LeLeStore.GStoreDataSetTableAdapters.NguoiDungTableAdapter();
-            this.button3 = new ReaLTaiizor.Controls.Button();
+            this.btnLuu = new ReaLTaiizor.Controls.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nguoiDungBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gStoreDataSet)).BeginInit();
@@ -104,74 +104,76 @@
             this.label5.TabIndex = 4;
             this.label5.Text = "Vai Trò:";
             // 
-            // textBox1
+            // txtMaDung
             // 
-            this.textBox1.Location = new System.Drawing.Point(31, 198);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(300, 26);
-            this.textBox1.TabIndex = 5;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.txtMaDung.Location = new System.Drawing.Point(31, 198);
+            this.txtMaDung.Name = "txtMaDung";
+            this.txtMaDung.Size = new System.Drawing.Size(300, 26);
+            this.txtMaDung.TabIndex = 5;
+            this.txtMaDung.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
-            // textBox2
+            // txtTenDN
             // 
-            this.textBox2.Location = new System.Drawing.Point(31, 284);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(315, 26);
-            this.textBox2.TabIndex = 6;
+            this.txtTenDN.Location = new System.Drawing.Point(31, 284);
+            this.txtTenDN.Name = "txtTenDN";
+            this.txtTenDN.Size = new System.Drawing.Size(315, 26);
+            this.txtTenDN.TabIndex = 6;
             // 
-            // textBox3
+            // txtMK
             // 
-            this.textBox3.Location = new System.Drawing.Point(35, 362);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(268, 26);
-            this.textBox3.TabIndex = 7;
+            this.txtMK.Location = new System.Drawing.Point(35, 362);
+            this.txtMK.Name = "txtMK";
+            this.txtMK.Size = new System.Drawing.Size(268, 26);
+            this.txtMK.TabIndex = 7;
             // 
-            // textBox4
+            // txtVaiTro
             // 
-            this.textBox4.Location = new System.Drawing.Point(35, 439);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(225, 26);
-            this.textBox4.TabIndex = 8;
+            this.txtVaiTro.Location = new System.Drawing.Point(35, 439);
+            this.txtVaiTro.Name = "txtVaiTro";
+            this.txtVaiTro.Size = new System.Drawing.Size(225, 26);
+            this.txtVaiTro.TabIndex = 8;
             // 
-            // button1
+            // btnSua
             // 
-            this.button1.BackColor = System.Drawing.Color.Transparent;
-            this.button1.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button1.EnteredBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
-            this.button1.EnteredColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.button1.Font = new System.Drawing.Font("Arial", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Image = null;
-            this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.button1.Location = new System.Drawing.Point(270, 593);
-            this.button1.Name = "button1";
-            this.button1.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
-            this.button1.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
-            this.button1.Size = new System.Drawing.Size(192, 97);
-            this.button1.TabIndex = 9;
-            this.button1.Text = "SỬA";
-            this.button1.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnSua.BackColor = System.Drawing.Color.Transparent;
+            this.btnSua.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
+            this.btnSua.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnSua.EnteredBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
+            this.btnSua.EnteredColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
+            this.btnSua.Font = new System.Drawing.Font("Arial", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSua.Image = null;
+            this.btnSua.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnSua.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
+            this.btnSua.Location = new System.Drawing.Point(270, 593);
+            this.btnSua.Name = "btnSua";
+            this.btnSua.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
+            this.btnSua.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
+            this.btnSua.Size = new System.Drawing.Size(192, 97);
+            this.btnSua.TabIndex = 9;
+            this.btnSua.Text = "SỬA";
+            this.btnSua.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnSua.Click += new System.EventHandler(this.btnSua_Click_1);
             // 
-            // button2
+            // btnXoa
             // 
-            this.button2.BackColor = System.Drawing.Color.Transparent;
-            this.button2.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.button2.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button2.EnteredBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
-            this.button2.EnteredColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.button2.Font = new System.Drawing.Font("Arial", 16F, System.Drawing.FontStyle.Bold);
-            this.button2.Image = null;
-            this.button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button2.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.button2.Location = new System.Drawing.Point(554, 593);
-            this.button2.Name = "button2";
-            this.button2.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
-            this.button2.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
-            this.button2.Size = new System.Drawing.Size(192, 97);
-            this.button2.TabIndex = 10;
-            this.button2.Text = "XÓA";
-            this.button2.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnXoa.BackColor = System.Drawing.Color.Transparent;
+            this.btnXoa.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
+            this.btnXoa.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnXoa.EnteredBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
+            this.btnXoa.EnteredColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
+            this.btnXoa.Font = new System.Drawing.Font("Arial", 16F, System.Drawing.FontStyle.Bold);
+            this.btnXoa.Image = null;
+            this.btnXoa.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnXoa.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
+            this.btnXoa.Location = new System.Drawing.Point(554, 593);
+            this.btnXoa.Name = "btnXoa";
+            this.btnXoa.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
+            this.btnXoa.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
+            this.btnXoa.Size = new System.Drawing.Size(192, 97);
+            this.btnXoa.TabIndex = 10;
+            this.btnXoa.Text = "XÓA";
+            this.btnXoa.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnXoa.Click += new System.EventHandler(this.btnXoa_Click);
             // 
             // dataGridView1
             // 
@@ -237,25 +239,26 @@
             // 
             this.nguoiDungTableAdapter.ClearBeforeFill = true;
             // 
-            // button3
+            // btnLuu
             // 
-            this.button3.BackColor = System.Drawing.Color.Transparent;
-            this.button3.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.button3.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button3.EnteredBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
-            this.button3.EnteredColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.button3.Font = new System.Drawing.Font("Arial", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.Image = null;
-            this.button3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button3.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.button3.Location = new System.Drawing.Point(826, 593);
-            this.button3.Name = "button3";
-            this.button3.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
-            this.button3.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
-            this.button3.Size = new System.Drawing.Size(192, 97);
-            this.button3.TabIndex = 12;
-            this.button3.Text = "LƯU";
-            this.button3.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnLuu.BackColor = System.Drawing.Color.Transparent;
+            this.btnLuu.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
+            this.btnLuu.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnLuu.EnteredBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
+            this.btnLuu.EnteredColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
+            this.btnLuu.Font = new System.Drawing.Font("Arial", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnLuu.Image = null;
+            this.btnLuu.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnLuu.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
+            this.btnLuu.Location = new System.Drawing.Point(826, 593);
+            this.btnLuu.Name = "btnLuu";
+            this.btnLuu.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
+            this.btnLuu.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
+            this.btnLuu.Size = new System.Drawing.Size(192, 97);
+            this.btnLuu.TabIndex = 12;
+            this.btnLuu.Text = "LƯU";
+            this.btnLuu.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnLuu.Click += new System.EventHandler(this.btnLuu_Click);
             // 
             // formUser
             // 
@@ -263,14 +266,14 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.ClientSize = new System.Drawing.Size(1189, 691);
-            this.Controls.Add(this.button3);
+            this.Controls.Add(this.btnLuu);
             this.Controls.Add(this.dataGridView1);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.textBox4);
-            this.Controls.Add(this.textBox3);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.btnXoa);
+            this.Controls.Add(this.btnSua);
+            this.Controls.Add(this.txtVaiTro);
+            this.Controls.Add(this.txtMK);
+            this.Controls.Add(this.txtTenDN);
+            this.Controls.Add(this.txtMaDung);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -296,12 +299,12 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox4;
-        private ReaLTaiizor.Controls.Button button1;
-        private ReaLTaiizor.Controls.Button button2;
+        private System.Windows.Forms.TextBox txtMaDung;
+        private System.Windows.Forms.TextBox txtTenDN;
+        private System.Windows.Forms.TextBox txtMK;
+        private System.Windows.Forms.TextBox txtVaiTro;
+        private ReaLTaiizor.Controls.Button btnSua;
+        private ReaLTaiizor.Controls.Button btnXoa;
         private System.Windows.Forms.DataGridView dataGridView1;
         private GStoreDataSet gStoreDataSet;
         private System.Windows.Forms.BindingSource nguoiDungBindingSource;
@@ -310,6 +313,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn tenDangNhapDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn matKhauDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn vaiTroDataGridViewTextBoxColumn;
-        private ReaLTaiizor.Controls.Button button3;
+        private ReaLTaiizor.Controls.Button btnLuu;
     }
 }
