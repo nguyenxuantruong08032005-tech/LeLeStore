@@ -16,5 +16,17 @@ namespace LeLeStore
         {
             InitializeComponent();
         }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void formUser_Load(object sender, EventArgs e)
+        {
+            // TODO: This line of code loads data into the 'gStoreDataSet.NguoiDung' table. You can move, or remove it, as needed.
+            this.nguoiDungTableAdapter.Fill(this.gStoreDataSet.NguoiDung);
+            this.ControlBox = false;
+        }
     }
 }

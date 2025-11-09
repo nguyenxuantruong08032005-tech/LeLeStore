@@ -65,9 +65,33 @@ namespace LeLeStore
         }
         private void ApplyRolePermissions()
         {
-            panel8.Visible = _role != UserRole.Kho;
-            panel6.Visible = _role != UserRole.BanHang;
-            pnProduct.Visible = _role == UserRole.QuanLy;
+            bool isQuanLy = _role == UserRole.QuanLy;
+            bool isBanHang = _role == UserRole.BanHang;
+            bool isKho = _role == UserRole.Kho;
+
+            // Top level navigation items
+            pUser.Visible = isQuanLy;
+            pnClient.Visible = isQuanLy;
+            pnProduct.Visible = isQuanLy || isBanHang;
+            pnSupplier.Visible = isQuanLy || isKho;
+            pnPayMent.Visible = isQuanLy || isBanHang;
+            pnEmployeeSalary.Visible = isQuanLy;
+            pnDashDoard.Visible = isQuanLy;
+
+            // Customer related submenu (menu)
+            bool canAccessCustomerMenu = isQuanLy || isBanHang;
+            menuContainer.Visible = canAccessCustomerMenu;
+            panel1.Visible = canAccessCustomerMenu;
+            panel8.Visible = canAccessCustomerMenu; // formUpdateClient
+            panel6.Visible = canAccessCustomerMenu; // formPoint
+
+            // Warehouse related submenu (menu2)
+            bool canAccessWarehouseMenu = isQuanLy || isBanHang || isKho;
+            menuContainer2.Visible = canAccessWarehouseMenu;
+            panel2.Visible = canAccessWarehouseMenu;
+            panel3.Visible = canAccessWarehouseMenu; // formTonKho
+            panel4.Visible = canAccessWarehouseMenu; // formPhieuNhap
+            panel5.Visible = canAccessWarehouseMenu; // formPhieuXuat
         }
 
         private void UpdateTitle()
