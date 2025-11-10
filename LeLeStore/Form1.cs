@@ -326,11 +326,7 @@ namespace LeLeStore
 
          
         }
-        private void Product_FormClosed(object sender, EventArgs e)
-        {
-            product = null;
-        }
-
+        
         private void btnStaff_Click(object sender, EventArgs e)
         {
             OpenChildForm(new formStaff());
@@ -382,17 +378,7 @@ namespace LeLeStore
 
         private void btnPayMent_Click(object sender, EventArgs e)
         {
-            if (payment == null)
-            {
-                payment = new formPayMent();
-                payment.FormClosed += PayMent_FormClosed;
-                payment.MdiParent = this;
-                payment.Show();
-            }
-            else
-            {
-                payment.Activate();
-            }
+            OpenChildForm(new formPayMent());
         }
         private void PayMent_FormClosed(object sender, EventArgs e)
         {

@@ -118,6 +118,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="anhbia" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\anhbia.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="bia" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\bia.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Businessman_52px" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Businessman_52px.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -138,6 +144,12 @@
   </data>
   <data name="if_quit_37278" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\if_quit_37278.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Light_Gray_and_Blue_Modern_Grocery_Store_Logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Light Gray and Blue Modern Grocery Store Logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Light_Gray_and_Blue_Modern_Grocery_Store_Logo__1_" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Light Gray and Blue Modern Grocery Store Logo (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="_500ml" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\500ml.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

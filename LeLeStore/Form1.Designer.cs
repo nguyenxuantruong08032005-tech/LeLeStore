@@ -54,6 +54,7 @@
             this.menuTransition = new System.Windows.Forms.Timer(this.components);
             this.sidebarTransition = new System.Windows.Forms.Timer(this.components);
             this.menuTransition2 = new System.Windows.Forms.Timer(this.components);
+            this.pnlMain = new System.Windows.Forms.Panel();
             this.button3 = new System.Windows.Forms.Button();
             this.btnStaff = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
@@ -70,7 +71,6 @@
             this.btnDashBoard = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.btnHam = new System.Windows.Forms.PictureBox();
-            this.pnlMain = new System.Windows.Forms.Panel();
             this.sidebar.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.pUser.SuspendLayout();
@@ -332,6 +332,16 @@
             // menuTransition2
             // 
             this.menuTransition2.Tick += new System.EventHandler(this.menuTransition2_Tick);
+            // 
+            // pnlMain
+            // 
+            this.pnlMain.BackgroundImage = global::LeLeStore.Properties.Resources.Light_Gray_and_Blue_Modern_Grocery_Store_Logo__1_;
+            this.pnlMain.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlMain.Location = new System.Drawing.Point(250, 53);
+            this.pnlMain.Name = "pnlMain";
+            this.pnlMain.Size = new System.Drawing.Size(939, 638);
+            this.pnlMain.TabIndex = 3;
             // 
             // button3
             // 
@@ -628,14 +638,6 @@
             this.btnHam.TabIndex = 7;
             this.btnHam.TabStop = false;
             this.btnHam.Click += new System.EventHandler(this.btnHam_Click);
-            // 
-            // pnlMain
-            // 
-            this.pnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlMain.Location = new System.Drawing.Point(250, 53);
-            this.pnlMain.Name = "pnlMain";
-            this.pnlMain.Size = new System.Drawing.Size(939, 638);
-            this.pnlMain.TabIndex = 3;
             // 
             // Form1
             // 

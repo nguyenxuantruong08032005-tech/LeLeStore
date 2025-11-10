@@ -64,16 +64,16 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Arial", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Arial", 22F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(432, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(318, 37);
+            this.label1.Size = new System.Drawing.Size(439, 51);
             this.label1.TabIndex = 0;
             this.label1.Text = "Cập Nhật Thông Tin";
             // 
             // txtMaKH
             // 
-            this.txtMaKH.Location = new System.Drawing.Point(156, 125);
+            this.txtMaKH.Location = new System.Drawing.Point(277, 130);
             this.txtMaKH.Name = "txtMaKH";
             this.txtMaKH.Size = new System.Drawing.Size(95, 26);
             this.txtMaKH.TabIndex = 24;
@@ -82,7 +82,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.label3.Location = new System.Drawing.Point(150, 169);
+            this.label3.Location = new System.Drawing.Point(273, 186);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(174, 24);
             this.label3.TabIndex = 23;
@@ -92,7 +92,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(152, 98);
+            this.label2.Location = new System.Drawing.Point(273, 103);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(166, 24);
             this.label2.TabIndex = 22;
@@ -100,7 +100,7 @@
             // 
             // txtTenKH
             // 
-            this.txtTenKH.Location = new System.Drawing.Point(154, 206);
+            this.txtTenKH.Location = new System.Drawing.Point(277, 223);
             this.txtTenKH.Name = "txtTenKH";
             this.txtTenKH.Size = new System.Drawing.Size(229, 26);
             this.txtTenKH.TabIndex = 25;
@@ -117,11 +117,11 @@
             this.diemTichLuyDataGridViewTextBoxColumn,
             this.maNhanVienDataGridViewTextBoxColumn});
             this.dataGridView1.DataSource = this.khachHangBindingSource;
-            this.dataGridView1.Location = new System.Drawing.Point(37, 303);
+            this.dataGridView1.Location = new System.Drawing.Point(40, 308);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 62;
             this.dataGridView1.RowTemplate.Height = 28;
-            this.dataGridView1.Size = new System.Drawing.Size(1111, 275);
+            this.dataGridView1.Size = new System.Drawing.Size(1290, 365);
             this.dataGridView1.TabIndex = 26;
             this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
             // 
@@ -190,7 +190,7 @@
             // 
             // txtSDTKH
             // 
-            this.txtSDTKH.Location = new System.Drawing.Point(430, 135);
+            this.txtSDTKH.Location = new System.Drawing.Point(551, 140);
             this.txtSDTKH.Name = "txtSDTKH";
             this.txtSDTKH.Size = new System.Drawing.Size(229, 26);
             this.txtSDTKH.TabIndex = 28;
@@ -199,7 +199,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.label4.Location = new System.Drawing.Point(426, 98);
+            this.label4.Location = new System.Drawing.Point(547, 103);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(149, 24);
             this.label4.TabIndex = 27;
@@ -207,7 +207,7 @@
             // 
             // txtDiaChiKH
             // 
-            this.txtDiaChiKH.Location = new System.Drawing.Point(430, 218);
+            this.txtDiaChiKH.Location = new System.Drawing.Point(551, 223);
             this.txtDiaChiKH.Name = "txtDiaChiKH";
             this.txtDiaChiKH.Size = new System.Drawing.Size(229, 26);
             this.txtDiaChiKH.TabIndex = 30;
@@ -216,7 +216,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.label5.Location = new System.Drawing.Point(426, 181);
+            this.label5.Location = new System.Drawing.Point(547, 186);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(84, 24);
             this.label5.TabIndex = 29;
@@ -224,7 +224,7 @@
             // 
             // txtDiem
             // 
-            this.txtDiem.Location = new System.Drawing.Point(741, 135);
+            this.txtDiem.Location = new System.Drawing.Point(862, 140);
             this.txtDiem.Name = "txtDiem";
             this.txtDiem.Size = new System.Drawing.Size(229, 26);
             this.txtDiem.TabIndex = 32;
@@ -233,7 +233,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.label6.Location = new System.Drawing.Point(737, 98);
+            this.label6.Location = new System.Drawing.Point(858, 103);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(153, 24);
             this.label6.TabIndex = 31;
@@ -241,7 +241,7 @@
             // 
             // txtMaNVKH
             // 
-            this.txtMaNVKH.Location = new System.Drawing.Point(741, 218);
+            this.txtMaNVKH.Location = new System.Drawing.Point(862, 223);
             this.txtMaNVKH.Name = "txtMaNVKH";
             this.txtMaNVKH.Size = new System.Drawing.Size(229, 26);
             this.txtMaNVKH.TabIndex = 34;
@@ -250,7 +250,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.label7.Location = new System.Drawing.Point(737, 181);
+            this.label7.Location = new System.Drawing.Point(858, 186);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(147, 24);
             this.label7.TabIndex = 33;
@@ -267,7 +267,7 @@
             this.btnThem.Image = null;
             this.btnThem.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnThem.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnThem.Location = new System.Drawing.Point(51, 601);
+            this.btnThem.Location = new System.Drawing.Point(128, 695);
             this.btnThem.Name = "btnThem";
             this.btnThem.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnThem.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -288,7 +288,7 @@
             this.btnLuu.Image = null;
             this.btnLuu.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnLuu.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnLuu.Location = new System.Drawing.Point(947, 601);
+            this.btnLuu.Location = new System.Drawing.Point(1024, 695);
             this.btnLuu.Name = "btnLuu";
             this.btnLuu.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnLuu.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -309,7 +309,7 @@
             this.btnXoa.Image = null;
             this.btnXoa.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnXoa.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnXoa.Location = new System.Drawing.Point(639, 601);
+            this.btnXoa.Location = new System.Drawing.Point(716, 695);
             this.btnXoa.Name = "btnXoa";
             this.btnXoa.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnXoa.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -330,7 +330,7 @@
             this.btnSua.Image = null;
             this.btnSua.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnSua.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnSua.Location = new System.Drawing.Point(346, 601);
+            this.btnSua.Location = new System.Drawing.Point(423, 695);
             this.btnSua.Name = "btnSua";
             this.btnSua.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnSua.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -344,7 +344,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1177, 710);
+            this.ClientSize = new System.Drawing.Size(1342, 780);
             this.Controls.Add(this.btnThem);
             this.Controls.Add(this.btnLuu);
             this.Controls.Add(this.btnXoa);

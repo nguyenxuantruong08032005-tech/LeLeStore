@@ -73,6 +73,26 @@ namespace LeLeStore.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap anhbia {
+            get {
+                object obj = ResourceManager.GetObject("anhbia", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap bia {
+            get {
+                object obj = ResourceManager.GetObject("bia", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Businessman_52px {
             get {
                 object obj = ResourceManager.GetObject("Businessman_52px", resourceCulture);
@@ -136,6 +156,26 @@ namespace LeLeStore.Properties {
         internal static System.Drawing.Bitmap if_quit_37278 {
             get {
                 object obj = ResourceManager.GetObject("if_quit_37278", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Light_Gray_and_Blue_Modern_Grocery_Store_Logo {
+            get {
+                object obj = ResourceManager.GetObject("Light_Gray_and_Blue_Modern_Grocery_Store_Logo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Light_Gray_and_Blue_Modern_Grocery_Store_Logo__1_ {
+            get {
+                object obj = ResourceManager.GetObject("Light_Gray_and_Blue_Modern_Grocery_Store_Logo__1_", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

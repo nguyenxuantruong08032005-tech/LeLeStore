@@ -311,5 +311,17 @@
   <ItemGroup>
     <None Include="Resources\500ml.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\anhbia.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bia.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Light Gray and Blue Modern Grocery Store Logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Light Gray and Blue Modern Grocery Store Logo %281%29.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

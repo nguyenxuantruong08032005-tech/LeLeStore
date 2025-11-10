@@ -63,28 +63,28 @@
             // 
             // txtSDT
             // 
-            this.txtSDT.Location = new System.Drawing.Point(774, 137);
+            this.txtSDT.Location = new System.Drawing.Point(895, 137);
             this.txtSDT.Name = "txtSDT";
             this.txtSDT.Size = new System.Drawing.Size(225, 26);
             this.txtSDT.TabIndex = 16;
             // 
             // txtCV
             // 
-            this.txtCV.Location = new System.Drawing.Point(463, 137);
+            this.txtCV.Location = new System.Drawing.Point(584, 137);
             this.txtCV.Name = "txtCV";
             this.txtCV.Size = new System.Drawing.Size(197, 26);
             this.txtCV.TabIndex = 15;
             // 
             // txtTenNV
             // 
-            this.txtTenNV.Location = new System.Drawing.Point(172, 202);
+            this.txtTenNV.Location = new System.Drawing.Point(293, 202);
             this.txtTenNV.Name = "txtTenNV";
             this.txtTenNV.Size = new System.Drawing.Size(229, 26);
             this.txtTenNV.TabIndex = 14;
             // 
             // txtMaNV
             // 
-            this.txtMaNV.Location = new System.Drawing.Point(172, 137);
+            this.txtMaNV.Location = new System.Drawing.Point(293, 137);
             this.txtMaNV.Name = "txtMaNV";
             this.txtMaNV.Size = new System.Drawing.Size(95, 26);
             this.txtMaNV.TabIndex = 13;
@@ -93,7 +93,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.label5.Location = new System.Drawing.Point(770, 99);
+            this.label5.Location = new System.Drawing.Point(891, 99);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(149, 24);
             this.label5.TabIndex = 12;
@@ -103,7 +103,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.label4.Location = new System.Drawing.Point(459, 110);
+            this.label4.Location = new System.Drawing.Point(580, 110);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(99, 24);
             this.label4.TabIndex = 11;
@@ -113,7 +113,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.label3.Location = new System.Drawing.Point(168, 175);
+            this.label3.Location = new System.Drawing.Point(289, 175);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(155, 24);
             this.label3.TabIndex = 10;
@@ -123,7 +123,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(168, 110);
+            this.label2.Location = new System.Drawing.Point(289, 110);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(140, 24);
             this.label2.TabIndex = 9;
@@ -133,7 +133,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 26F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(389, 9);
+            this.label1.Location = new System.Drawing.Point(464, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(495, 70);
             this.label1.TabIndex = 17;
@@ -141,7 +141,7 @@
             // 
             // txtDC
             // 
-            this.txtDC.Location = new System.Drawing.Point(463, 202);
+            this.txtDC.Location = new System.Drawing.Point(584, 202);
             this.txtDC.Name = "txtDC";
             this.txtDC.Size = new System.Drawing.Size(225, 26);
             this.txtDC.TabIndex = 19;
@@ -150,7 +150,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.label6.Location = new System.Drawing.Point(459, 175);
+            this.label6.Location = new System.Drawing.Point(580, 175);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(84, 24);
             this.label6.TabIndex = 18;
@@ -158,7 +158,7 @@
             // 
             // txtMaND
             // 
-            this.txtMaND.Location = new System.Drawing.Point(774, 202);
+            this.txtMaND.Location = new System.Drawing.Point(895, 202);
             this.txtMaND.Name = "txtMaND";
             this.txtMaND.Size = new System.Drawing.Size(225, 26);
             this.txtMaND.TabIndex = 21;
@@ -167,7 +167,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.label7.Location = new System.Drawing.Point(779, 175);
+            this.label7.Location = new System.Drawing.Point(900, 175);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(166, 24);
             this.label7.TabIndex = 20;
@@ -185,11 +185,11 @@
             this.diaChiDataGridViewTextBoxColumn,
             this.maNguoiDungDataGridViewTextBoxColumn});
             this.dataGridView1.DataSource = this.nhanVienBindingSource;
-            this.dataGridView1.Location = new System.Drawing.Point(146, 279);
+            this.dataGridView1.Location = new System.Drawing.Point(22, 280);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 62;
             this.dataGridView1.RowTemplate.Height = 28;
-            this.dataGridView1.Size = new System.Drawing.Size(891, 236);
+            this.dataGridView1.Size = new System.Drawing.Size(1349, 313);
             this.dataGridView1.TabIndex = 22;
             this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
             // 
@@ -267,7 +267,7 @@
             this.btnSua.Image = null;
             this.btnSua.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnSua.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnSua.Location = new System.Drawing.Point(353, 562);
+            this.btnSua.Location = new System.Drawing.Point(438, 655);
             this.btnSua.Name = "btnSua";
             this.btnSua.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnSua.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -288,7 +288,7 @@
             this.btnXoa.Image = null;
             this.btnXoa.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnXoa.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnXoa.Location = new System.Drawing.Point(646, 562);
+            this.btnXoa.Location = new System.Drawing.Point(731, 655);
             this.btnXoa.Name = "btnXoa";
             this.btnXoa.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnXoa.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -309,7 +309,7 @@
             this.btnLuu.Image = null;
             this.btnLuu.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnLuu.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnLuu.Location = new System.Drawing.Point(935, 562);
+            this.btnLuu.Location = new System.Drawing.Point(1020, 655);
             this.btnLuu.Name = "btnLuu";
             this.btnLuu.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnLuu.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -330,7 +330,7 @@
             this.btnThem.Image = null;
             this.btnThem.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnThem.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnThem.Location = new System.Drawing.Point(58, 562);
+            this.btnThem.Location = new System.Drawing.Point(143, 655);
             this.btnThem.Name = "btnThem";
             this.btnThem.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnThem.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -344,7 +344,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(1263, 691);
+            this.ClientSize = new System.Drawing.Size(1383, 724);
             this.Controls.Add(this.btnThem);
             this.Controls.Add(this.btnLuu);
             this.Controls.Add(this.btnXoa);
