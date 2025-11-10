@@ -199,11 +199,7 @@ namespace LeLeStore
                 MessageBox.Show("Họ tên không được để trống.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            if (IsHoTenDuplicate(hoTen, null))
-            {
-                MessageBox.Show("Họ tên nhân viên đã tồn tại. Vui lòng nhập tên khác.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+           
             if (!TryParseMaNguoiDung(out int? maNguoiDung))
             {
                 return;
@@ -314,11 +310,7 @@ namespace LeLeStore
                 MessageBox.Show("Không có thay đổi.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
-            if (IsHoTenDuplicate(hoTen, currentRow?.MaNhanVien))
-            {
-                MessageBox.Show("Họ tên nhân viên đã tồn tại. Vui lòng nhập tên khác.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+            
             currentRow.HoTen = hoTen;
 
             if (string.IsNullOrEmpty(chucVu))
@@ -486,29 +478,6 @@ namespace LeLeStore
             maNguoiDung = null;
             return false;
         }
-        private bool IsHoTenDuplicate(string hoTen, int? excludeMaNhanVien)
-        {
-            string normalizedHoTen = NormalizeRequiredText(hoTen);
-            foreach (GStoreDataSet.NhanVienRow row in gStoreDataSet.NhanVien)
-            {
-                if (row.RowState == DataRowState.Deleted)
-                {
-                    continue;
-                }
-
-                if (excludeMaNhanVien.HasValue && !row.IsMaNhanVienNull() && row.MaNhanVien == excludeMaNhanVien.Value)
-                {
-                    continue;
-                }
-
-                string existingHoTen = NormalizeRequiredText(row.HoTen);
-                if (string.Equals(existingHoTen, normalizedHoTen, StringComparison.OrdinalIgnoreCase))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
+       
     }
 }

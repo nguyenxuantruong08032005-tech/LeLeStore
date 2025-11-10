@@ -192,6 +192,9 @@
     <Compile Include="formUser.Designer.cs">
       <DependentUpon>formUser.cs</DependentUpon>
     </Compile>
+    <Compile Include="GStoreDataSet.cs">
+      <DependentUpon>GStoreDataSet.xsd</DependentUpon>
+    </Compile>
     <Compile Include="GStoreDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

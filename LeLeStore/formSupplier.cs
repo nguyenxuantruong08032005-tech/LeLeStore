@@ -16,5 +16,12 @@ namespace LeLeStore
         {
             InitializeComponent();
         }
+
+        private void formSupplier_Load(object sender, EventArgs e)
+        {
+            // TODO: This line of code loads data into the 'gStoreDataSet.NhaCungCap' table. You can move, or remove it, as needed.
+            this.nhaCungCapTableAdapter.Fill(this.gStoreDataSet.NhaCungCap);
+
+        }
     }
 }
