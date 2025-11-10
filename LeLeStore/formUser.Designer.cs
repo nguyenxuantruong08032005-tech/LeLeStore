@@ -58,7 +58,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 26F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(353, 9);
+            this.label1.Location = new System.Drawing.Point(487, 20);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(543, 70);
             this.label1.TabIndex = 0;
@@ -68,7 +68,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(31, 161);
+            this.label2.Location = new System.Drawing.Point(57, 156);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(159, 24);
             this.label2.TabIndex = 1;
@@ -78,7 +78,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.label3.Location = new System.Drawing.Point(27, 249);
+            this.label3.Location = new System.Drawing.Point(53, 244);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(163, 24);
             this.label3.TabIndex = 2;
@@ -88,7 +88,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.label4.Location = new System.Drawing.Point(27, 324);
+            this.label4.Location = new System.Drawing.Point(53, 319);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(107, 24);
             this.label4.TabIndex = 3;
@@ -98,7 +98,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.label5.Location = new System.Drawing.Point(27, 400);
+            this.label5.Location = new System.Drawing.Point(53, 395);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(83, 24);
             this.label5.TabIndex = 4;
@@ -106,7 +106,7 @@
             // 
             // txtMaDung
             // 
-            this.txtMaDung.Location = new System.Drawing.Point(31, 198);
+            this.txtMaDung.Location = new System.Drawing.Point(57, 193);
             this.txtMaDung.Name = "txtMaDung";
             this.txtMaDung.Size = new System.Drawing.Size(300, 26);
             this.txtMaDung.TabIndex = 5;
@@ -114,21 +114,21 @@
             // 
             // txtTenDN
             // 
-            this.txtTenDN.Location = new System.Drawing.Point(31, 284);
+            this.txtTenDN.Location = new System.Drawing.Point(57, 279);
             this.txtTenDN.Name = "txtTenDN";
             this.txtTenDN.Size = new System.Drawing.Size(315, 26);
             this.txtTenDN.TabIndex = 6;
             // 
             // txtMK
             // 
-            this.txtMK.Location = new System.Drawing.Point(35, 362);
+            this.txtMK.Location = new System.Drawing.Point(61, 357);
             this.txtMK.Name = "txtMK";
             this.txtMK.Size = new System.Drawing.Size(268, 26);
             this.txtMK.TabIndex = 7;
             // 
             // txtVaiTro
             // 
-            this.txtVaiTro.Location = new System.Drawing.Point(35, 439);
+            this.txtVaiTro.Location = new System.Drawing.Point(61, 434);
             this.txtVaiTro.Name = "txtVaiTro";
             this.txtVaiTro.Size = new System.Drawing.Size(225, 26);
             this.txtVaiTro.TabIndex = 8;
@@ -144,7 +144,7 @@
             this.btnSua.Image = null;
             this.btnSua.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnSua.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnSua.Location = new System.Drawing.Point(270, 593);
+            this.btnSua.Location = new System.Drawing.Point(469, 596);
             this.btnSua.Name = "btnSua";
             this.btnSua.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnSua.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -165,7 +165,7 @@
             this.btnXoa.Image = null;
             this.btnXoa.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnXoa.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnXoa.Location = new System.Drawing.Point(554, 593);
+            this.btnXoa.Location = new System.Drawing.Point(725, 596);
             this.btnXoa.Name = "btnXoa";
             this.btnXoa.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnXoa.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -185,11 +185,11 @@
             this.matKhauDataGridViewTextBoxColumn,
             this.vaiTroDataGridViewTextBoxColumn});
             this.dataGridView1.DataSource = this.nguoiDungBindingSource;
-            this.dataGridView1.Location = new System.Drawing.Point(365, 161);
+            this.dataGridView1.Location = new System.Drawing.Point(382, 157);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 62;
             this.dataGridView1.RowTemplate.Height = 28;
-            this.dataGridView1.Size = new System.Drawing.Size(812, 327);
+            this.dataGridView1.Size = new System.Drawing.Size(1005, 327);
             this.dataGridView1.TabIndex = 11;
             // 
             // maNguoiDungDataGridViewTextBoxColumn
@@ -250,7 +250,7 @@
             this.btnLuu.Image = null;
             this.btnLuu.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnLuu.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnLuu.Location = new System.Drawing.Point(826, 593);
+            this.btnLuu.Location = new System.Drawing.Point(997, 596);
             this.btnLuu.Name = "btnLuu";
             this.btnLuu.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnLuu.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -265,7 +265,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.ClientSize = new System.Drawing.Size(1189, 691);
+            this.ClientSize = new System.Drawing.Size(1390, 753);
             this.Controls.Add(this.btnLuu);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.btnXoa);

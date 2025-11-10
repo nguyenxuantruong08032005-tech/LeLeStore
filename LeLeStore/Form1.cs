@@ -30,6 +30,23 @@ namespace LeLeStore
         public Form1() : this(UserRole.QuanLy, string.Empty)
         {
         }
+        private Form activeForm = null;
+
+        private void OpenChildForm(Form childForm)
+        {
+            // Đóng form con cũ nếu có
+            if (activeForm != null)
+                activeForm.Close();
+
+            activeForm = childForm;
+            childForm.TopLevel = false;
+            childForm.FormBorderStyle = FormBorderStyle.None;
+            childForm.Dock = DockStyle.Fill;
+            pnlMain.Controls.Add(childForm);
+            pnlMain.Tag = childForm;
+            childForm.BringToFront();
+            childForm.Show();
+        }
 
         public Form1(UserRole role, string username)
         {
@@ -265,18 +282,8 @@ namespace LeLeStore
 
         private void btnUpdateClient_Click(object sender, EventArgs e)
         {
-            if(updateclient == null)
-            {
-                updateclient = new formUpdateClient();
-                updateclient.FormClosed += UpdateClient_FormClosed;
-                updateclient.MdiParent = this;
-                updateclient.Dock = DockStyle.Fill;
-                updateclient.Show();
-            }
-            else
-            {
-                updateclient.Activate();
-            }
+            OpenChildForm(new formUpdateClient());
+          
         }
         private void UpdateClient_FormClosed(object sender, EventArgs e)
         {
@@ -285,18 +292,8 @@ namespace LeLeStore
 
         private void button3_Click(object sender, EventArgs e)
         {
-            if (user == null)
-            {
-                user = new formUser();
-                user.FormClosed += About_FormClosed;
-                user.MdiParent = this;
-                user.Dock = DockStyle.Fill;
-                user.Show();
-            }
-            else
-            {
-                user.Activate();
-            }
+            OpenChildForm(new formUser());
+           
         }
         private void About_FormClosed(object sender, EventArgs e)
         {
@@ -304,7 +301,7 @@ namespace LeLeStore
         }
 
         private void sbmenu2_Click(object sender, EventArgs e)
-        {
+        {OpenChildForm(new formPoint());
             if (point == null)
             {
                 point = new formPoint();
@@ -325,19 +322,9 @@ namespace LeLeStore
 
         private void button4_Click(object sender, EventArgs e)
         {
+            OpenChildForm(new formProduct());
 
-            if (product == null)
-            {
-                product = new formProduct();
-                product.FormClosed += Product_FormClosed;
-                product.MdiParent = this;
-                product.Dock = DockStyle.Fill;
-                product.Show();
-            }
-            else
-            {
-                product.Activate();
-            }
+         
         }
         private void Product_FormClosed(object sender, EventArgs e)
         {
@@ -346,18 +333,8 @@ namespace LeLeStore
 
         private void btnStaff_Click(object sender, EventArgs e)
         {
-            if (staff == null)
-            {
-                staff = new formStaff();
-                staff.FormClosed += Staff_FormClosed;
-                staff.MdiParent = this;
-                staff.Dock = DockStyle.Fill;
-                staff.Show();
-            }
-            else
-            {
-                staff.Activate();
-            }
+            OpenChildForm(new formStaff());
+            
         }
         private void Staff_FormClosed(object sender, EventArgs e)
         {
@@ -366,18 +343,8 @@ namespace LeLeStore
 
         private void btnSupplier_Click(object sender, EventArgs e)
         {
-            if (supplier == null)
-            {
-                supplier = new formSupplier();
-                supplier.FormClosed += Supplier_FormClosed;
-                supplier.MdiParent = this;
-                supplier.Dock = DockStyle.Fill;
-                supplier.Show();
-            }
-            else
-            {
-                supplier.Activate();
-            }
+            OpenChildForm(new formSupplier());
+           
         }
         private void Supplier_FormClosed(object sender, EventArgs e)
         {
@@ -386,18 +353,8 @@ namespace LeLeStore
 
         private void btnEmployeeSalary_Click(object sender, EventArgs e)
         {
-            if (salary == null)
-            {
-                salary = new formEmployeeSalary();
-                salary.FormClosed += EmployeeSalary_FormClosed;
-                salary.MdiParent = this;
-                salary.Dock = DockStyle.Fill;
-                salary.Show();
-            }
-            else
-            {
-                salary.Activate();
-            }
+            OpenChildForm(new formEmployeeSalary());
+            
         }
         private void EmployeeSalary_FormClosed(object sender, EventArgs e)
         {

@@ -35,15 +35,15 @@
             this.label2 = new System.Windows.Forms.Label();
             this.txtTenKH = new System.Windows.Forms.TextBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.gStoreDataSet = new LeLeStore.GStoreDataSet();
-            this.khachHangBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.khachHangTableAdapter = new LeLeStore.GStoreDataSetTableAdapters.KhachHangTableAdapter();
             this.maKhachHangDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.hoTenDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.soDienThoaiDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.diaChiDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.diemTichLuyDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.maNhanVienDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.khachHangBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.gStoreDataSet = new LeLeStore.GStoreDataSet();
+            this.khachHangTableAdapter = new LeLeStore.GStoreDataSetTableAdapters.KhachHangTableAdapter();
             this.txtSDTKH = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.txtDiaChiKH = new System.Windows.Forms.TextBox();
@@ -57,8 +57,8 @@
             this.btnXoa = new ReaLTaiizor.Controls.Button();
             this.btnSua = new ReaLTaiizor.Controls.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gStoreDataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.khachHangBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gStoreDataSet)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -123,20 +123,7 @@
             this.dataGridView1.RowTemplate.Height = 28;
             this.dataGridView1.Size = new System.Drawing.Size(1111, 275);
             this.dataGridView1.TabIndex = 26;
-            // 
-            // gStoreDataSet
-            // 
-            this.gStoreDataSet.DataSetName = "GStoreDataSet";
-            this.gStoreDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
-            // khachHangBindingSource
-            // 
-            this.khachHangBindingSource.DataMember = "KhachHang";
-            this.khachHangBindingSource.DataSource = this.gStoreDataSet;
-            // 
-            // khachHangTableAdapter
-            // 
-            this.khachHangTableAdapter.ClearBeforeFill = true;
+            this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
             // 
             // maKhachHangDataGridViewTextBoxColumn
             // 
@@ -186,6 +173,20 @@
             this.maNhanVienDataGridViewTextBoxColumn.MinimumWidth = 8;
             this.maNhanVienDataGridViewTextBoxColumn.Name = "maNhanVienDataGridViewTextBoxColumn";
             this.maNhanVienDataGridViewTextBoxColumn.Width = 150;
+            // 
+            // khachHangBindingSource
+            // 
+            this.khachHangBindingSource.DataMember = "KhachHang";
+            this.khachHangBindingSource.DataSource = this.gStoreDataSet;
+            // 
+            // gStoreDataSet
+            // 
+            this.gStoreDataSet.DataSetName = "GStoreDataSet";
+            this.gStoreDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
+            // khachHangTableAdapter
+            // 
+            this.khachHangTableAdapter.ClearBeforeFill = true;
             // 
             // txtSDTKH
             // 
@@ -274,6 +275,7 @@
             this.btnThem.TabIndex = 38;
             this.btnThem.Text = "THÊM";
             this.btnThem.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnThem.Click += new System.EventHandler(this.btnThem_Click);
             // 
             // btnLuu
             // 
@@ -294,6 +296,7 @@
             this.btnLuu.TabIndex = 37;
             this.btnLuu.Text = "LƯU";
             this.btnLuu.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnLuu.Click += new System.EventHandler(this.btnLuu_Click);
             // 
             // btnXoa
             // 
@@ -314,6 +317,7 @@
             this.btnXoa.TabIndex = 36;
             this.btnXoa.Text = "XÓA";
             this.btnXoa.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnXoa.Click += new System.EventHandler(this.btnXoa_Click);
             // 
             // btnSua
             // 
@@ -334,6 +338,7 @@
             this.btnSua.TabIndex = 35;
             this.btnSua.Text = "SỬA";
             this.btnSua.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnSua.Click += new System.EventHandler(this.btnSua_Click);
             // 
             // formUpdateClient
             // 
@@ -363,8 +368,8 @@
             this.Text = "formUpdateClient";
             this.Load += new System.EventHandler(this.formUpdateClient_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gStoreDataSet)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.khachHangBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gStoreDataSet)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
