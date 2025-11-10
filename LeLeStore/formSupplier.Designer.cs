@@ -45,17 +45,17 @@
             this.btnXoa = new ReaLTaiizor.Controls.Button();
             this.btnSua = new ReaLTaiizor.Controls.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.gStoreDataSet = new LeLeStore.GStoreDataSet();
-            this.nhaCungCapBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.nhaCungCapTableAdapter = new LeLeStore.GStoreDataSetTableAdapters.NhaCungCapTableAdapter();
             this.maNCCDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tenNCCDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.soDienThoaiDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.diaChiDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.maNhanVienDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.nhaCungCapBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.gStoreDataSet = new LeLeStore.GStoreDataSet();
+            this.nhaCungCapTableAdapter = new LeLeStore.GStoreDataSetTableAdapters.NhaCungCapTableAdapter();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gStoreDataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nhaCungCapBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gStoreDataSet)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -70,7 +70,7 @@
             // 
             // txtDiaChiNCC
             // 
-            this.txtDiaChiNCC.Location = new System.Drawing.Point(16, 364);
+            this.txtDiaChiNCC.Location = new System.Drawing.Point(16, 344);
             this.txtDiaChiNCC.Name = "txtDiaChiNCC";
             this.txtDiaChiNCC.Size = new System.Drawing.Size(214, 26);
             this.txtDiaChiNCC.TabIndex = 24;
@@ -100,7 +100,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.label5.Location = new System.Drawing.Point(18, 322);
+            this.label5.Location = new System.Drawing.Point(12, 317);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(84, 24);
             this.label5.TabIndex = 20;
@@ -140,7 +140,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.label6.Location = new System.Drawing.Point(18, 411);
+            this.label6.Location = new System.Drawing.Point(14, 384);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(147, 24);
             this.label6.TabIndex = 25;
@@ -148,7 +148,7 @@
             // 
             // txtManv
             // 
-            this.txtManv.Location = new System.Drawing.Point(16, 448);
+            this.txtManv.Location = new System.Drawing.Point(18, 411);
             this.txtManv.Name = "txtManv";
             this.txtManv.Size = new System.Drawing.Size(164, 26);
             this.txtManv.TabIndex = 26;
@@ -172,6 +172,7 @@
             this.btnThem.TabIndex = 30;
             this.btnThem.Text = "THÊM";
             this.btnThem.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnThem.Click += new System.EventHandler(this.btnThem_Click);
             // 
             // btnLuu
             // 
@@ -192,6 +193,7 @@
             this.btnLuu.TabIndex = 29;
             this.btnLuu.Text = "LƯU";
             this.btnLuu.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnLuu.Click += new System.EventHandler(this.btnLuu_Click);
             // 
             // btnXoa
             // 
@@ -212,6 +214,7 @@
             this.btnXoa.TabIndex = 28;
             this.btnXoa.Text = "XÓA";
             this.btnXoa.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnXoa.Click += new System.EventHandler(this.btnXoa_Click);
             // 
             // btnSua
             // 
@@ -232,6 +235,7 @@
             this.btnSua.TabIndex = 27;
             this.btnSua.Text = "SỬA";
             this.btnSua.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnSua.Click += new System.EventHandler(this.btnSua_Click);
             // 
             // dataGridView1
             // 
@@ -244,26 +248,13 @@
             this.diaChiDataGridViewTextBoxColumn,
             this.maNhanVienDataGridViewTextBoxColumn});
             this.dataGridView1.DataSource = this.nhaCungCapBindingSource;
-            this.dataGridView1.Location = new System.Drawing.Point(263, 145);
+            this.dataGridView1.Location = new System.Drawing.Point(251, 145);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 62;
             this.dataGridView1.RowTemplate.Height = 28;
-            this.dataGridView1.Size = new System.Drawing.Size(880, 327);
+            this.dataGridView1.Size = new System.Drawing.Size(934, 327);
             this.dataGridView1.TabIndex = 31;
-            // 
-            // gStoreDataSet
-            // 
-            this.gStoreDataSet.DataSetName = "GStoreDataSet";
-            this.gStoreDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
-            // nhaCungCapBindingSource
-            // 
-            this.nhaCungCapBindingSource.DataMember = "NhaCungCap";
-            this.nhaCungCapBindingSource.DataSource = this.gStoreDataSet;
-            // 
-            // nhaCungCapTableAdapter
-            // 
-            this.nhaCungCapTableAdapter.ClearBeforeFill = true;
+            this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
             // 
             // maNCCDataGridViewTextBoxColumn
             // 
@@ -306,11 +297,25 @@
             this.maNhanVienDataGridViewTextBoxColumn.Name = "maNhanVienDataGridViewTextBoxColumn";
             this.maNhanVienDataGridViewTextBoxColumn.Width = 150;
             // 
+            // nhaCungCapBindingSource
+            // 
+            this.nhaCungCapBindingSource.DataMember = "NhaCungCap";
+            this.nhaCungCapBindingSource.DataSource = this.gStoreDataSet;
+            // 
+            // gStoreDataSet
+            // 
+            this.gStoreDataSet.DataSetName = "GStoreDataSet";
+            this.gStoreDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
+            // nhaCungCapTableAdapter
+            // 
+            this.nhaCungCapTableAdapter.ClearBeforeFill = true;
+            // 
             // formSupplier
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1155, 681);
+            this.ClientSize = new System.Drawing.Size(1197, 681);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.btnThem);
             this.Controls.Add(this.btnLuu);
@@ -332,8 +337,8 @@
             this.Text = "formSupplier";
             this.Load += new System.EventHandler(this.formSupplier_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gStoreDataSet)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nhaCungCapBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gStoreDataSet)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

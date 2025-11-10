@@ -16,5 +16,17 @@ namespace LeLeStore
         {
             InitializeComponent();
         }
+
+        private void formProduct_Load(object sender, EventArgs e)
+        {
+            // TODO: This line of code loads data into the 'gStoreDataSet.SanPham' table. You can move, or remove it, as needed.
+            this.sanPhamTableAdapter.Fill(this.gStoreDataSet.SanPham);
+
+        }
+
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
