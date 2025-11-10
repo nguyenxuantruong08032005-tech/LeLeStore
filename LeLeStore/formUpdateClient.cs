@@ -16,5 +16,12 @@ namespace LeLeStore
         {
             InitializeComponent();
         }
+
+        private void formUpdateClient_Load(object sender, EventArgs e)
+        {
+            // TODO: This line of code loads data into the 'gStoreDataSet.KhachHang' table. You can move, or remove it, as needed.
+            this.khachHangTableAdapter.Fill(this.gStoreDataSet.KhachHang);
+
+        }
     }
 }

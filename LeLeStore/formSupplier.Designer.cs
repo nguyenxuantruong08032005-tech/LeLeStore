@@ -70,28 +70,28 @@
             // 
             // txtDiaChiNCC
             // 
-            this.txtDiaChiNCC.Location = new System.Drawing.Point(16, 344);
+            this.txtDiaChiNCC.Location = new System.Drawing.Point(493, 186);
             this.txtDiaChiNCC.Name = "txtDiaChiNCC";
             this.txtDiaChiNCC.Size = new System.Drawing.Size(214, 26);
             this.txtDiaChiNCC.TabIndex = 24;
             // 
             // txtSdtNCC
             // 
-            this.txtSdtNCC.Location = new System.Drawing.Point(16, 276);
+            this.txtSdtNCC.Location = new System.Drawing.Point(493, 118);
             this.txtSdtNCC.Name = "txtSdtNCC";
             this.txtSdtNCC.Size = new System.Drawing.Size(197, 26);
             this.txtSdtNCC.TabIndex = 23;
             // 
             // txtTenNCC
             // 
-            this.txtTenNCC.Location = new System.Drawing.Point(16, 210);
+            this.txtTenNCC.Location = new System.Drawing.Point(169, 189);
             this.txtTenNCC.Name = "txtTenNCC";
             this.txtTenNCC.Size = new System.Drawing.Size(229, 26);
             this.txtTenNCC.TabIndex = 22;
             // 
             // txtMaNCC
             // 
-            this.txtMaNCC.Location = new System.Drawing.Point(16, 145);
+            this.txtMaNCC.Location = new System.Drawing.Point(171, 118);
             this.txtMaNCC.Name = "txtMaNCC";
             this.txtMaNCC.Size = new System.Drawing.Size(95, 26);
             this.txtMaNCC.TabIndex = 21;
@@ -100,7 +100,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.label5.Location = new System.Drawing.Point(12, 317);
+            this.label5.Location = new System.Drawing.Point(489, 159);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(84, 24);
             this.label5.TabIndex = 20;
@@ -110,7 +110,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.label4.Location = new System.Drawing.Point(12, 249);
+            this.label4.Location = new System.Drawing.Point(489, 91);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(149, 24);
             this.label4.TabIndex = 19;
@@ -120,7 +120,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.label3.Location = new System.Drawing.Point(12, 183);
+            this.label3.Location = new System.Drawing.Point(165, 162);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(195, 24);
             this.label3.TabIndex = 18;
@@ -130,7 +130,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(12, 118);
+            this.label2.Location = new System.Drawing.Point(167, 91);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(180, 24);
             this.label2.TabIndex = 17;
@@ -140,7 +140,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.label6.Location = new System.Drawing.Point(14, 384);
+            this.label6.Location = new System.Drawing.Point(824, 91);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(147, 24);
             this.label6.TabIndex = 25;
@@ -148,7 +148,7 @@
             // 
             // txtManv
             // 
-            this.txtManv.Location = new System.Drawing.Point(18, 411);
+            this.txtManv.Location = new System.Drawing.Point(828, 118);
             this.txtManv.Name = "txtManv";
             this.txtManv.Size = new System.Drawing.Size(164, 26);
             this.txtManv.TabIndex = 26;
@@ -248,11 +248,11 @@
             this.diaChiDataGridViewTextBoxColumn,
             this.maNhanVienDataGridViewTextBoxColumn});
             this.dataGridView1.DataSource = this.nhaCungCapBindingSource;
-            this.dataGridView1.Location = new System.Drawing.Point(251, 145);
+            this.dataGridView1.Location = new System.Drawing.Point(36, 230);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 62;
             this.dataGridView1.RowTemplate.Height = 28;
-            this.dataGridView1.Size = new System.Drawing.Size(934, 327);
+            this.dataGridView1.Size = new System.Drawing.Size(1134, 274);
             this.dataGridView1.TabIndex = 31;
             this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
             // 
