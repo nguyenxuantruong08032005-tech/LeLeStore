@@ -131,7 +131,7 @@ namespace LeLeStore
 
             if (_bindingSource.Current is DataRowView currentView && currentView.Row is GStoreDataSet.KhachHangRow row)
             {
-                var points = row.IsNull(row.Table.DiemTichLuyColumn) ? 0 : row.DiemTichLuy;
+                var points = row.IsNull(_dataSet.KhachHang.DiemTichLuyColumn) ? 0 : row.DiemTichLuy;
                 var value = Math.Max(numericUpDown1.Minimum, Math.Min(numericUpDown1.Maximum, points));
                 numericUpDown1.Value = value;
                 UpdateDiscountDisplay(points);
@@ -233,6 +233,15 @@ namespace LeLeStore
 
         private void btnChietKhau_Click(object sender, EventArgs e)
         {
+           
+        }
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnChietKhau_Click_1(object sender, EventArgs e)
+        {
             if (_bindingSource.Count == 0 || !(_bindingSource.Current is DataRowView currentView) || !(currentView.Row is GStoreDataSet.KhachHangRow))
             {
                 MessageBox.Show("Vui lòng chọn khách hàng trước khi áp dụng chiết khấu.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -256,10 +265,6 @@ namespace LeLeStore
             {
                 MessageBox.Show("Không tìm thấy hóa đơn để áp dụng chiết khấu.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-        }
-        private void label1_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }
