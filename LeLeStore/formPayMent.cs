@@ -15,6 +15,7 @@ namespace LeLeStore
     {
         private readonly GStoreDataSet _dataSet = new GStoreDataSet();
         private readonly GStoreDataSetTableAdapters.SanPhamTableAdapter _sanPhamTableAdapter = new GStoreDataSetTableAdapters.SanPhamTableAdapter();
+        private readonly GStoreDataSetTableAdapters.LoaiSPTableAdapter _loaiSpTableAdapter = new GStoreDataSetTableAdapters.LoaiSPTableAdapter();
         private readonly Dictionary<string, Image> _imageCache = new Dictionary<string, Image>(StringComparer.OrdinalIgnoreCase);
         private readonly List<Image> _productImageClones = new List<Image>();
         private readonly CultureInfo _currencyCulture = CultureInfo.GetCultureInfo("vi-VN");
@@ -40,7 +41,7 @@ namespace LeLeStore
             dgvInvoice.CellValidating += dgvInvoice_CellValidating;
             dgvInvoice.DataError += dgvInvoice_DataError;
 
-
+            btnSearch.Click += btnSearch_Click;
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -64,8 +65,39 @@ namespace LeLeStore
             ConfigureInvoiceGrid();
             dgvInvoice.DataSource = _invoiceTable;
             UpdateTotalLabel();
-
+            LoadProductCategories();
             LoadProductsFromDatabase();
+        }
+        private void LoadProductCategories()
+        {
+            try
+            {
+                _loaiSpTableAdapter.ClearBeforeFill = true;
+                _loaiSpTableAdapter.Fill(_dataSet.LoaiSP);
+
+                var categories = new List<KeyValuePair<int?, string>>
+                {
+                    new KeyValuePair<int?, string>(null, "Tất cả sản phẩm")
+                };
+
+                foreach (var category in _dataSet.LoaiSP)
+                {
+                    categories.Add(new KeyValuePair<int?, string>(category.MaLoai, category.TenLoai));
+                }
+
+                cbSearch.DisplayMember = "Value";
+                cbSearch.ValueMember = "Key";
+                cbSearch.DataSource = categories;
+                cbSearch.SelectedIndex = categories.Count > 0 ? 0 : -1;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "Không thể tải danh sách loại sản phẩm.\n" + ex.Message,
+                    "Lỗi",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
         }
         private void InitializeInvoiceTable()
         {
@@ -469,7 +501,39 @@ namespace LeLeStore
 
             _imageCache.Clear();
             _sanPhamTableAdapter?.Dispose();
+            _loaiSpTableAdapter?.Dispose();
             _dataSet?.Dispose();
+        }
+
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            int? selectedCategoryId = null;
+            var selectedValue = cbSearch.SelectedValue;
+
+            if (selectedValue is int id)
+            {
+                selectedCategoryId = id;
+            }
+            // nếu null thì giữ selectedCategoryId = null
+
+            ApplyProductFilter(selectedCategoryId);
+        }
+
+        private void ApplyProductFilter(int? categoryId)
+        {
+            if (_dataSet?.SanPham == null)
+            {
+                return;
+            }
+
+            IEnumerable<GStoreDataSet.SanPhamRow> products = _dataSet.SanPham;
+
+            if (categoryId.HasValue)
+            {
+                products = products.Where(row => row.RowState != DataRowState.Deleted && row.MaLoai == categoryId.Value);
+            }
+
+            PopulateProductCards(products);
         }
     }
 }

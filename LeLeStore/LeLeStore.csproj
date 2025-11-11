@@ -126,6 +126,12 @@
     <Compile Include="formEmployeeSalary.Designer.cs">
       <DependentUpon>formEmployeeSalary.cs</DependentUpon>
     </Compile>
+    <Compile Include="formInHoaDon.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="formInHoaDon.Designer.cs">
+      <DependentUpon>formInHoaDon.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormLogin.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -215,6 +221,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="formEmployeeSalary.resx">
       <DependentUpon>formEmployeeSalary.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="formInHoaDon.resx">
+      <DependentUpon>formInHoaDon.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormLogin.resx">
       <DependentUpon>FormLogin.cs</DependentUpon>
