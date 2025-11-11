@@ -34,6 +34,7 @@ namespace LeLeStore
             public decimal Price { get; set; }
 
             public string ImagePath { get; set; } = string.Empty;
+            public int AvailableQuantity { get; set; }
         }
         public formPayMent() : this(string.Empty)
         {
@@ -69,7 +70,15 @@ namespace LeLeStore
                     MessageBoxIcon.Information);
                 return;
             }
+            if (!TryReloadProductData())
+            {
+                return;
+            }
 
+            if (!EnsureInvoiceQuantitiesWithinStock())
+            {
+                return;
+            }
             var lines = new List<InvoiceLine>();
             var sequence = 1;
             foreach (DataRow row in _invoiceTable.Rows)
@@ -118,12 +127,17 @@ namespace LeLeStore
                 DateTime.Now,
                 _currentEmployeeId,
                 _username);
-
+            var invoiceSaved = false;
             using (var invoiceForm = new formInHoaDon(snapshot))
             {
                 invoiceForm.ShowDialog(this);
+                invoiceSaved = invoiceForm.IsInvoiceSaved;
+                if (invoiceSaved)
+                {
+                    LoadProductsFromDatabase();
+                }
             }
-            if (_invoiceTable != null)
+            if (invoiceSaved && _invoiceTable != null)
             {
                 _invoiceTable.Clear();
             }
@@ -296,7 +310,8 @@ namespace LeLeStore
                     Id = product.MaSP,
                     Name = product.TenSP,
                     Price = product.DonGia,
-                    ImagePath = product.IsHinhAnhNull() ? string.Empty : product.HinhAnh
+                    ImagePath = product.IsHinhAnhNull() ? string.Empty : product.HinhAnh,
+                    AvailableQuantity = product.SoLuong
                 };
 
                 var card = CreateProductCard(info);
@@ -362,8 +377,14 @@ namespace LeLeStore
                 BackColor = Color.FromArgb(65, 140, 240),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
-                Tag = info
+                Tag = info,
+                Enabled = info.AvailableQuantity > 0
             };
+            if (!addButton.Enabled)
+            {
+                addButton.Text = "Hết hàng";
+                addButton.BackColor = Color.Gray;
+            }
             addButton.FlatAppearance.BorderSize = 0;
             addButton.Click += OnAddProductButtonClick;
 
@@ -388,11 +409,38 @@ namespace LeLeStore
             {
                 return;
             }
+            if (!TryGetProductStock(info.Id, out var availableQuantity))
+            {
+                MessageBox.Show(
+                    "Không thể xác định tồn kho cho sản phẩm đã chọn.",
+                    "Lỗi",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return;
+            }
 
+            if (availableQuantity <= 0)
+            {
+                MessageBox.Show(
+                    "Sản phẩm đã hết hàng.",
+                    "Cảnh báo",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return;
+            }
             var existingRow = _invoiceTable.Rows.Find(info.Id);
             if (existingRow != null)
             {
                 var currentQuantity = existingRow.Field<int>("SoLuong");
+                if (currentQuantity >= availableQuantity)
+                {
+                    MessageBox.Show(
+                        $"Số lượng bán không được vượt quá tồn kho ({availableQuantity}).",
+                        "Cảnh báo",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                    return;
+                }
                 existingRow["SoLuong"] = currentQuantity + 1;
             }
             else
@@ -441,6 +489,28 @@ namespace LeLeStore
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Warning);
                 }
+                else if (dgvInvoice.Rows[e.RowIndex].DataBoundItem is DataRowView rowView)
+                {
+                    var productId = rowView.Row.Field<int>("MaSP");
+                    if (!TryGetProductStock(productId, out var availableQuantity))
+                    {
+                        e.Cancel = true;
+                        MessageBox.Show(
+                            "Không thể xác định tồn kho cho sản phẩm.",
+                            "Lỗi",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+                    }
+                    else if (quantity > availableQuantity)
+                    {
+                        e.Cancel = true;
+                        MessageBox.Show(
+                            $"Số lượng bán không được vượt quá tồn kho ({availableQuantity}).",
+                            "Cảnh báo",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+                    }
+                }
             }
         }
 
@@ -474,7 +544,86 @@ namespace LeLeStore
 
             lblTotalText.Text = "Tổng Tiền: " + total.ToString("N0", _currencyCulture) + " ₫";
         }
+        private bool TryGetProductStock(int productId, out int availableQuantity)
+        {
+            availableQuantity = 0;
 
+            try
+            {
+                var productRow = _dataSet.SanPham.FindByMaSP(productId);
+                if (productRow == null || productRow.RowState == DataRowState.Deleted)
+                {
+                    return false;
+                }
+
+                availableQuantity = productRow.SoLuong;
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private bool TryReloadProductData()
+        {
+            try
+            {
+                _sanPhamTableAdapter.ClearBeforeFill = true;
+                _sanPhamTableAdapter.Fill(_dataSet.SanPham);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "Không thể tải lại dữ liệu sản phẩm.\n" + ex.Message,
+                    "Lỗi",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return false;
+            }
+        }
+
+        private bool EnsureInvoiceQuantitiesWithinStock()
+        {
+            if (_invoiceTable == null)
+            {
+                return false;
+            }
+
+            foreach (DataRow row in _invoiceTable.Rows)
+            {
+                if (row.RowState == DataRowState.Deleted)
+                {
+                    continue;
+                }
+
+                var productId = row.Field<int>("MaSP");
+                var requestedQuantity = row.Field<int>("SoLuong");
+
+                if (!TryGetProductStock(productId, out var availableQuantity))
+                {
+                    MessageBox.Show(
+                        "Không thể xác định tồn kho cho sản phẩm \"" + row.Field<string>("TenSP") + "\".",
+                        "Lỗi",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                    return false;
+                }
+
+                if (requestedQuantity > availableQuantity)
+                {
+                    MessageBox.Show(
+                        $"Số lượng bán của \"{row.Field<string>("TenSP")}\" vượt quá tồn kho hiện có ({availableQuantity}).",
+                        "Cảnh báo",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                    return false;
+                }
+            }
+
+            return true;
+        }
         private Image GetImageFromCache(string path)
         {
             if (string.IsNullOrWhiteSpace(path))

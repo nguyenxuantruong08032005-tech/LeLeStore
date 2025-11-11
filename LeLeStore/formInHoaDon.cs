@@ -21,7 +21,7 @@ namespace LeLeStore
         private int? _persistedInvoiceId;
         private bool _isSaved;
         private int? _suggestedInvoiceNumber;
-
+        public bool IsInvoiceSaved => _isSaved;
         public formInHoaDon() : this(new InvoiceSnapshot(Array.Empty<InvoiceLine>(), DateTime.Now, null, string.Empty))
         {
         }
@@ -277,6 +277,7 @@ namespace LeLeStore
 
                         foreach (var line in _invoiceLines)
                         {
+                            ReduceProductStock(connection, transaction, line);
                             InsertInvoiceDetail(connection, transaction, invoiceId, line);
                         }
 
@@ -288,6 +289,24 @@ namespace LeLeStore
                         transaction.Rollback();
                         throw;
                     }
+                }
+            }
+        }
+        private void ReduceProductStock(SqlConnection connection, SqlTransaction transaction, InvoiceLine line)
+        {
+            using (var command = new SqlCommand(
+                "UPDATE SanPham SET SoLuong = SoLuong - @SoLuong WHERE MaSP = @MaSP AND SoLuong >= @SoLuong;",
+                connection,
+                transaction))
+            {
+                command.Parameters.Add("@MaSP", SqlDbType.Int).Value = line.ProductId;
+                command.Parameters.Add("@SoLuong", SqlDbType.Int).Value = line.Quantity;
+
+                var affectedRows = command.ExecuteNonQuery();
+                if (affectedRows == 0)
+                {
+                    throw new InvalidOperationException(
+                        $"Không đủ tồn kho cho sản phẩm \"{line.ProductName}\".");
                 }
             }
         }
