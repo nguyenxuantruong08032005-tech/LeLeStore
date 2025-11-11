@@ -18,7 +18,7 @@ namespace LeLeStore
         public int Quantity { get; set; }
 
         public decimal UnitPrice { get; set; }
-
+        public int? CustomerId { get; set; }
         public decimal Total => UnitPrice * Quantity;
 
         public InvoiceLine Clone()
@@ -29,7 +29,8 @@ namespace LeLeStore
                 ProductId = ProductId,
                 ProductName = ProductName,
                 Quantity = Quantity,
-                UnitPrice = UnitPrice
+                UnitPrice = UnitPrice,
+                CustomerId = CustomerId
             };
         }
     }

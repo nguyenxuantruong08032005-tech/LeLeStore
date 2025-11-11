@@ -19,9 +19,15 @@ namespace LeLeStore
         private readonly BindingList<InvoiceLine> _invoiceLines;
         private readonly decimal _discountAmount;
         private readonly CultureInfo _currencyCulture = CultureInfo.GetCultureInfo("vi-VN");
+        private readonly GStoreDataSet _dataSet = new GStoreDataSet();
+        private readonly GStoreDataSetTableAdapters.KhachHangTableAdapter _khachHangTableAdapter = new GStoreDataSetTableAdapters.KhachHangTableAdapter();
         private int? _persistedInvoiceId;
         private bool _isSaved;
         private int? _suggestedInvoiceNumber;
+        private GStoreDataSet.KhachHangRow _currentCustomerRow;
+        private decimal _currentDiscountAmount;
+        private decimal _appliedLoyaltyDiscount;
+        private int? _selectedCustomerId;
         public bool IsInvoiceSaved => _isSaved;
         public formInHoaDon() : this(new InvoiceSnapshot(Array.Empty<InvoiceLine>(), DateTime.Now, null, string.Empty))
         {
@@ -51,6 +57,7 @@ namespace LeLeStore
             btnInHoaDon.Click += btnInHoaDon_Click;
             btnLuu.Click += btnLuu_Click;
             Load += formInHoaDon_Load;
+            InitializeCustomerFeatures();
         }
 
         private void panel1_Click(object sender, EventArgs e)
@@ -62,10 +69,23 @@ namespace LeLeStore
         {
             PopulateInvoiceMetadata();
             UpdateTotalsDisplay();
+            TryReloadCustomerData();
         }
         private void ConfigureGridColumns()
         {
             dataGridView1.Columns.Clear();
+            var customerColumn = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = nameof(InvoiceLine.CustomerId),
+                HeaderText = "Mã KH",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                ReadOnly = true,
+                DefaultCellStyle = new DataGridViewCellStyle
+                {
+                    NullValue = string.Empty
+                }
+            };
+
 
             var orderColumn = new DataGridViewTextBoxColumn
             {
@@ -117,7 +137,7 @@ namespace LeLeStore
                 }
             };
 
-            dataGridView1.Columns.AddRange(orderColumn, nameColumn, quantityColumn, priceColumn, totalColumn);
+            dataGridView1.Columns.AddRange(customerColumn, orderColumn, nameColumn, quantityColumn, priceColumn, totalColumn);
         }
         private void PopulateInvoiceMetadata()
         {
@@ -320,8 +340,7 @@ namespace LeLeStore
             var totalAmount = CalculateTotalAmount();
 
             using (var command = new SqlCommand(
-                "INSERT INTO HoaDon (NgayLap, TongTien, MaKhachHang, MaNhanVien) OUTPUT INSERTED.MaHD VALUES (@NgayLap, @TongTien, NULL, @MaNhanVien);",
-                connection, transaction))
+"INSERT INTO HoaDon (NgayLap, TongTien, MaKhachHang, MaNhanVien) OUTPUT INSERTED.MaHD VALUES (@NgayLap, @TongTien, @MaKhachHang, @MaNhanVien);", connection, transaction))
             {
                 command.Parameters.Add("@NgayLap", SqlDbType.DateTime2).Value = dateTimePicker1.Value;
 
@@ -329,7 +348,15 @@ namespace LeLeStore
                 totalParameter.Precision = 18;
                 totalParameter.Scale = 2;
                 totalParameter.Value = totalAmount;
-
+                var customerParameter = command.Parameters.Add("@MaKhachHang", SqlDbType.Int);
+                if (_selectedCustomerId.HasValue)
+                {
+                    customerParameter.Value = _selectedCustomerId.Value;
+                }
+                else
+                {
+                    customerParameter.Value = DBNull.Value;
+                }
                 command.Parameters.Add("@MaNhanVien", SqlDbType.Int).Value = employeeId;
 
                 var result = command.ExecuteScalar();
@@ -364,7 +391,15 @@ namespace LeLeStore
         private (decimal Subtotal, decimal Discount, decimal Total) CalculateFinancialSummary()
         {
             var subtotal = _invoiceLines.Sum(line => line.Total);
-            var discount = subtotal <= 0m ? 0m : Math.Min(subtotal, _discountAmount);
+            if (subtotal <= 0m)
+            {
+                return (0m, 0m, 0m);
+            }
+
+            var baseDiscount = Math.Max(0m, Math.Min(subtotal, _discountAmount));
+            var remainingAfterBase = subtotal - baseDiscount;
+            var loyaltyDiscount = Math.Max(0m, Math.Min(remainingAfterBase, _appliedLoyaltyDiscount));
+            var discount = baseDiscount + loyaltyDiscount;
             var total = subtotal - discount;
 
             return (subtotal, discount, total);
@@ -521,10 +556,207 @@ namespace LeLeStore
                 .Replace("(", "\\(")
                 .Replace(")", "\\)");
         }
+        private void InitializeCustomerFeatures()
+        {
+            numericUpDown1.Minimum = 0;
+            numericUpDown1.Maximum = int.MaxValue;
+            numericUpDown1.Enabled = false;
 
+            txtChietKhau.ReadOnly = true;
+
+            btnUpdate.Enabled = false;
+            btnChietKhau.Enabled = false;
+
+            ResetCustomerState();
+        }
+
+        private bool TryReloadCustomerData()
+        {
+            try
+            {
+                _dataSet.KhachHang.Clear();
+                _khachHangTableAdapter.Fill(_dataSet.KhachHang);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Không thể tải dữ liệu khách hàng. Lỗi: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
+        private void ResetCustomerState()
+        {
+            _currentCustomerRow = null;
+            _selectedCustomerId = null;
+            numericUpDown1.Enabled = false;
+            btnUpdate.Enabled = false;
+            numericUpDown1.Value = numericUpDown1.Minimum;
+            ResetDiscountDisplay();
+            UpdateCustomerIdOnInvoiceLines(null);
+        }
+
+        private void UpdateCustomerIdOnInvoiceLines(int? customerId)
+        {
+            foreach (var line in _invoiceLines)
+            {
+                line.CustomerId = customerId;
+            }
+
+            dataGridView1.Refresh();
+        }
         private void label3_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            var phoneNumber = txtSearch.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(phoneNumber))
+            {
+                MessageBox.Show("Vui lòng nhập số điện thoại để tìm kiếm.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                ResetCustomerState();
+                txtSearch.Focus();
+                return;
+            }
+
+            if (!TryReloadCustomerData())
+            {
+                return;
+            }
+
+            var customerRow = _dataSet.KhachHang.FirstOrDefault(row => string.Equals(row.SoDienThoai?.Trim(), phoneNumber, StringComparison.OrdinalIgnoreCase));
+
+            if (customerRow == null)
+            {
+                MessageBox.Show("Không tìm thấy khách hàng với số điện thoại đã nhập.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                ResetCustomerState();
+                return;
+            }
+
+            _currentCustomerRow = customerRow;
+            _selectedCustomerId = customerRow.MaKhachHang;
+            _appliedLoyaltyDiscount = 0m;
+
+            numericUpDown1.Enabled = true;
+            btnUpdate.Enabled = true;
+
+            UpdateCustomerIdOnInvoiceLines(_selectedCustomerId);
+            UpdateNumericUpDownWithCurrentCustomer();
+            UpdateTotalsDisplay();
+        }
+        private void UpdateNumericUpDownWithCurrentCustomer()
+        {
+            if (_currentCustomerRow == null)
+            {
+                return;
+            }
+
+            var points = _currentCustomerRow.IsDiemTichLuyNull() ? 0 : _currentCustomerRow.DiemTichLuy;
+            var value = Math.Max(numericUpDown1.Minimum, Math.Min(numericUpDown1.Maximum, points));
+            numericUpDown1.Value = value;
+            UpdateDiscountDisplay(points);
+            _appliedLoyaltyDiscount = Math.Min(_appliedLoyaltyDiscount, _currentDiscountAmount);
+            UpdateTotalsDisplay();
+        }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            if (_currentCustomerRow == null)
+            {
+                MessageBox.Show("Vui lòng tìm kiếm và chọn khách hàng trước khi cập nhật.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            var newPoints = (int)numericUpDown1.Value;
+
+            try
+            {
+                _currentCustomerRow.DiemTichLuy = newPoints;
+
+                var rowsAffected = _khachHangTableAdapter.Update(_currentCustomerRow);
+
+                if (rowsAffected > 0)
+                {
+                    MessageBox.Show("Cập nhật điểm tích lũy thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    UpdateNumericUpDownWithCurrentCustomer();
+                }
+                else
+                {
+                    MessageBox.Show("Không có thay đổi nào được lưu.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                _currentCustomerRow.RejectChanges();
+                MessageBox.Show($"Không thể cập nhật điểm tích lũy. Lỗi: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        private void UpdateDiscountDisplay(int points)
+        {
+            _currentDiscountAmount = CalculateDiscountAmount(points);
+            txtChietKhau.Text = FormatCurrency(_currentDiscountAmount);
+            btnChietKhau.Enabled = _currentDiscountAmount > 0;
+        }
+
+        private void ResetDiscountDisplay()
+        {
+            _currentDiscountAmount = 0m;
+            _appliedLoyaltyDiscount = 0m;
+            txtChietKhau.Text = FormatCurrency(_currentDiscountAmount);
+            btnChietKhau.Enabled = false;
+            UpdateTotalsDisplay();
+        }
+
+        private decimal CalculateDiscountAmount(int points)
+        {
+            if (points >= 20)
+            {
+                return 11000m;
+            }
+
+            if (points >= 15)
+            {
+                return 9000m;
+            }
+
+            if (points >= 10)
+            {
+                return 7000m;
+            }
+
+            if (points >= 5)
+            {
+                return 5000m;
+            }
+
+            return 0m;
+        }
+
+        private string FormatCurrency(decimal amount)
+        {
+            return amount.ToString("N0", _currencyCulture) + " ₫";
+        }
+
+        private void btnChietKhau_Click(object sender, EventArgs e)
+        {
+            if (_currentCustomerRow == null)
+            {
+                MessageBox.Show("Vui lòng chọn khách hàng trước khi áp dụng chiết khấu.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            if (_currentDiscountAmount <= 0)
+            {
+                MessageBox.Show("Khách hàng chưa đủ điểm tích lũy để nhận khuyến mãi.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            _appliedLoyaltyDiscount = _currentDiscountAmount;
+            UpdateTotalsDisplay();
+
+            MessageBox.Show($"Đã áp dụng chiết khấu {FormatCurrency(_currentDiscountAmount)} vào hóa đơn.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }
