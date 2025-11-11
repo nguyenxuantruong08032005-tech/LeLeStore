@@ -16,9 +16,13 @@ namespace LeLeStore
         private readonly GStoreDataSet _dataSet = new GStoreDataSet();
         private readonly GStoreDataSetTableAdapters.SanPhamTableAdapter _sanPhamTableAdapter = new GStoreDataSetTableAdapters.SanPhamTableAdapter();
         private readonly GStoreDataSetTableAdapters.LoaiSPTableAdapter _loaiSpTableAdapter = new GStoreDataSetTableAdapters.LoaiSPTableAdapter();
+        private readonly GStoreDataSetTableAdapters.NhanVienTableAdapter _nhanVienTableAdapter = new GStoreDataSetTableAdapters.NhanVienTableAdapter();
+        private readonly GStoreDataSetTableAdapters.NguoiDungTableAdapter _nguoiDungTableAdapter = new GStoreDataSetTableAdapters.NguoiDungTableAdapter();
         private readonly Dictionary<string, Image> _imageCache = new Dictionary<string, Image>(StringComparer.OrdinalIgnoreCase);
         private readonly List<Image> _productImageClones = new List<Image>();
         private readonly CultureInfo _currencyCulture = CultureInfo.GetCultureInfo("vi-VN");
+        private readonly string _username;
+        private int? _currentEmployeeId;
         private DataTable _invoiceTable;
 
         private sealed class ProductDisplayInfo
@@ -31,7 +35,7 @@ namespace LeLeStore
 
             public string ImagePath { get; set; } = string.Empty;
         }
-        public formPayMent()
+        public formPayMent() : this(string.Empty)
         {
             InitializeComponent();
             dgvInvoice.AutoGenerateColumns = false;
@@ -42,6 +46,7 @@ namespace LeLeStore
             dgvInvoice.DataError += dgvInvoice_DataError;
 
             btnSearch.Click += btnSearch_Click;
+            LoadCurrentEmployeeInformation();
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -51,7 +56,69 @@ namespace LeLeStore
 
         private void btnThanhToan_Click(object sender, EventArgs e)
         {
+            if (_invoiceTable == null || _invoiceTable.Rows.Count == 0)
+            {
+                MessageBox.Show(
+                    "Không có sản phẩm trong hóa đơn.",
+                    "Thông báo",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                return;
+            }
 
+            var lines = new List<InvoiceLine>();
+            var sequence = 1;
+            foreach (DataRow row in _invoiceTable.Rows)
+            {
+                if (row.RowState == DataRowState.Deleted)
+                {
+                    continue;
+                }
+
+                try
+                {
+                    var line = new InvoiceLine
+                    {
+                        Sequence = sequence++,
+                        ProductId = row.Field<int>("MaSP"),
+                        ProductName = row.Field<string>("TenSP"),
+                        Quantity = row.Field<int>("SoLuong"),
+                        UnitPrice = row.Field<decimal>("DonGia")
+                    };
+
+                    lines.Add(line);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        "Không thể tạo dòng sản phẩm cho hóa đơn.\n" + ex.Message,
+                        "Lỗi",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                    return;
+                }
+            }
+
+            if (lines.Count == 0)
+            {
+                MessageBox.Show(
+                    "Không có sản phẩm hợp lệ trong hóa đơn.",
+                    "Thông báo",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                return;
+            }
+
+            var snapshot = new InvoiceSnapshot(
+                lines,
+                DateTime.Now,
+                _currentEmployeeId,
+                _username);
+
+            using (var invoiceForm = new formInHoaDon(snapshot))
+            {
+                invoiceForm.ShowDialog(this);
+            }
         }
 
         private void splitContainer1_Panel1_Paint(object sender, PaintEventArgs e)
@@ -502,6 +569,8 @@ namespace LeLeStore
             _imageCache.Clear();
             _sanPhamTableAdapter?.Dispose();
             _loaiSpTableAdapter?.Dispose();
+            _nhanVienTableAdapter?.Dispose();
+            _nguoiDungTableAdapter?.Dispose();
             _dataSet?.Dispose();
         }
 
@@ -534,6 +603,47 @@ namespace LeLeStore
             }
 
             PopulateProductCards(products);
+        }
+        private void LoadCurrentEmployeeInformation()
+        {
+            if (string.IsNullOrWhiteSpace(_username))
+            {
+                return;
+            }
+
+            try
+            {
+                _nguoiDungTableAdapter.ClearBeforeFill = true;
+                _nguoiDungTableAdapter.Fill(_dataSet.NguoiDung);
+
+                var userRow = _dataSet.NguoiDung
+                    .FirstOrDefault(row => !row.IsTenDangNhapNull() &&
+                        string.Equals(row.TenDangNhap, _username, StringComparison.OrdinalIgnoreCase));
+
+                if (userRow == null)
+                {
+                    return;
+                }
+
+                _nhanVienTableAdapter.ClearBeforeFill = true;
+                _nhanVienTableAdapter.Fill(_dataSet.NhanVien);
+
+                var employeeRow = _dataSet.NhanVien
+                    .FirstOrDefault(row => !row.IsMaNguoiDungNull() && row.MaNguoiDung == userRow.MaNguoiDung);
+
+                if (employeeRow != null)
+                {
+                    _currentEmployeeId = employeeRow.MaNhanVien;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "Không thể xác định mã nhân viên hiện tại.\n" + ex.Message,
+                    "Cảnh báo",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+            }
         }
     }
 }

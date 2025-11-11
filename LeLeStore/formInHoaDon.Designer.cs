@@ -117,6 +117,7 @@
             this.btnInHoaDon.TabIndex = 6;
             this.btnInHoaDon.Text = "In Hóa Đơn";
             this.btnInHoaDon.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnInHoaDon.Click += new System.EventHandler(this.btnInHoaDon_Click);
             // 
             // panel1
             // 
@@ -137,6 +138,7 @@
             this.panel1.SmoothingType = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             this.panel1.TabIndex = 7;
             this.panel1.Text = "panel1";
+            this.panel1.Click += new System.EventHandler(this.panel1_Click);
             // 
             // textBox1
             // 
@@ -188,6 +190,7 @@
             this.btnLuu.TabIndex = 7;
             this.btnLuu.Text = "Lưu";
             this.btnLuu.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnLuu.Click += new System.EventHandler(this.btnLuu_Click);
             // 
             // formInHoaDon
             // 
@@ -199,6 +202,7 @@
             this.Controls.Add(this.dataGridView1);
             this.Name = "formInHoaDon";
             this.Text = "formInHoaDon";
+            this.Load += new System.EventHandler(this.formInHoaDon_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
