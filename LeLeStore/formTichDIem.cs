@@ -131,7 +131,7 @@ namespace LeLeStore
 
             if (_bindingSource.Current is DataRowView currentView && currentView.Row is GStoreDataSet.KhachHangRow row)
             {
-                var points = row.IsDiemTichLuyNull() ? 0 : row.DiemTichLuy;
+                var points = row.IsNull(row.Table.DiemTichLuyColumn) ? 0 : row.DiemTichLuy;
                 var value = Math.Max(numericUpDown1.Minimum, Math.Min(numericUpDown1.Maximum, points));
                 numericUpDown1.Value = value;
                 UpdateDiscountDisplay(points);
