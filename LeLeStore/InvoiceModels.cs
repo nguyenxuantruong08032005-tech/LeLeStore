@@ -36,7 +36,12 @@ namespace LeLeStore
 
     public class InvoiceSnapshot
     {
-        public InvoiceSnapshot(IEnumerable<InvoiceLine> lines, DateTime createdAt, int? employeeId, string employeeUsername)
+        public InvoiceSnapshot(
+           IEnumerable<InvoiceLine> lines,
+           DateTime createdAt,
+           int? employeeId,
+           string employeeUsername,
+           decimal discountAmount = 0m)
         {
             if (lines == null)
             {
@@ -59,6 +64,9 @@ namespace LeLeStore
             CreatedAt = createdAt;
             EmployeeId = employeeId;
             EmployeeUsername = employeeUsername ?? string.Empty;
+            var subtotal = materialized.Sum(item => item.Total);
+            Subtotal = subtotal;
+            DiscountAmount = Math.Max(0m, Math.Min(subtotal, discountAmount));
         }
 
         public IReadOnlyList<InvoiceLine> Lines { get; }
@@ -69,6 +77,10 @@ namespace LeLeStore
 
         public string EmployeeUsername { get; }
 
-        public decimal TotalAmount => Lines.Sum(line => line?.Total ?? 0m);
+        public decimal Subtotal { get; }
+
+        public decimal DiscountAmount { get; }
+
+        public decimal TotalAmount => Subtotal - DiscountAmount;
     }
 }

@@ -40,6 +40,9 @@
             this.label4 = new System.Windows.Forms.Label();
             this.panel2 = new ReaLTaiizor.Controls.Panel();
             this.btnLuu = new ReaLTaiizor.Controls.Button();
+            this.lblTotalPayable = new System.Windows.Forms.Label();
+            this.lblDiscount = new System.Windows.Forms.Label();
+            this.lblSubtotal = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -95,7 +98,7 @@
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 62;
             this.dataGridView1.RowTemplate.Height = 28;
-            this.dataGridView1.Size = new System.Drawing.Size(915, 566);
+            this.dataGridView1.Size = new System.Drawing.Size(915, 658);
             this.dataGridView1.TabIndex = 5;
             // 
             // btnInHoaDon
@@ -109,7 +112,7 @@
             this.btnInHoaDon.Image = null;
             this.btnInHoaDon.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnInHoaDon.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnInHoaDon.Location = new System.Drawing.Point(222, 26);
+            this.btnInHoaDon.Location = new System.Drawing.Point(306, 136);
             this.btnInHoaDon.Name = "btnInHoaDon";
             this.btnInHoaDon.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnInHoaDon.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -159,14 +162,17 @@
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.White;
+            this.panel2.Controls.Add(this.lblSubtotal);
+            this.panel2.Controls.Add(this.lblDiscount);
+            this.panel2.Controls.Add(this.lblTotalPayable);
             this.panel2.Controls.Add(this.btnLuu);
             this.panel2.Controls.Add(this.btnInHoaDon);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel2.EdgeColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(41)))), ((int)(((byte)(50)))));
-            this.panel2.Location = new System.Drawing.Point(0, 449);
+            this.panel2.Location = new System.Drawing.Point(0, 458);
             this.panel2.Name = "panel2";
             this.panel2.Padding = new System.Windows.Forms.Padding(5);
-            this.panel2.Size = new System.Drawing.Size(915, 117);
+            this.panel2.Size = new System.Drawing.Size(915, 200);
             this.panel2.SmoothingType = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             this.panel2.TabIndex = 8;
             this.panel2.Text = "panel2";
@@ -182,7 +188,7 @@
             this.btnLuu.Image = null;
             this.btnLuu.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnLuu.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnLuu.Location = new System.Drawing.Point(581, 26);
+            this.btnLuu.Location = new System.Drawing.Point(571, 136);
             this.btnLuu.Name = "btnLuu";
             this.btnLuu.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnLuu.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -192,11 +198,41 @@
             this.btnLuu.TextAlignment = System.Drawing.StringAlignment.Center;
             this.btnLuu.Click += new System.EventHandler(this.btnLuu_Click);
             // 
+            // lblTotalPayable
+            // 
+            this.lblTotalPayable.AutoSize = true;
+            this.lblTotalPayable.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTotalPayable.Location = new System.Drawing.Point(20, 78);
+            this.lblTotalPayable.Name = "lblTotalPayable";
+            this.lblTotalPayable.Size = new System.Drawing.Size(243, 25);
+            this.lblTotalPayable.TabIndex = 10;
+            this.lblTotalPayable.Text = "Tổng thanh toán: 0 ₫";
+            // 
+            // lblDiscount
+            // 
+            this.lblDiscount.AutoSize = true;
+            this.lblDiscount.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDiscount.Location = new System.Drawing.Point(20, 52);
+            this.lblDiscount.Name = "lblDiscount";
+            this.lblDiscount.Size = new System.Drawing.Size(168, 25);
+            this.lblDiscount.TabIndex = 9;
+            this.lblDiscount.Text = "Chiết khấu: 0 ₫";
+            // 
+            // lblSubtotal
+            // 
+            this.lblSubtotal.AutoSize = true;
+            this.lblSubtotal.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSubtotal.Location = new System.Drawing.Point(20, 26);
+            this.lblSubtotal.Name = "lblSubtotal";
+            this.lblSubtotal.Size = new System.Drawing.Size(216, 25);
+            this.lblSubtotal.TabIndex = 8;
+            this.lblSubtotal.Text = "Tổng trước giảm: 0 ₫";
+            // 
             // formInHoaDon
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(915, 566);
+            this.ClientSize = new System.Drawing.Size(915, 658);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.dataGridView1);
@@ -207,6 +243,7 @@
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -225,5 +262,8 @@
         private System.Windows.Forms.Label label4;
         private ReaLTaiizor.Controls.Panel panel2;
         private ReaLTaiizor.Controls.Button btnLuu;
+        private System.Windows.Forms.Label lblSubtotal;
+        private System.Windows.Forms.Label lblDiscount;
+        private System.Windows.Forms.Label lblTotalPayable;
     }
 }

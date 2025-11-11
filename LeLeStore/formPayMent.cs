@@ -123,12 +123,14 @@ namespace LeLeStore
                     MessageBoxIcon.Information);
                 return;
             }
-
+            var subtotal = lines.Sum(line => line.Total);
+            var discountToApply = Math.Min(subtotal, Math.Max(0m, _loyaltyDiscountAmount));
             var snapshot = new InvoiceSnapshot(
                 lines,
                 DateTime.Now,
                 _currentEmployeeId,
-                _username);
+                  _username,
+                discountToApply);
             var invoiceSaved = false;
             using (var invoiceForm = new formInHoaDon(snapshot))
             {

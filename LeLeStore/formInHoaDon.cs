@@ -17,6 +17,7 @@ namespace LeLeStore
     {
         private readonly InvoiceSnapshot _invoiceSnapshot;
         private readonly BindingList<InvoiceLine> _invoiceLines;
+        private readonly decimal _discountAmount;
         private readonly CultureInfo _currencyCulture = CultureInfo.GetCultureInfo("vi-VN");
         private int? _persistedInvoiceId;
         private bool _isSaved;
@@ -39,6 +40,8 @@ namespace LeLeStore
             ConfigureGridColumns();
 
             _invoiceLines = new BindingList<InvoiceLine>(_invoiceSnapshot.Lines.Select(line => line.Clone()).ToList());
+            var subtotal = _invoiceLines.Sum(line => line.Total);
+            _discountAmount = Math.Min(subtotal, Math.Max(0m, _invoiceSnapshot.DiscountAmount));
             dataGridView1.DataSource = _invoiceLines;
 
             textBox1.ReadOnly = true;
@@ -58,6 +61,7 @@ namespace LeLeStore
         private void formInHoaDon_Load(object sender, EventArgs e)
         {
             PopulateInvoiceMetadata();
+            UpdateTotalsDisplay();
         }
         private void ConfigureGridColumns()
         {
@@ -357,16 +361,34 @@ namespace LeLeStore
                 command.ExecuteNonQuery();
             }
         }
+        private (decimal Subtotal, decimal Discount, decimal Total) CalculateFinancialSummary()
+        {
+            var subtotal = _invoiceLines.Sum(line => line.Total);
+            var discount = subtotal <= 0m ? 0m : Math.Min(subtotal, _discountAmount);
+            var total = subtotal - discount;
 
+            return (subtotal, discount, total);
+        }
         private decimal CalculateTotalAmount()
         {
-            return _invoiceLines.Sum(line => line.Total);
+            return CalculateFinancialSummary().Total;
+        }
+        private void UpdateTotalsDisplay()
+        {
+            var summary = CalculateFinancialSummary();
+
+            lblSubtotal.Text = "Tổng trước giảm: " + summary.Subtotal.ToString("N0", _currencyCulture) + " ₫";
+            lblDiscount.Text = "Chiết khấu: " + summary.Discount.ToString("N0", _currencyCulture) + " ₫";
+            lblTotalPayable.Text = "Tổng thanh toán: " + summary.Total.ToString("N0", _currencyCulture) + " ₫";
         }
 
         private void ExportInvoiceToPdf(string filePath)
         {
             var lines = _invoiceLines.ToList();
-            var totalAmount = CalculateTotalAmount();
+            var summary = CalculateFinancialSummary();
+            var subtotalAmount = summary.Subtotal;
+            var discountAmount = summary.Discount;
+            var totalAmount = summary.Total;
 
             var contentBuilder = new StringBuilder();
 
@@ -395,7 +417,13 @@ namespace LeLeStore
                 contentBuilder.AppendLine("0 -16 Td (" + EscapePdfText(rowText) + ") Tj");
             }
 
-            contentBuilder.AppendLine("0 -24 Td (" + EscapePdfText($"Tong cong: {totalAmount.ToString("N0", _currencyCulture)} VND") + ") Tj");
+            contentBuilder.AppendLine("0 -24 Td (" + EscapePdfText($"Tong truoc giam: {subtotalAmount.ToString("N0", _currencyCulture)} VND") + ") Tj");
+            if (discountAmount > 0)
+            {
+                contentBuilder.AppendLine("0 -16 Td (" + EscapePdfText($"Chiet khau: {discountAmount.ToString("N0", _currencyCulture)} VND") + ") Tj");
+            }
+
+            contentBuilder.AppendLine("0 -16 Td (" + EscapePdfText($"Tong cong: {totalAmount.ToString("N0", _currencyCulture)} VND") + ") Tj");
             contentBuilder.AppendLine("ET");
 
             var contentString = contentBuilder.ToString();
