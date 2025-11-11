@@ -88,6 +88,7 @@
             this.btnTichDiem.TabIndex = 2;
             this.btnTichDiem.Text = "Tích Điểm";
             this.btnTichDiem.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnTichDiem.Click += new System.EventHandler(this.btnTichDiem_Click);
             // 
             // btnThanhToan
             // 

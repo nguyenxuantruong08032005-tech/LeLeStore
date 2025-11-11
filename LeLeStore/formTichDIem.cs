@@ -30,6 +30,9 @@ namespace LeLeStore
             dataGridView1.DataSource = _bindingSource;
 
             numericUpDown1.Enabled = false;
+            numericUpDown1.Minimum = 0;
+            numericUpDown1.Maximum = int.MaxValue;
+            btnUpdate.Enabled = false;
         }
 
         private void formTichDIem_Load(object sender, EventArgs e)
@@ -53,6 +56,8 @@ namespace LeLeStore
                 MessageBox.Show("Vui lòng nhập số điện thoại để tìm kiếm.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 _bindingSource.RemoveFilter();
                 numericUpDown1.Enabled = false;
+                btnUpdate.Enabled = false;
+                numericUpDown1.Value = numericUpDown1.Minimum;
                 dataGridView1.ClearSelection();
                 return;
             }
@@ -85,6 +90,8 @@ namespace LeLeStore
             if (_bindingSource.Count > 0)
             {
                 numericUpDown1.Enabled = true;
+                btnUpdate.Enabled = true;
+                _bindingSource.Position = 0;
                 if (dataGridView1.Rows.Count > 0)
                 {
                     dataGridView1.ClearSelection();
@@ -98,12 +105,83 @@ namespace LeLeStore
                         }
                     }
                 }
+                UpdateNumericUpDownWithCurrentCustomer();
             }
             else
             {
                 numericUpDown1.Enabled = false;
+                btnUpdate.Enabled = false;
+                numericUpDown1.Value = numericUpDown1.Minimum;
                 MessageBox.Show("Không tìm thấy khách hàng với số điện thoại đã nhập.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+        }
+        private void UpdateNumericUpDownWithCurrentCustomer()
+        {
+            if (!numericUpDown1.Enabled)
+            {
+                return;
+            }
+
+            if (_bindingSource.Current is DataRowView currentView && currentView.Row is GStoreDataSet.KhachHangRow row)
+            {
+                var value = Math.Max(numericUpDown1.Minimum, Math.Min(numericUpDown1.Maximum, row.DiemTichLuy));
+                numericUpDown1.Value = value;
+            }
+        }
+
+        private void dataGridView1_SelectionChanged(object sender, EventArgs e)
+        {
+            if (!numericUpDown1.Enabled)
+            {
+                return;
+            }
+
+            UpdateNumericUpDownWithCurrentCustomer();
+        }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            if (!numericUpDown1.Enabled || _bindingSource.Count == 0)
+            {
+                MessageBox.Show("Vui lòng tìm kiếm và chọn khách hàng trước khi cập nhật.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            if (!(_bindingSource.Current is DataRowView currentView) || !(currentView.Row is GStoreDataSet.KhachHangRow row))
+            {
+                MessageBox.Show("Không thể xác định khách hàng được chọn.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            var newPoints = (int)numericUpDown1.Value;
+
+            try
+            {
+                row.DiemTichLuy = newPoints;
+                _bindingSource.EndEdit();
+
+                var rowsAffected = _khachHangTableAdapter.Update(row);
+                if (rowsAffected > 0)
+                {
+                    MessageBox.Show("Cập nhật điểm tích lũy thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    _bindingSource.ResetCurrentItem();
+                    UpdateNumericUpDownWithCurrentCustomer();
+                }
+                else
+                {
+                    MessageBox.Show("Không có thay đổi nào được lưu.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                row.RejectChanges();
+                MessageBox.Show($"Không thể cập nhật điểm tích lũy. Lỗi: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -51,6 +51,7 @@ namespace LeLeStore
             dgvInvoice.DataError += dgvInvoice_DataError;
 
             btnSearch.Click += btnSearch_Click;
+           
             LoadCurrentEmployeeInformation();
         }
 
@@ -802,6 +803,14 @@ namespace LeLeStore
                     "Cảnh báo",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
+            }
+        }
+
+        private void btnTichDiem_Click(object sender, EventArgs e)
+        {
+            using (var loyaltyForm = new formTichDIem())
+            {
+                loyaltyForm.ShowDialog(this);
             }
         }
     }

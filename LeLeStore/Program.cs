@@ -16,7 +16,7 @@ namespace LeLeStore
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new formTichDIem());
+            Application.Run(new Form1());
         }
     }
 }

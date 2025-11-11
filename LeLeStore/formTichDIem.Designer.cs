@@ -35,6 +35,9 @@
             this.label2 = new System.Windows.Forms.Label();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.btnUpdate = new ReaLTaiizor.Controls.Button();
+            this.txtChietKhau = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.btnChietKhau = new ReaLTaiizor.Controls.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
@@ -43,15 +46,16 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Arial", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(383, 15);
+            this.label1.Location = new System.Drawing.Point(334, 25);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(191, 43);
+            this.label1.Size = new System.Drawing.Size(398, 43);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Tích Điểm";
+            this.label1.Text = "Tích Điểm & Chiết Khấu";
+            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // txtSearch
             // 
-            this.txtSearch.Location = new System.Drawing.Point(648, 32);
+            this.txtSearch.Location = new System.Drawing.Point(743, 42);
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.Size = new System.Drawing.Size(175, 26);
             this.txtSearch.TabIndex = 1;
@@ -67,7 +71,7 @@
             this.btnSearch.Image = null;
             this.btnSearch.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnSearch.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnSearch.Location = new System.Drawing.Point(829, 21);
+            this.btnSearch.Location = new System.Drawing.Point(924, 31);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnSearch.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -104,6 +108,7 @@
             this.dataGridView1.RowTemplate.Height = 28;
             this.dataGridView1.Size = new System.Drawing.Size(801, 213);
             this.dataGridView1.TabIndex = 5;
+            this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
             // 
             // btnUpdate
             // 
@@ -116,7 +121,7 @@
             this.btnUpdate.Image = null;
             this.btnUpdate.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnUpdate.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnUpdate.Location = new System.Drawing.Point(458, 390);
+            this.btnUpdate.Location = new System.Drawing.Point(324, 390);
             this.btnUpdate.Name = "btnUpdate";
             this.btnUpdate.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnUpdate.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -124,12 +129,52 @@
             this.btnUpdate.TabIndex = 6;
             this.btnUpdate.Text = "Cập Nhật";
             this.btnUpdate.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
+            // 
+            // txtChietKhau
+            // 
+            this.txtChietKhau.Location = new System.Drawing.Point(594, 89);
+            this.txtChietKhau.Name = "txtChietKhau";
+            this.txtChietKhau.Size = new System.Drawing.Size(138, 26);
+            this.txtChietKhau.TabIndex = 7;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(480, 95);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(95, 20);
+            this.label3.TabIndex = 8;
+            this.label3.Text = "Khuyến Mãi:";
+            // 
+            // btnChietKhau
+            // 
+            this.btnChietKhau.BackColor = System.Drawing.Color.Transparent;
+            this.btnChietKhau.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
+            this.btnChietKhau.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnChietKhau.EnteredBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
+            this.btnChietKhau.EnteredColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
+            this.btnChietKhau.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnChietKhau.Image = null;
+            this.btnChietKhau.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnChietKhau.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
+            this.btnChietKhau.Location = new System.Drawing.Point(594, 390);
+            this.btnChietKhau.Name = "btnChietKhau";
+            this.btnChietKhau.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
+            this.btnChietKhau.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
+            this.btnChietKhau.Size = new System.Drawing.Size(138, 47);
+            this.btnChietKhau.TabIndex = 9;
+            this.btnChietKhau.Text = "Chiết Khấu";
+            this.btnChietKhau.TextAlignment = System.Drawing.StringAlignment.Center;
             // 
             // formTichDIem
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(991, 465);
+            this.ClientSize = new System.Drawing.Size(1064, 489);
+            this.Controls.Add(this.btnChietKhau);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.txtChietKhau);
             this.Controls.Add(this.btnUpdate);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.label2);
@@ -156,5 +201,8 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.DataGridView dataGridView1;
         private ReaLTaiizor.Controls.Button btnUpdate;
+        private System.Windows.Forms.TextBox txtChietKhau;
+        private System.Windows.Forms.Label label3;
+        private ReaLTaiizor.Controls.Button btnChietKhau;
     }
 }
