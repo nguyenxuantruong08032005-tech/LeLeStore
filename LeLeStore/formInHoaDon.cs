@@ -653,7 +653,7 @@ namespace LeLeStore
                 return;
             }
 
-            var points = _currentCustomerRow.IsDiemTichLuyNull() ? 0 : _currentCustomerRow.DiemTichLuy;
+            var points = _currentCustomerRow.IsNull(_currentCustomerRow.Table.Columns["DiemTichLuy"]) ? 0 : _currentCustomerRow.DiemTichLuy;
             var value = Math.Max(numericUpDown1.Minimum, Math.Min(numericUpDown1.Maximum, points));
             numericUpDown1.Value = value;
             UpdateDiscountDisplay(points);
@@ -758,5 +758,26 @@ namespace LeLeStore
 
             MessageBox.Show($"Đã áp dụng chiết khấu {FormatCurrency(_currentDiscountAmount)} vào hóa đơn.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+
+        private void btnChietKhau_Click_1(object sender, EventArgs e)
+        {
+            if (_currentCustomerRow == null)
+            {
+                MessageBox.Show("Vui lòng chọn khách hàng trước khi áp dụng chiết khấu.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            if (_currentDiscountAmount <= 0)
+            {
+                MessageBox.Show("Khách hàng chưa đủ điểm tích lũy để nhận khuyến mãi.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            _appliedLoyaltyDiscount = _currentDiscountAmount;
+            UpdateTotalsDisplay();
+
+            MessageBox.Show($"Đã áp dụng chiết khấu {FormatCurrency(_currentDiscountAmount)} vào hóa đơn.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
     }
+    
 }

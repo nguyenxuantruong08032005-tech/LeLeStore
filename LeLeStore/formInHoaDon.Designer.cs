@@ -276,6 +276,7 @@
             this.btnChietKhau.TabIndex = 12;
             this.btnChietKhau.Text = "Chiết Khấu";
             this.btnChietKhau.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnChietKhau.Click += new System.EventHandler(this.btnChietKhau_Click_1);
             // 
             // btnUpdate
             // 
