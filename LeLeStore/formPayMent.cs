@@ -123,6 +123,12 @@ namespace LeLeStore
             {
                 invoiceForm.ShowDialog(this);
             }
+            if (_invoiceTable != null)
+            {
+                _invoiceTable.Clear();
+            }
+
+            UpdateTotalLabel();
         }
 
         private void splitContainer1_Panel1_Paint(object sender, PaintEventArgs e)

@@ -201,7 +201,7 @@
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.dataGridView1);
             this.Name = "formInHoaDon";
-            this.Text = "formInHoaDon";
+            this.Text = "In Hóa Đơn";
             this.Load += new System.EventHandler(this.formInHoaDon_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.panel1.ResumeLayout(false);
