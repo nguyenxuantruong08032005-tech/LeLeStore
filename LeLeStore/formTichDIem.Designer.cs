@@ -75,9 +75,11 @@
             this.btnSearch.TabIndex = 2;
             this.btnSearch.Text = "Tìm kiếm";
             this.btnSearch.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
             // numericUpDown1
             // 
+            this.numericUpDown1.Enabled = false;
             this.numericUpDown1.Location = new System.Drawing.Point(227, 88);
             this.numericUpDown1.Name = "numericUpDown1";
             this.numericUpDown1.Size = new System.Drawing.Size(132, 26);
@@ -137,6 +139,7 @@
             this.Controls.Add(this.label1);
             this.Name = "formTichDIem";
             this.Text = "formTichDIem";
+            this.Load += new System.EventHandler(this.formTichDIem_Load);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);

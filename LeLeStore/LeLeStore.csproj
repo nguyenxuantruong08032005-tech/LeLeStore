@@ -180,6 +180,12 @@
     <Compile Include="formSupplier.Designer.cs">
       <DependentUpon>formSupplier.cs</DependentUpon>
     </Compile>
+    <Compile Include="formTichDIem.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="formTichDIem.Designer.cs">
+      <DependentUpon>formTichDIem.cs</DependentUpon>
+    </Compile>
     <Compile Include="formTonKho.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -249,6 +255,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="formSupplier.resx">
       <DependentUpon>formSupplier.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="formTichDIem.resx">
+      <DependentUpon>formTichDIem.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="formTonKho.resx">
       <DependentUpon>formTonKho.cs</DependentUpon>
