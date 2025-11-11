@@ -24,6 +24,7 @@ namespace LeLeStore
         private readonly string _username;
         private int? _currentEmployeeId;
         private DataTable _invoiceTable;
+        private decimal _loyaltyDiscountAmount;
 
         private sealed class ProductDisplayInfo
         {
@@ -531,6 +532,7 @@ namespace LeLeStore
             if (_invoiceTable == null || _invoiceTable.Rows.Count == 0)
             {
                 lblTotalText.Text = "Tổng Tiền: 0 ₫";
+                _loyaltyDiscountAmount = 0m;
                 return;
             }
 
@@ -543,7 +545,16 @@ namespace LeLeStore
                 }
             }
 
-            lblTotalText.Text = "Tổng Tiền: " + total.ToString("N0", _currencyCulture) + " ₫";
+            var discountToApply = Math.Min(total, Math.Max(0m, _loyaltyDiscountAmount));
+            var payableTotal = total - discountToApply;
+
+            var totalText = "Tổng Tiền: " + payableTotal.ToString("N0", _currencyCulture) + " ₫";
+            if (discountToApply > 0)
+            {
+                totalText += " (Đã giảm " + discountToApply.ToString("N0", _currencyCulture) + " ₫)";
+            }
+
+            lblTotalText.Text = totalText;
         }
         private bool TryGetProductStock(int productId, out int availableQuantity)
         {
@@ -812,6 +823,11 @@ namespace LeLeStore
             {
                 loyaltyForm.ShowDialog(this);
             }
+        }
+        public void ApplyLoyaltyDiscount(decimal discountAmount)
+        {
+            _loyaltyDiscountAmount = discountAmount < 0m ? 0m : discountAmount;
+            UpdateTotalLabel();
         }
     }
 }

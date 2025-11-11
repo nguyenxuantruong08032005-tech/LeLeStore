@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +16,8 @@ namespace LeLeStore
         private readonly GStoreDataSet _dataSet = new GStoreDataSet();
         private readonly GStoreDataSetTableAdapters.KhachHangTableAdapter _khachHangTableAdapter = new GStoreDataSetTableAdapters.KhachHangTableAdapter();
         private readonly BindingSource _bindingSource = new BindingSource();
-
+        private readonly CultureInfo _currencyCulture = CultureInfo.GetCultureInfo("vi-VN");
+        private decimal _currentDiscountAmount;
         public formTichDIem()
         {
             InitializeComponent();
@@ -33,6 +35,9 @@ namespace LeLeStore
             numericUpDown1.Minimum = 0;
             numericUpDown1.Maximum = int.MaxValue;
             btnUpdate.Enabled = false;
+
+            txtChietKhau.ReadOnly = true;
+            ResetDiscountDisplay();
         }
 
         private void formTichDIem_Load(object sender, EventArgs e)
@@ -59,6 +64,7 @@ namespace LeLeStore
                 btnUpdate.Enabled = false;
                 numericUpDown1.Value = numericUpDown1.Minimum;
                 dataGridView1.ClearSelection();
+                ResetDiscountDisplay();
                 return;
             }
 
@@ -112,6 +118,7 @@ namespace LeLeStore
                 numericUpDown1.Enabled = false;
                 btnUpdate.Enabled = false;
                 numericUpDown1.Value = numericUpDown1.Minimum;
+                ResetDiscountDisplay();
                 MessageBox.Show("Không tìm thấy khách hàng với số điện thoại đã nhập.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
@@ -124,8 +131,10 @@ namespace LeLeStore
 
             if (_bindingSource.Current is DataRowView currentView && currentView.Row is GStoreDataSet.KhachHangRow row)
             {
-                var value = Math.Max(numericUpDown1.Minimum, Math.Min(numericUpDown1.Maximum, row.DiemTichLuy));
+                var points = row.IsDiemTichLuyNull() ? 0 : row.DiemTichLuy;
+                var value = Math.Max(numericUpDown1.Minimum, Math.Min(numericUpDown1.Maximum, points));
                 numericUpDown1.Value = value;
+                UpdateDiscountDisplay(points);
             }
         }
 
@@ -178,7 +187,76 @@ namespace LeLeStore
                 MessageBox.Show($"Không thể cập nhật điểm tích lũy. Lỗi: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        private void UpdateDiscountDisplay(int points)
+        {
+            _currentDiscountAmount = CalculateDiscountAmount(points);
+            txtChietKhau.Text = FormatCurrency(_currentDiscountAmount);
+            btnChietKhau.Enabled = _bindingSource.Count > 0 && _currentDiscountAmount > 0;
+        }
 
+        private void ResetDiscountDisplay()
+        {
+            _currentDiscountAmount = 0m;
+            txtChietKhau.Text = FormatCurrency(_currentDiscountAmount);
+            btnChietKhau.Enabled = false;
+        }
+
+        private decimal CalculateDiscountAmount(int points)
+        {
+            if (points >= 20)
+            {
+                return 11000m;
+            }
+
+            if (points >= 15)
+            {
+                return 9000m;
+            }
+
+            if (points >= 10)
+            {
+                return 7000m;
+            }
+
+            if (points >= 5)
+            {
+                return 5000m;
+            }
+
+            return 0m;
+        }
+
+        private string FormatCurrency(decimal amount)
+        {
+            return amount.ToString("N0", _currencyCulture) + " ₫";
+        }
+
+        private void btnChietKhau_Click(object sender, EventArgs e)
+        {
+            if (_bindingSource.Count == 0 || !(_bindingSource.Current is DataRowView currentView) || !(currentView.Row is GStoreDataSet.KhachHangRow))
+            {
+                MessageBox.Show("Vui lòng chọn khách hàng trước khi áp dụng chiết khấu.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            if (_currentDiscountAmount <= 0)
+            {
+                MessageBox.Show("Khách hàng chưa đủ điểm tích lũy để nhận khuyến mãi.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            if (Owner is formPayMent paymentForm)
+            {
+                paymentForm.ApplyLoyaltyDiscount(_currentDiscountAmount);
+                MessageBox.Show($"Đã áp dụng chiết khấu {FormatCurrency(_currentDiscountAmount)} vào hóa đơn.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                DialogResult = DialogResult.OK;
+                Close();
+            }
+            else
+            {
+                MessageBox.Show("Không tìm thấy hóa đơn để áp dụng chiết khấu.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
         private void label1_Click(object sender, EventArgs e)
         {
 
