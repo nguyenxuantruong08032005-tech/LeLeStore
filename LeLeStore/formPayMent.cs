@@ -37,6 +37,10 @@ namespace LeLeStore
         }
         public formPayMent() : this(string.Empty)
         {
+        }
+
+        public formPayMent(string username)
+        {
             InitializeComponent();
             dgvInvoice.AutoGenerateColumns = false;
             dgvInvoice.AllowUserToAddRows = false;
@@ -617,7 +621,7 @@ namespace LeLeStore
                 _nguoiDungTableAdapter.Fill(_dataSet.NguoiDung);
 
                 var userRow = _dataSet.NguoiDung
-                    .FirstOrDefault(row => !row.IsTenDangNhapNull() &&
+                     .FirstOrDefault(row => !row.IsNull(_dataSet.NguoiDung.TenDangNhapColumn) &&
                         string.Equals(row.TenDangNhap, _username, StringComparison.OrdinalIgnoreCase));
 
                 if (userRow == null)

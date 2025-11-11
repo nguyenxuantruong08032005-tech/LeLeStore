@@ -378,7 +378,7 @@ namespace LeLeStore
 
         private void btnPayMent_Click(object sender, EventArgs e)
         {
-            OpenChildForm(new formPayMent());
+            OpenChildForm(new formPayMent(_username));
         }
         private void PayMent_FormClosed(object sender, EventArgs e)
         {

@@ -206,6 +206,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>GStoreDataSet.xsd</DependentUpon>
     </Compile>
+    <Compile Include="InvoiceModels.cs" />
     <Compile Include="mdiProperties.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
