@@ -437,17 +437,7 @@ namespace LeLeStore
 
         private void btnPN_Click(object sender, EventArgs e)
         {
-            if (nhap == null)
-            {
-                nhap = new formPhieuNhap();
-                nhap.FormClosed += PhieuNhap_FormClosed;
-                nhap.MdiParent = this;
-                nhap.Show();
-            }
-            else
-            {
-                nhap.Activate();
-            }
+            OpenChildForm(new formPhieuNhap());
         }
         private void PhieuNhap_FormClosed(object sender, EventArgs e)
         {
