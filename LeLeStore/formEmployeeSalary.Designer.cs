@@ -120,6 +120,8 @@
             this.cboNhanVien.Name = "cboNhanVien";
             this.cboNhanVien.Size = new System.Drawing.Size(175, 32);
             this.cboNhanVien.TabIndex = 0;
+            this.cboNhanVien.SelectedIndexChanged += new System.EventHandler(this.cboNhanVien_SelectedIndexChanged);
+            this.cboNhanVien.SelectionChangeCommitted += new System.EventHandler(this.cboNhanVien_SelectionChangeCommitted);
             // 
             // label1
             // 
@@ -655,6 +657,7 @@
             this.btnTinhLuong.TabIndex = 20;
             this.btnTinhLuong.Text = "Tính Lương";
             this.btnTinhLuong.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnTinhLuong.Click += new System.EventHandler(this.btnTinhLuong_Click);
             // 
             // btnLuu
             // 
@@ -675,6 +678,7 @@
             this.btnLuu.TabIndex = 21;
             this.btnLuu.Text = "Lưu";
             this.btnLuu.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnLuu.Click += new System.EventHandler(this.btnLuu_Click);
             // 
             // btnThoat
             // 
@@ -713,6 +717,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "formEmployeeSalary";
             this.Text = "formEmployeeSalary";
+            this.Load += new System.EventHandler(this.formEmployeeSalary_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
