@@ -320,7 +320,7 @@ namespace LeLeStore
 
         private void btnLuuCT_Click(object sender, EventArgs e)
         {
-            var productAdjustments = new List<(int MaSP, int Delta)>();
+          
             if (detailMode != EditMode.None)
             {
                 if (!TryGetDetailValues(out int maGd, out int maSp, out int soLuong))
@@ -343,7 +343,7 @@ namespace LeLeStore
                     newRow.SoLuong = soLuong;
                     gStoreDataSet.ChiTietGiaoDichKho.AddChiTietGiaoDichKhoRow(newRow);
                     detailPendingChanges = true;
-                    productAdjustments.Add((maSp, soLuong));
+                   
                 }
                 else if (detailMode == EditMode.Edit)
                 {
@@ -372,15 +372,7 @@ namespace LeLeStore
                     row.MaSP = maSp;
                     row.SoLuong = soLuong;
                     detailPendingChanges = true;
-                    if (originalMaSp == maSp)
-                    {
-                        productAdjustments.Add((maSp, soLuong - originalQuantity));
-                    }
-                    else
-                    {
-                        productAdjustments.Add((originalMaSp, -originalQuantity));
-                        productAdjustments.Add((maSp, soLuong));
-                    }
+                   
                 }
             }
 
@@ -393,6 +385,7 @@ namespace LeLeStore
             try
             {
                 chiTietGiaoDichKhoBindingSource.EndEdit();
+                var productAdjustments = CalculateProductAdjustmentsFromPendingChanges();
                 int affected = chiTietGiaoDichKhoTableAdapter.Update(gStoreDataSet.ChiTietGiaoDichKho);
                 ApplyProductAdjustments(productAdjustments);
                 detailPendingChanges = false;
@@ -639,7 +632,104 @@ namespace LeLeStore
                 RefreshProducts();
             }
         }
+        private List<(int MaSP, int Delta)> CalculateProductAdjustmentsFromPendingChanges()
+        {
+            var aggregatedAdjustments = new Dictionary<int, int>();
 
+            foreach (GStoreDataSet.ChiTietGiaoDichKhoRow row in gStoreDataSet.ChiTietGiaoDichKho.Rows)
+            {
+                switch (row.RowState)
+                {
+                    case DataRowState.Added:
+                        AddProductAdjustment(aggregatedAdjustments, row.MaSP, row.SoLuong * GetTransactionQuantitySign(row.MaGD, DataRowVersion.Current));
+                        break;
+                    case DataRowState.Modified:
+                        int originalMaGd = (int)row["MaGD", DataRowVersion.Original];
+                        int originalMaSp = (int)row["MaSP", DataRowVersion.Original];
+                        int originalQuantity = (int)row["SoLuong", DataRowVersion.Original];
+                        AddProductAdjustment(aggregatedAdjustments, originalMaSp, -originalQuantity * GetTransactionQuantitySign(originalMaGd, DataRowVersion.Original));
+
+                        AddProductAdjustment(aggregatedAdjustments, row.MaSP, row.SoLuong * GetTransactionQuantitySign(row.MaGD, DataRowVersion.Current));
+                        break;
+                    case DataRowState.Deleted:
+                        int deletedMaGd = (int)row["MaGD", DataRowVersion.Original];
+                        int deletedMaSp = (int)row["MaSP", DataRowVersion.Original];
+                        int deletedQuantity = (int)row["SoLuong", DataRowVersion.Original];
+                        AddProductAdjustment(aggregatedAdjustments, deletedMaSp, -deletedQuantity * GetTransactionQuantitySign(deletedMaGd, DataRowVersion.Original));
+                        break;
+                }
+            }
+
+            return aggregatedAdjustments
+                .Where(kvp => kvp.Value != 0)
+                .Select(kvp => (kvp.Key, kvp.Value))
+                .ToList();
+        }
+        private void AddProductAdjustment(Dictionary<int, int> adjustments, int maSp, int delta)
+        {
+            if (delta == 0)
+            {
+                return;
+            }
+
+            if (adjustments.TryGetValue(maSp, out int existing))
+            {
+                adjustments[maSp] = existing + delta;
+            }
+            else
+            {
+                adjustments[maSp] = delta;
+            }
+        }
+
+        private int GetTransactionQuantitySign(int maGd, DataRowVersion version)
+        {
+            var transactionRow = gStoreDataSet.GiaoDichKho.FindByMaGD(maGd);
+            if (transactionRow != null && transactionRow.RowState != DataRowState.Deleted)
+            {
+                if (version == DataRowVersion.Original && transactionRow.HasVersion(DataRowVersion.Original))
+                {
+                    return InterpretTransactionSign(transactionRow["LoaiGD", DataRowVersion.Original]?.ToString());
+                }
+
+                return InterpretTransactionSign(transactionRow.LoaiGD);
+            }
+
+            foreach (GStoreDataSet.GiaoDichKhoRow row in gStoreDataSet.GiaoDichKho.Rows)
+            {
+                if (row.RowState == DataRowState.Deleted)
+                {
+                    int originalId = (int)row["MaGD", DataRowVersion.Original];
+                    if (originalId == maGd)
+                    {
+                        return InterpretTransactionSign(row["LoaiGD", DataRowVersion.Original]?.ToString());
+                    }
+                }
+            }
+
+            return 0;
+        }
+
+        private int InterpretTransactionSign(string loaiGiaoDich)
+        {
+            if (string.IsNullOrWhiteSpace(loaiGiaoDich))
+            {
+                return 0;
+            }
+
+            string normalized = loaiGiaoDich.Trim().ToUpperInvariant();
+            if (normalized == "NHAP")
+            {
+                return 1;
+            }
+
+            if (normalized == "XUAT")
+            {
+                return -1;
+            }
+
+            return 0;
+        }
         private void RefreshProducts()
         {
             try

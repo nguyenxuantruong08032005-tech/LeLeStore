@@ -100,7 +100,7 @@ namespace LeLeStore
             menuContainer.Visible = canAccessCustomerMenu;
             panel1.Visible = canAccessCustomerMenu;
             panel8.Visible = canAccessCustomerMenu; // formUpdateClient
-            panel6.Visible = canAccessCustomerMenu; // formPoint
+            
 
             // Warehouse related submenu (menu2)
             bool canAccessWarehouseMenu = isQuanLy || isBanHang || isKho;
@@ -108,7 +108,7 @@ namespace LeLeStore
             panel2.Visible = canAccessWarehouseMenu;
             panel3.Visible = canAccessWarehouseMenu; // formTonKho
             panel4.Visible = canAccessWarehouseMenu; // formPhieuNhap
-            panel5.Visible = canAccessWarehouseMenu; // formPhieuXuat
+         
         }
 
         private void UpdateTitle()
@@ -150,8 +150,8 @@ namespace LeLeStore
         }
         private void menuTransition_Tick(object sender, EventArgs e)
         {
-            const int minHeight = 55;
-            const int maxHeight = 168;
+            const int minHeight = 52;
+            const int maxHeight = 106;
             const int step = 25;
             if (menuExpand == false)
             {
@@ -387,8 +387,8 @@ namespace LeLeStore
         bool menuExpand2 = false;
         private void menuTransition2_Tick(object sender, EventArgs e)
         {
-            const int minHeight = 55;
-            const int maxHeight = 210;
+            const int minHeight = 52;
+            const int maxHeight = 162;
             const int step = 15;
             if (menuExpand2 == false)
             {
@@ -461,6 +461,11 @@ namespace LeLeStore
         private void PhieuXuat_FormClosed(object sender, EventArgs e)
         {
             xuat = null;
+        }
+
+        private void pnlMain_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

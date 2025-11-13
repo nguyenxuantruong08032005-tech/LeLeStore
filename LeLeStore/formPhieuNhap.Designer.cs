@@ -79,7 +79,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Tai Le", 26F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(462, -8);
+            this.label1.Location = new System.Drawing.Point(480, -8);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(374, 67);
             this.label1.TabIndex = 0;
@@ -291,7 +291,7 @@
             this.btnLuuCT.Image = null;
             this.btnLuuCT.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnLuuCT.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnLuuCT.Location = new System.Drawing.Point(1181, 627);
+            this.btnLuuCT.Location = new System.Drawing.Point(1209, 620);
             this.btnLuuCT.Name = "btnLuuCT";
             this.btnLuuCT.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnLuuCT.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -312,7 +312,7 @@
             this.btnSuaCT.Image = null;
             this.btnSuaCT.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnSuaCT.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnSuaCT.Location = new System.Drawing.Point(1021, 627);
+            this.btnSuaCT.Location = new System.Drawing.Point(1049, 620);
             this.btnSuaCT.Name = "btnSuaCT";
             this.btnSuaCT.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnSuaCT.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -333,7 +333,7 @@
             this.btnXoaCT.Image = null;
             this.btnXoaCT.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnXoaCT.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnXoaCT.Location = new System.Drawing.Point(852, 630);
+            this.btnXoaCT.Location = new System.Drawing.Point(880, 623);
             this.btnXoaCT.Name = "btnXoaCT";
             this.btnXoaCT.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnXoaCT.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -354,7 +354,7 @@
             this.btnThemCT.Image = null;
             this.btnThemCT.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnThemCT.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnThemCT.Location = new System.Drawing.Point(692, 630);
+            this.btnThemCT.Location = new System.Drawing.Point(720, 623);
             this.btnThemCT.Name = "btnThemCT";
             this.btnThemCT.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnThemCT.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -442,7 +442,7 @@
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.RowHeadersWidth = 62;
             this.dataGridView2.RowTemplate.Height = 28;
-            this.dataGridView2.Size = new System.Drawing.Size(588, 264);
+            this.dataGridView2.Size = new System.Drawing.Size(677, 264);
             this.dataGridView2.TabIndex = 18;
             this.dataGridView2.SelectionChanged += new System.EventHandler(this.dataGridView2_SelectionChanged);
             // 
