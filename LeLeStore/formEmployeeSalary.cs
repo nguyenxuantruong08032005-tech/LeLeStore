@@ -1,7 +1,7 @@
 ﻿using System;
 
 using System.Data;
-
+using System.Collections.Generic;
 
 using System.Windows.Forms;
 using System.Configuration;
@@ -12,13 +12,91 @@ namespace LeLeStore
     public partial class formEmployeeSalary : Form
     {
         private readonly string connectionString;
+        private readonly TextBox[] managedTextBoxes;
+        private readonly Dictionary<string, TextBox[]> roleTextBoxes;
         public formEmployeeSalary()
         {
             InitializeComponent();
             connectionString = ConfigurationManager
                   .ConnectionStrings["LeLeStore.Properties.Settings.GStoreConnectionString"]?.ConnectionString
                   ?? throw new InvalidOperationException("Không tìm thấy chuỗi kết nối GStore.");
+            managedTextBoxes = new[]
+           {
+                txtKy,
+                txtHeSoLuong,
+                txtLuongCoBan,
+                txtLuongTheoGio,
+                txtSoGioLam,
+                txtSoNgayLam,
+                txtTyLeDoanhThu,
+                txtDoanhThuKhuVuc,
+                txtHoaHongBanHang,
+                txtDoanhThuCa,
+                txtKhauTru,
+                txtThuongQTHT,
+                txtThuong,
+                txtPhuCapQuanLy,
+                txtPhuCapCaDem,
+                txtPhuCap,
+                txtLuongThucNhan,
+                txtTongThuNhap,
+                txtTongPhuCap,
+                txtTienHoaHong,
+                txtLuongKPI,
+                txtLuongCoBanTinh,
+                txtLuongGio
+            };
 
+            roleTextBoxes = new Dictionary<string, TextBox[]>(StringComparer.CurrentCultureIgnoreCase)
+            {
+                {
+                    "Nhân viên bán hàng",
+                    new[]
+                    {
+                        txtSoNgayLam,
+                        txtSoGioLam,
+                        txtLuongTheoGio,
+                        txtLuongCoBan,
+                        txtHeSoLuong,
+                        txtDoanhThuCa,
+                        txtHoaHongBanHang,
+                        txtPhuCap,
+                        txtThuong,
+                        txtKhauTru
+                    }
+                },
+                {
+                    "Nhân viên kho",
+                    new[]
+                    {
+                        txtSoNgayLam,
+                        txtSoGioLam,
+                        txtLuongTheoGio,
+                        txtLuongCoBan,
+                        txtHeSoLuong,
+                        txtPhuCap,
+                        txtThuong,
+                        txtKhauTru,
+                        txtPhuCapCaDem
+                    }
+                },
+                {
+                    "Quản lý cửa hàng",
+                    new[]
+                    {
+                        txtSoNgayLam,
+                        txtSoGioLam,
+                        txtLuongTheoGio,
+                        txtLuongCoBan,
+                        txtHeSoLuong,
+                        txtPhuCap,
+                        txtThuong,
+                        txtKhauTru,
+                        txtDoanhThuKhuVuc,
+                        txtThuongQTHT
+                    }
+                }
+            };
             Load += formEmployeeSalary_Load;
             cboNhanVien.SelectedIndexChanged += cboNhanVien_SelectedIndexChanged;
             btnTinhLuong.Click += btnTinhLuong_Click;
@@ -26,6 +104,7 @@ namespace LeLeStore
             btnThoat.Click += (sender, e) => Close();
 
             SetResultTextBoxesReadOnly();
+            DisableAllManagedTextBoxes();
         }
 
         private void groupBox5_Enter(object sender, EventArgs e)
@@ -57,7 +136,7 @@ namespace LeLeStore
                 cboNhanVien.ValueMember = "MaNhanVien";
                 cboNhanVien.DataSource = table;
             }
-
+            cboNhanVien.SelectedIndex = -1;
             UpdateNhanVienInfo();
         }
 
@@ -75,7 +154,9 @@ namespace LeLeStore
             if (cboNhanVien.SelectedItem is DataRowView rowView)
             {
                 txtHoTen.Text = rowView["HoTen"].ToString();
-                txtChucVu.Text = rowView["ChucVu"] == DBNull.Value ? string.Empty : rowView["ChucVu"].ToString();
+                var chucVu = rowView["ChucVu"] == DBNull.Value ? string.Empty : rowView["ChucVu"].ToString();
+                txtChucVu.Text = chucVu;
+                EnableTextBoxesForRole(chucVu);
             }
             else
             {
@@ -304,6 +385,39 @@ VALUES
             txtTongPhuCap.ReadOnly = true;
             txtTongThuNhap.ReadOnly = true;
             txtLuongThucNhan.ReadOnly = true;
+        }
+        private void DisableAllManagedTextBoxes()
+        {
+            foreach (var textBox in managedTextBoxes)
+            {
+                textBox.Enabled = false;
+            }
+        }
+
+        private void EnableTextBoxesForRole(string role)
+        {
+            DisableAllManagedTextBoxes();
+
+            if (role == null)
+            {
+                return;
+            }
+
+            txtKy.Enabled = true;
+
+            var key = role.Trim();
+            if (key.Length == 0)
+            {
+                return;
+            }
+
+            if (roleTextBoxes.TryGetValue(key, out var textBoxes))
+            {
+                foreach (var textBox in textBoxes)
+                {
+                    textBox.Enabled = true;
+                }
+            }
         }
 
         private string FormatCurrency(decimal value)

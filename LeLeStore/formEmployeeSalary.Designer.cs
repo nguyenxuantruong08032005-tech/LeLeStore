@@ -109,7 +109,7 @@
             this.groupBox1.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
             this.groupBox1.Location = new System.Drawing.Point(29, 31);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(676, 138);
+            this.groupBox1.Size = new System.Drawing.Size(744, 138);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Thông tin nhân viên";
@@ -119,7 +119,7 @@
             this.txtChucVu.Location = new System.Drawing.Point(520, 64);
             this.txtChucVu.Name = "txtChucVu";
             this.txtChucVu.ReadOnly = true;
-            this.txtChucVu.Size = new System.Drawing.Size(150, 30);
+            this.txtChucVu.Size = new System.Drawing.Size(191, 30);
             this.txtChucVu.TabIndex = 5;
             // 
             // label3
@@ -172,7 +172,7 @@
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.txtKy);
             this.groupBox2.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.groupBox2.Location = new System.Drawing.Point(736, 42);
+            this.groupBox2.Location = new System.Drawing.Point(796, 31);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(202, 111);
             this.groupBox2.TabIndex = 1;
@@ -513,7 +513,7 @@
             this.groupBox6.Controls.Add(this.label20);
             this.groupBox6.Controls.Add(this.txtLuongGio);
             this.groupBox6.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.groupBox6.Location = new System.Drawing.Point(996, 31);
+            this.groupBox6.Location = new System.Drawing.Point(1017, 31);
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.Size = new System.Drawing.Size(326, 635);
             this.groupBox6.TabIndex = 19;
