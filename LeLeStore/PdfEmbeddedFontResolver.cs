@@ -37,12 +37,15 @@ namespace LeLeStore
 
         public byte[] GetFont(string faceName)
         {
-            return faceName switch
+            switch (faceName)
             {
-                RegularFontKey => _regularFontData,
-                BoldFontKey => _boldFontData,
-                _ => throw new InvalidOperationException($"Không tìm thấy dữ liệu phông chữ cho khóa '{faceName}'.")
-            };
+                case RegularFontKey:
+                    return _regularFontData;
+                case BoldFontKey:
+                    return _boldFontData;
+                default:
+                    throw new InvalidOperationException($"Không tìm thấy dữ liệu phông chữ cho khóa '{faceName}'.");
+            }
         }
 
         private static byte[] LoadFontData(string fileName)

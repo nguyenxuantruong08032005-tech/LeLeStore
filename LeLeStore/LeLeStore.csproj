@@ -220,6 +220,7 @@
     </Compile>
     <Compile Include="InvoiceModels.cs" />
     <Compile Include="mdiProperties.cs" />
+    <Compile Include="PdfEmbeddedFontResolver.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserRole.cs" />
