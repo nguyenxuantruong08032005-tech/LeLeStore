@@ -1,4 +1,9 @@
-﻿using System;
+﻿using PdfSharp;
+using PdfSharp.Drawing;
+using PdfSharp.Drawing.Layout;
+using PdfSharp.Fonts;
+using PdfSharp.Pdf;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,7 +15,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
 namespace LeLeStore
 {
     public partial class formInHoaDon : Form
@@ -28,6 +32,8 @@ namespace LeLeStore
         private decimal _currentDiscountAmount;
         private decimal _appliedLoyaltyDiscount;
         private int? _selectedCustomerId;
+        private static readonly object PdfFontInitializationLock = new object();
+        private static bool _pdfFontResolverInitialized;
         public bool IsInvoiceSaved => _isSaved;
         public formInHoaDon() : this(new InvoiceSnapshot(Array.Empty<InvoiceLine>(), DateTime.Now, null, string.Empty))
         {
@@ -419,99 +425,136 @@ namespace LeLeStore
 
         private void ExportInvoiceToPdf(string filePath)
         {
+            EnsurePdfFontResolver();
+
             var lines = _invoiceLines.ToList();
             var summary = CalculateFinancialSummary();
             var subtotalAmount = summary.Subtotal;
             var discountAmount = summary.Discount;
             var totalAmount = summary.Total;
 
-            var contentBuilder = new StringBuilder();
-
-            contentBuilder.AppendLine("BT");
-            contentBuilder.AppendLine("/F1 18 Tf");
-            contentBuilder.AppendLine($"50 800 Td ({EscapePdfText("HOA DON BAN HANG")}) Tj");
-            contentBuilder.AppendLine("/F1 12 Tf");
-            contentBuilder.AppendLine($"0 -24 Td ({EscapePdfText($"Ma hoa don: {GetInvoiceIdentifier()}")}) Tj");
-            contentBuilder.AppendLine($"0 -16 Td ({EscapePdfText($"Ngay lap: {dateTimePicker1.Value:dd/MM/yyyy HH:mm}")}) Tj");
-            contentBuilder.AppendLine($"0 -16 Td ({EscapePdfText($"Ma nhan vien: {txtMaNv.Text.Trim()}")}) Tj");
-            contentBuilder.AppendLine("0 -24 Td (" + EscapePdfText("Danh sach san pham:") + ") Tj");
-            contentBuilder.AppendLine("0 -18 Td (" + EscapePdfText("STT   Ten SP                     SL   Don gia        Thanh tien") + ") Tj");
-
-            foreach (var line in lines)
+            using (var document = new PdfDocument())
             {
-                var unitPrice = line.UnitPrice.ToString("N0", _currencyCulture);
-                var total = line.Total.ToString("N0", _currencyCulture);
-                var rowText = string.Format(CultureInfo.InvariantCulture,
-                    "{0,2}   {1,-25}   {2,3}   {3,12}   {4,12}",
-                    line.Sequence,
-                    Truncate(line.ProductName, 25),
-                    line.Quantity,
-                    unitPrice,
-                    total);
+                var page = document.AddPage();
+                page.Size = PageSize.A4;
 
-                contentBuilder.AppendLine("0 -16 Td (" + EscapePdfText(rowText) + ") Tj");
-            }
-
-            contentBuilder.AppendLine("0 -24 Td (" + EscapePdfText($"Tong truoc giam: {subtotalAmount.ToString("N0", _currencyCulture)} VND") + ") Tj");
-            if (discountAmount > 0)
-            {
-                contentBuilder.AppendLine("0 -16 Td (" + EscapePdfText($"Chiet khau: {discountAmount.ToString("N0", _currencyCulture)} VND") + ") Tj");
-            }
-
-            contentBuilder.AppendLine("0 -16 Td (" + EscapePdfText($"Tong cong: {totalAmount.ToString("N0", _currencyCulture)} VND") + ") Tj");
-            contentBuilder.AppendLine("ET");
-
-            var contentString = contentBuilder.ToString();
-            var contentBytes = Encoding.ASCII.GetBytes(contentString);
-
-            var objects = new List<string>
-            {
-                "1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj",
-                "2 0 obj << /Type /Pages /Count 1 /Kids [3 0 R] >> endobj",
-                "3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >> endobj",
-                $"4 0 obj << /Length {contentBytes.Length} >>\nstream\n{contentString}endstream\nendobj",
-                "5 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj"
-            };
-
-            using (var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
-            using (var writer = new BinaryWriter(stream, Encoding.ASCII))
-            {
-                var offsets = new List<long> { 0 };
-
-                WriteLine(writer, "%PDF-1.4");
-
-                foreach (var obj in objects)
+                using (var graphics = XGraphics.FromPdfPage(page))
                 {
-                    offsets.Add(stream.Position);
-                    WriteLine(writer, obj);
+                    var fontOptions = new XPdfFontOptions(PdfFontEncoding.Unicode, PdfFontEmbedding.Always);
+                    var titleFont = new XFont("DejaVu Sans", 18, XFontStyle.Bold, fontOptions);
+                    var labelFont = new XFont("DejaVu Sans", 12, XFontStyle.Regular, fontOptions);
+                    var labelBoldFont = new XFont("DejaVu Sans", 12, XFontStyle.Bold, fontOptions);
+                    var tableHeaderFont = new XFont("DejaVu Sans", 11, XFontStyle.Bold, fontOptions);
+                    var tableCellFont = new XFont("DejaVu Sans", 11, XFontStyle.Regular, fontOptions);
+
+                    const double margin = 50;
+                    double availableWidth = page.Width - (2 * margin);
+                    double left = margin;
+                    double cursorY = margin;
+
+                    double titleHeight = GetLineHeight(graphics, titleFont);
+                    graphics.DrawString("HOÁ ĐƠN BÁN HÀNG", titleFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, titleHeight), XStringFormats.TopCenter);
+                    cursorY += titleHeight + 12;
+
+                    double infoLineHeight = GetLineHeight(graphics, labelFont);
+                    graphics.DrawString($"Mã hoá đơn: {GetInvoiceIdentifier()}", labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
+                    cursorY += infoLineHeight;
+
+                    graphics.DrawString($"Ngày lập: {dateTimePicker1.Value:dd/MM/yyyy HH:mm}", labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
+                    cursorY += infoLineHeight;
+
+                    graphics.DrawString($"Mã nhân viên: {txtMaNv.Text.Trim()}", labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
+                    cursorY += infoLineHeight * 1.5;
+
+                    graphics.DrawString("Danh sách sản phẩm", labelBoldFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
+                    cursorY += infoLineHeight * 1.2;
+
+                    double[] columnWidths = { 50, 220, 70, 110, 110 };
+                    double headerHeight = GetLineHeight(graphics, tableHeaderFont) + 8;
+                    double rowHeight = GetLineHeight(graphics, tableCellFont) + 8;
+
+                    var borderPen = new XPen(XColors.Black, 0.75);
+                    var headerBrush = new XSolidBrush(XColor.FromArgb(235, 235, 235));
+                    var headerTexts = new[] { "STT", "Tên sản phẩm", "SL", "Đơn giá", "Thành tiền" };
+                    var headerFormat = new XStringFormat
+                    {
+                        Alignment = XStringAlignment.Center,
+                        LineAlignment = XLineAlignment.Center
+                    };
+
+
+                    double cursorX = left;
+                    for (int i = 0; i < headerTexts.Length; i++)
+                    {
+                        var cellRect = new XRect(cursorX, cursorY, columnWidths[i], headerHeight);
+                        graphics.DrawRectangle(borderPen, headerBrush, cellRect);
+                        graphics.DrawString(headerTexts[i], tableHeaderFont, XBrushes.Black, cellRect, headerFormat);
+                        cursorX += columnWidths[i];
+                    }
+
+                    cursorY += headerHeight;
+
+                    var cellFormats = new[]
+                  {
+                        new XStringFormat { Alignment = XStringAlignment.Center, LineAlignment = XLineAlignment.Center },
+                        new XStringFormat { Alignment = XStringAlignment.Near, LineAlignment = XLineAlignment.Center },
+                        new XStringFormat { Alignment = XStringAlignment.Center, LineAlignment = XLineAlignment.Center },
+                        new XStringFormat { Alignment = XStringAlignment.Far, LineAlignment = XLineAlignment.Center },
+                        new XStringFormat { Alignment = XStringAlignment.Far, LineAlignment = XLineAlignment.Center }
+                    };
+
+                    var textFormatter = new XTextFormatter(graphics)
+                    {
+                        Alignment = XParagraphAlignment.Left
+                    };
+
+                    foreach (var line in lines)
+                    {
+                        var rowValues = new[]
+                        {
+                            line.Sequence.ToString(CultureInfo.InvariantCulture),
+                            line.ProductName,
+                            line.Quantity.ToString(CultureInfo.InvariantCulture),
+                            line.UnitPrice.ToString("N0", _currencyCulture),
+                            line.Total.ToString("N0", _currencyCulture)
+                        };
+
+                        cursorX = left;
+                        for (int i = 0; i < rowValues.Length; i++)
+                        {
+                            var cellRect = new XRect(cursorX, cursorY, columnWidths[i], rowHeight);
+                            graphics.DrawRectangle(borderPen, cellRect);
+
+                            if (i == 1)
+                            {
+                                var textRect = new XRect(cellRect.X + 4, cellRect.Y + 2, cellRect.Width - 8, cellRect.Height - 4);
+                                textFormatter.DrawString(rowValues[i], tableCellFont, XBrushes.Black, textRect, XStringFormats.TopLeft);
+                            }
+                            else
+                            {
+                                graphics.DrawString(rowValues[i], tableCellFont, XBrushes.Black, cellRect, cellFormats[i]);
+                            }
+
+                            cursorX += columnWidths[i];
+                        }
+
+                        cursorY += rowHeight;
+                    }
+
+                    cursorY += infoLineHeight;
+
+                    graphics.DrawString($"Tổng trước giảm: {subtotalAmount.ToString("N0", _currencyCulture)} VND", labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
+                    cursorY += infoLineHeight;
+
+                    if (discountAmount > 0)
+                    {
+                        graphics.DrawString($"Chiết khấu: {discountAmount.ToString("N0", _currencyCulture)} VND", labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
+                        cursorY += infoLineHeight;
+                    }
+                    graphics.DrawString($"Tổng cộng: {totalAmount.ToString("N0", _currencyCulture)} VND", labelBoldFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
                 }
-
-                var xrefPosition = stream.Position;
-                WriteLine(writer, $"xref\n0 {objects.Count + 1}");
-                WriteLine(writer, "0000000000 65535 f ");
-
-                for (int i = 1; i < offsets.Count; i++)
-                {
-                    WriteLine(writer, string.Format(CultureInfo.InvariantCulture, "{0:0000000000} 00000 n ", offsets[i]));
-                }
-
-                WriteLine(writer, "trailer");
-                WriteLine(writer, $"<< /Size {objects.Count + 1} /Root 1 0 R >>");
-                WriteLine(writer, "startxref");
-                WriteLine(writer, xrefPosition.ToString(CultureInfo.InvariantCulture));
-                WriteLine(writer, "%%EOF", false);
+                document.Save(filePath);
             }
-        }
-
-        private static void WriteLine(BinaryWriter writer, string value, bool appendNewLine = true)
-        {
-            if (appendNewLine)
-            {
-                value += "\n";
-            }
-
-            var bytes = Encoding.ASCII.GetBytes(value);
-            writer.Write(bytes);
         }
 
         private string GetInvoiceIdentifier()
@@ -529,32 +572,28 @@ namespace LeLeStore
             return DateTime.Now.ToString("yyyyMMddHHmmss", CultureInfo.InvariantCulture);
         }
 
-        private static string Truncate(string value, int length)
+        private static void EnsurePdfFontResolver()
         {
-            if (string.IsNullOrEmpty(value) || value.Length <= length)
+            if (_pdfFontResolverInitialized)
             {
-                return value ?? string.Empty;
+                return ;
             }
 
-            if (length <= 3)
+            lock (PdfFontInitializationLock)
             {
-                return value.Substring(0, length);
-            }
+                if (_pdfFontResolverInitialized)
+                {
+                    return;
+                }
 
-            return value.Substring(0, length - 3) + "...";
+                GlobalFontSettings.FontResolver = new PdfEmbeddedFontResolver();
+                _pdfFontResolverInitialized = true;
+            }
         }
 
-        private static string EscapePdfText(string input)
+        private static double GetLineHeight(XGraphics graphics, XFont font)
         {
-            if (input == null)
-            {
-                return string.Empty;
-            }
-
-            return input
-                .Replace("\\", "\\\\")
-                .Replace("(", "\\(")
-                .Replace(")", "\\)");
+            return graphics.MeasureString("Ag", font).Height;
         }
         private void InitializeCustomerFeatures()
         {
