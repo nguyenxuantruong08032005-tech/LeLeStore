@@ -204,6 +204,7 @@
             this.btnThem.TabIndex = 4;
             this.btnThem.Text = "Thêm";
             this.btnThem.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnThem.Click += new System.EventHandler(this.btnThem_Click);
             // 
             // dataGridView1
             // 
@@ -214,6 +215,7 @@
             this.dataGridView1.RowTemplate.Height = 28;
             this.dataGridView1.Size = new System.Drawing.Size(1322, 134);
             this.dataGridView1.TabIndex = 8;
+            this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
             // 
             // btnXoa
             // 
@@ -234,6 +236,7 @@
             this.btnXoa.TabIndex = 9;
             this.btnXoa.Text = "Xóa";
             this.btnXoa.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnXoa.Click += new System.EventHandler(this.btnXoa_Click);
             // 
             // btnSua
             // 
@@ -254,6 +257,7 @@
             this.btnSua.TabIndex = 10;
             this.btnSua.Text = "Sửa";
             this.btnSua.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnSua.Click += new System.EventHandler(this.btnSua_Click);
             // 
             // btnLuu
             // 
@@ -274,6 +278,7 @@
             this.btnLuu.TabIndex = 11;
             this.btnLuu.Text = "Lưu";
             this.btnLuu.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnLuu.Click += new System.EventHandler(this.btnLuu_Click);
             // 
             // btnLuuCT
             // 
@@ -294,6 +299,7 @@
             this.btnLuuCT.TabIndex = 17;
             this.btnLuuCT.Text = "Lưu";
             this.btnLuuCT.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnLuuCT.Click += new System.EventHandler(this.btnLuuCT_Click);
             // 
             // btnSuaCT
             // 
@@ -314,6 +320,7 @@
             this.btnSuaCT.TabIndex = 16;
             this.btnSuaCT.Text = "Sửa";
             this.btnSuaCT.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnSuaCT.Click += new System.EventHandler(this.btnSuaCT_Click);
             // 
             // btnXoaCT
             // 
@@ -334,6 +341,7 @@
             this.btnXoaCT.TabIndex = 15;
             this.btnXoaCT.Text = "Xóa";
             this.btnXoaCT.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnXoaCT.Click += new System.EventHandler(this.btnXoaCT_Click);
             // 
             // btnThemCT
             // 
@@ -354,6 +362,7 @@
             this.btnThemCT.TabIndex = 13;
             this.btnThemCT.Text = "Thêm";
             this.btnThemCT.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnThemCT.Click += new System.EventHandler(this.btnThemCT_Click);
             // 
             // groupBox2
             // 
@@ -435,6 +444,7 @@
             this.dataGridView2.RowTemplate.Height = 28;
             this.dataGridView2.Size = new System.Drawing.Size(729, 88);
             this.dataGridView2.TabIndex = 18;
+            this.dataGridView2.SelectionChanged += new System.EventHandler(this.dataGridView2_SelectionChanged);
             // 
             // gStoreDataSet
             // 
@@ -501,6 +511,7 @@
             this.btnSearch.TabIndex = 19;
             this.btnSearch.Text = "Tìm kiếm";
             this.btnSearch.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
             // txtSearch
             // 
