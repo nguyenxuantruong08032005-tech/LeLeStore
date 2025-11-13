@@ -209,11 +209,11 @@
             // dataGridView1
             // 
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(12, 247);
+            this.dataGridView1.Location = new System.Drawing.Point(214, 247);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 62;
             this.dataGridView1.RowTemplate.Height = 28;
-            this.dataGridView1.Size = new System.Drawing.Size(1322, 134);
+            this.dataGridView1.Size = new System.Drawing.Size(830, 150);
             this.dataGridView1.TabIndex = 8;
             this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
             // 
@@ -291,7 +291,7 @@
             this.btnLuuCT.Image = null;
             this.btnLuuCT.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnLuuCT.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnLuuCT.Location = new System.Drawing.Point(851, 692);
+            this.btnLuuCT.Location = new System.Drawing.Point(1181, 627);
             this.btnLuuCT.Name = "btnLuuCT";
             this.btnLuuCT.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnLuuCT.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -312,7 +312,7 @@
             this.btnSuaCT.Image = null;
             this.btnSuaCT.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnSuaCT.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnSuaCT.Location = new System.Drawing.Point(665, 692);
+            this.btnSuaCT.Location = new System.Drawing.Point(1021, 627);
             this.btnSuaCT.Name = "btnSuaCT";
             this.btnSuaCT.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnSuaCT.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -333,7 +333,7 @@
             this.btnXoaCT.Image = null;
             this.btnXoaCT.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnXoaCT.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnXoaCT.Location = new System.Drawing.Point(496, 695);
+            this.btnXoaCT.Location = new System.Drawing.Point(852, 630);
             this.btnXoaCT.Name = "btnXoaCT";
             this.btnXoaCT.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnXoaCT.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -354,7 +354,7 @@
             this.btnThemCT.Image = null;
             this.btnThemCT.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnThemCT.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnThemCT.Location = new System.Drawing.Point(336, 695);
+            this.btnThemCT.Location = new System.Drawing.Point(692, 630);
             this.btnThemCT.Name = "btnThemCT";
             this.btnThemCT.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnThemCT.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -373,9 +373,9 @@
             this.groupBox2.Controls.Add(this.txtMaGD1);
             this.groupBox2.Controls.Add(this.label11);
             this.groupBox2.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.groupBox2.Location = new System.Drawing.Point(12, 467);
+            this.groupBox2.Location = new System.Drawing.Point(12, 466);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(1322, 122);
+            this.groupBox2.Size = new System.Drawing.Size(1322, 111);
             this.groupBox2.TabIndex = 12;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Chi Tiết Giao Dịch";
@@ -438,11 +438,11 @@
             this.maSPDataGridViewTextBoxColumn,
             this.soLuongDataGridViewTextBoxColumn});
             this.dataGridView2.DataSource = this.chiTietGiaoDichKhoBindingSource;
-            this.dataGridView2.Location = new System.Drawing.Point(298, 598);
+            this.dataGridView2.Location = new System.Drawing.Point(12, 583);
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.RowHeadersWidth = 62;
             this.dataGridView2.RowTemplate.Height = 28;
-            this.dataGridView2.Size = new System.Drawing.Size(729, 88);
+            this.dataGridView2.Size = new System.Drawing.Size(588, 264);
             this.dataGridView2.TabIndex = 18;
             this.dataGridView2.SelectionChanged += new System.EventHandler(this.dataGridView2_SelectionChanged);
             // 

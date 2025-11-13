@@ -33,6 +33,8 @@ namespace LeLeStore
 
         public formPhieuNhap()
         {
+            InitializeComponent();
+
             giaoDichBindingSource.DataSource = gStoreDataSet;
             giaoDichBindingSource.DataMember = gStoreDataSet.GiaoDichKho.TableName;
             dataGridView1.AutoGenerateColumns = true;
@@ -52,7 +54,7 @@ namespace LeLeStore
 
             numericUpDown1.Minimum = 1;
             numericUpDown1.Maximum = 1000000;
-            InitializeComponent();
+          
         }
 
         private void groupBox1_Enter(object sender, EventArgs e)
