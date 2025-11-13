@@ -15,8 +15,9 @@ namespace LeLeStore
         public formEmployeeSalary()
         {
             InitializeComponent();
-            connectionString = ConfigurationManager.ConnectionStrings["LeLeStore.Properties.Settings.GStoreConnectionString"]?.ConnectionString
-               ?? throw new InvalidOperationException("Không tìm thấy chuỗi kết nối GStore.");
+            connectionString = ConfigurationManager
+                  .ConnectionStrings["LeLeStore.Properties.Settings.GStoreConnectionString"]?.ConnectionString
+                  ?? throw new InvalidOperationException("Không tìm thấy chuỗi kết nối GStore.");
 
             Load += formEmployeeSalary_Load;
             cboNhanVien.SelectedIndexChanged += cboNhanVien_SelectedIndexChanged;
@@ -308,6 +309,15 @@ VALUES
         private string FormatCurrency(decimal value)
         {
             return value.ToString("N2", CultureInfo.CurrentCulture);
+        }
+
+        private void btnBangLuong_Click(object sender, EventArgs e)
+        {
+            using (var f = new formDanhSachTinhLuong())
+            {
+                f.StartPosition = FormStartPosition.CenterScreen;
+                f.ShowDialog();
+            }
         }
     }
 }

@@ -60,9 +60,7 @@ namespace LeLeStore
             txtMaNv.ReadOnly = false;
             dateTimePicker1.Enabled = false;
 
-            btnInHoaDon.Click += btnInHoaDon_Click;
-            btnLuu.Click += btnLuu_Click;
-            Load += formInHoaDon_Load;
+          
             InitializeCustomerFeatures();
         }
 

@@ -51,6 +51,7 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.ptnTonKho = new System.Windows.Forms.Button();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.btnPN = new System.Windows.Forms.Button();
             this.menuContainer = new System.Windows.Forms.FlowLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.menu = new System.Windows.Forms.Button();
@@ -66,7 +67,6 @@
             this.sidebarTransition = new System.Windows.Forms.Timer(this.components);
             this.menuTransition2 = new System.Windows.Forms.Timer(this.components);
             this.pnlMain = new System.Windows.Forms.Panel();
-            this.btnPN = new System.Windows.Forms.Button();
             this.sidebar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnHam)).BeginInit();
             this.flowLayoutPanel1.SuspendLayout();
@@ -314,7 +314,7 @@
             this.menuContainer2.Location = new System.Drawing.Point(0, 295);
             this.menuContainer2.Margin = new System.Windows.Forms.Padding(0);
             this.menuContainer2.Name = "menuContainer2";
-            this.menuContainer2.Size = new System.Drawing.Size(248, 55);
+            this.menuContainer2.Size = new System.Drawing.Size(248, 52);
             this.menuContainer2.TabIndex = 9;
             // 
             // panel2
@@ -382,12 +382,31 @@
             this.panel4.Size = new System.Drawing.Size(248, 53);
             this.panel4.TabIndex = 8;
             // 
+            // btnPN
+            // 
+            this.btnPN.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(33)))), ((int)(((byte)(36)))));
+            this.btnPN.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnPN.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
+            this.btnPN.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPN.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPN.ForeColor = System.Drawing.Color.White;
+            this.btnPN.Image = ((System.Drawing.Image)(resources.GetObject("btnPN.Image")));
+            this.btnPN.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnPN.Location = new System.Drawing.Point(0, 0);
+            this.btnPN.Name = "btnPN";
+            this.btnPN.Size = new System.Drawing.Size(248, 53);
+            this.btnPN.TabIndex = 4;
+            this.btnPN.Text = "              Giao Dịch Kho";
+            this.btnPN.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnPN.UseVisualStyleBackColor = false;
+            this.btnPN.Click += new System.EventHandler(this.btnPN_Click);
+            // 
             // menuContainer
             // 
             this.menuContainer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(33)))), ((int)(((byte)(36)))));
             this.menuContainer.Controls.Add(this.panel1);
             this.menuContainer.Controls.Add(this.panel8);
-            this.menuContainer.Location = new System.Drawing.Point(0, 350);
+            this.menuContainer.Location = new System.Drawing.Point(0, 347);
             this.menuContainer.Margin = new System.Windows.Forms.Padding(0);
             this.menuContainer.Name = "menuContainer";
             this.menuContainer.Size = new System.Drawing.Size(250, 52);
@@ -452,7 +471,7 @@
             // pnEmployeeSalary
             // 
             this.pnEmployeeSalary.Controls.Add(this.btnEmployeeSalary);
-            this.pnEmployeeSalary.Location = new System.Drawing.Point(0, 402);
+            this.pnEmployeeSalary.Location = new System.Drawing.Point(0, 399);
             this.pnEmployeeSalary.Margin = new System.Windows.Forms.Padding(0);
             this.pnEmployeeSalary.Name = "pnEmployeeSalary";
             this.pnEmployeeSalary.Size = new System.Drawing.Size(248, 53);
@@ -480,7 +499,7 @@
             // pnDashDoard
             // 
             this.pnDashDoard.Controls.Add(this.btnDashBoard);
-            this.pnDashDoard.Location = new System.Drawing.Point(0, 455);
+            this.pnDashDoard.Location = new System.Drawing.Point(0, 452);
             this.pnDashDoard.Margin = new System.Windows.Forms.Padding(0);
             this.pnDashDoard.Name = "pnDashDoard";
             this.pnDashDoard.Size = new System.Drawing.Size(248, 53);
@@ -508,7 +527,7 @@
             // pnLogout
             // 
             this.pnLogout.Controls.Add(this.button5);
-            this.pnLogout.Location = new System.Drawing.Point(0, 508);
+            this.pnLogout.Location = new System.Drawing.Point(0, 505);
             this.pnLogout.Margin = new System.Windows.Forms.Padding(0);
             this.pnLogout.Name = "pnLogout";
             this.pnLogout.Size = new System.Drawing.Size(248, 53);
@@ -556,25 +575,6 @@
             this.pnlMain.Size = new System.Drawing.Size(939, 638);
             this.pnlMain.TabIndex = 3;
             this.pnlMain.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlMain_Paint);
-            // 
-            // btnPN
-            // 
-            this.btnPN.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(33)))), ((int)(((byte)(36)))));
-            this.btnPN.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnPN.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
-            this.btnPN.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnPN.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnPN.ForeColor = System.Drawing.Color.White;
-            this.btnPN.Image = ((System.Drawing.Image)(resources.GetObject("btnPN.Image")));
-            this.btnPN.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnPN.Location = new System.Drawing.Point(0, 0);
-            this.btnPN.Name = "btnPN";
-            this.btnPN.Size = new System.Drawing.Size(248, 53);
-            this.btnPN.TabIndex = 4;
-            this.btnPN.Text = "              Giao Dịch Kho";
-            this.btnPN.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnPN.UseVisualStyleBackColor = false;
-            this.btnPN.Click += new System.EventHandler(this.btnPN_Click);
             // 
             // Form1
             // 
