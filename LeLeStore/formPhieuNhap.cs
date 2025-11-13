@@ -320,6 +320,7 @@ namespace LeLeStore
 
         private void btnLuuCT_Click(object sender, EventArgs e)
         {
+            var productAdjustments = new List<(int MaSP, int Delta)>();
             if (detailMode != EditMode.None)
             {
                 if (!TryGetDetailValues(out int maGd, out int maSp, out int soLuong))
@@ -342,6 +343,7 @@ namespace LeLeStore
                     newRow.SoLuong = soLuong;
                     gStoreDataSet.ChiTietGiaoDichKho.AddChiTietGiaoDichKhoRow(newRow);
                     detailPendingChanges = true;
+                    productAdjustments.Add((maSp, soLuong));
                 }
                 else if (detailMode == EditMode.Edit)
                 {
@@ -364,11 +366,21 @@ namespace LeLeStore
                         MessageBox.Show("Chi tiết giao dịch với mã này đã tồn tại.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
-
+                    int originalMaSp = row.MaSP;
+                    int originalQuantity = row.SoLuong;
                     row.MaGD = maGd;
                     row.MaSP = maSp;
                     row.SoLuong = soLuong;
                     detailPendingChanges = true;
+                    if (originalMaSp == maSp)
+                    {
+                        productAdjustments.Add((maSp, soLuong - originalQuantity));
+                    }
+                    else
+                    {
+                        productAdjustments.Add((originalMaSp, -originalQuantity));
+                        productAdjustments.Add((maSp, soLuong));
+                    }
                 }
             }
 
@@ -382,6 +394,7 @@ namespace LeLeStore
             {
                 chiTietGiaoDichKhoBindingSource.EndEdit();
                 int affected = chiTietGiaoDichKhoTableAdapter.Update(gStoreDataSet.ChiTietGiaoDichKho);
+                ApplyProductAdjustments(productAdjustments);
                 detailPendingChanges = false;
                 detailMode = EditMode.None;
                 detailEditingKey = null;
@@ -400,6 +413,11 @@ namespace LeLeStore
             dateTimePicker1.Value = DateTime.Now;
             txtMaNCC.Clear();
             txtMaNV.Clear();
+            txtMaGD.Text = GenerateNextTransactionId().ToString();
+            if (detailMode != EditMode.Add)
+            {
+                txtMaGD1.Text = txtMaGD.Text;
+            }
         }
 
         private void PopulateTransactionInputs(GStoreDataSet.GiaoDichKhoRow row)
@@ -549,6 +567,88 @@ namespace LeLeStore
                 {
                     MessageBox.Show($"Không thể tải lại chi tiết giao dịch.\nChi tiết: {ex.Message}", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
+            }
+        }
+        private int GenerateNextTransactionId()
+        {
+            int maxId = 0;
+            foreach (GStoreDataSet.GiaoDichKhoRow row in gStoreDataSet.GiaoDichKho.Rows)
+            {
+                if (row.RowState == DataRowState.Deleted)
+                {
+                    continue;
+                }
+
+                int currentId = row.MaGD;
+                if (currentId > maxId)
+                {
+                    maxId = currentId;
+                }
+            }
+
+            return maxId + 1;
+        }
+
+        private void ApplyProductAdjustments(List<(int MaSP, int Delta)> adjustments)
+        {
+            if (adjustments == null || adjustments.Count == 0)
+            {
+                return;
+            }
+
+            EnsureLookupDataLoaded();
+
+            bool hasChanges = false;
+
+            foreach (var adjustment in adjustments)
+            {
+                if (adjustment.Delta == 0)
+                {
+                    continue;
+                }
+
+                var productRow = gStoreDataSet.SanPham.FindByMaSP(adjustment.MaSP);
+                if (productRow == null)
+                {
+                    MessageBox.Show($"Không tìm thấy sản phẩm với mã {adjustment.MaSP} để cập nhật số lượng.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    continue;
+                }
+
+                int newQuantity = productRow.SoLuong + adjustment.Delta;
+                if (newQuantity < 0)
+                {
+                    newQuantity = 0;
+                }
+
+                productRow.SoLuong = newQuantity;
+                hasChanges = true;
+            }
+
+            if (!hasChanges)
+            {
+                return;
+            }
+
+            try
+            {
+                sanPhamTableAdapter.Update(gStoreDataSet.SanPham);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Cập nhật số lượng sản phẩm thất bại.\nChi tiết: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                RefreshProducts();
+            }
+        }
+
+        private void RefreshProducts()
+        {
+            try
+            {
+                sanPhamTableAdapter.Fill(gStoreDataSet.SanPham);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Không thể tải lại dữ liệu sản phẩm.\nChi tiết: {ex.Message}", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
