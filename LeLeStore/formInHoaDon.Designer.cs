@@ -51,25 +51,27 @@
             this.lblDiscount = new System.Windows.Forms.Label();
             this.lblTotalPayable = new System.Windows.Forms.Label();
             this.btnLuu = new ReaLTaiizor.Controls.Button();
+            this.panelGrid = new ReaLTaiizor.Controls.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.panel2.SuspendLayout();
+            this.panelGrid.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Arial", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(345, 12);
+            this.label1.Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(452, 5);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(205, 37);
+            this.label1.Size = new System.Drawing.Size(259, 46);
             this.label1.TabIndex = 0;
             this.label1.Text = "IN HÓA ĐƠN";
             // 
             // dateTimePicker1
             // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(223, 74);
+            this.dateTimePicker1.Location = new System.Drawing.Point(156, 168);
             this.dateTimePicker1.Name = "dateTimePicker1";
             this.dateTimePicker1.Size = new System.Drawing.Size(200, 26);
             this.dateTimePicker1.TabIndex = 1;
@@ -77,25 +79,27 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(229, 51);
+            this.label2.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
+            this.label2.Location = new System.Drawing.Point(152, 143);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(114, 20);
+            this.label2.Size = new System.Drawing.Size(149, 24);
             this.label2.TabIndex = 2;
             this.label2.Text = "Ngày Lập Hóa:";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(494, 49);
+            this.label3.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
+            this.label3.Location = new System.Drawing.Point(453, 69);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(109, 20);
+            this.label3.Size = new System.Drawing.Size(140, 24);
             this.label3.TabIndex = 3;
             this.label3.Text = "Mã Nhân Viên";
             this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // txtMaNv
             // 
-            this.txtMaNv.Location = new System.Drawing.Point(498, 81);
+            this.txtMaNv.Location = new System.Drawing.Point(449, 98);
             this.txtMaNv.Name = "txtMaNv";
             this.txtMaNv.Size = new System.Drawing.Size(173, 26);
             this.txtMaNv.TabIndex = 4;
@@ -103,13 +107,12 @@
             // dataGridView1
             // 
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 0);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 62;
             this.dataGridView1.RowTemplate.Height = 28;
-            this.dataGridView1.Size = new System.Drawing.Size(1120, 730);
-            this.dataGridView1.TabIndex = 5;
+            this.dataGridView1.Size = new System.Drawing.Size(1120, 301);
+            this.dataGridView1.TabIndex = 0;
             // 
             // btnInHoaDon
             // 
@@ -122,7 +125,7 @@
             this.btnInHoaDon.Image = null;
             this.btnInHoaDon.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnInHoaDon.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnInHoaDon.Location = new System.Drawing.Point(583, 108);
+            this.btnInHoaDon.Location = new System.Drawing.Point(589, 52);
             this.btnInHoaDon.Name = "btnInHoaDon";
             this.btnInHoaDon.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnInHoaDon.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -135,7 +138,9 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.White;
+            this.panel1.Controls.Add(this.btnChietKhau);
             this.panel1.Controls.Add(this.btnSearch);
+            this.panel1.Controls.Add(this.btnUpdate);
             this.panel1.Controls.Add(this.label6);
             this.panel1.Controls.Add(this.txtSearch);
             this.panel1.Controls.Add(this.txtChietKhau);
@@ -153,7 +158,7 @@
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
             this.panel1.Padding = new System.Windows.Forms.Padding(5);
-            this.panel1.Size = new System.Drawing.Size(1120, 178);
+            this.panel1.Size = new System.Drawing.Size(1120, 229);
             this.panel1.SmoothingType = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             this.panel1.TabIndex = 7;
             this.panel1.Text = "panel1";
@@ -166,11 +171,11 @@
             this.btnSearch.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnSearch.EnteredBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnSearch.EnteredColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnSearch.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSearch.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSearch.Image = null;
             this.btnSearch.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnSearch.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnSearch.Location = new System.Drawing.Point(855, 12);
+            this.btnSearch.Location = new System.Drawing.Point(956, 12);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnSearch.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -183,22 +188,23 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(351, 138);
+            this.label6.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
+            this.label6.Location = new System.Drawing.Point(453, 143);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(95, 20);
+            this.label6.Size = new System.Drawing.Size(128, 24);
             this.label6.TabIndex = 10;
             this.label6.Text = "Khuyến Mãi:";
             // 
             // txtSearch
             // 
-            this.txtSearch.Location = new System.Drawing.Point(674, 23);
+            this.txtSearch.Location = new System.Drawing.Point(762, 23);
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.Size = new System.Drawing.Size(175, 26);
             this.txtSearch.TabIndex = 9;
             // 
             // txtChietKhau
             // 
-            this.txtChietKhau.Location = new System.Drawing.Point(465, 132);
+            this.txtChietKhau.Location = new System.Drawing.Point(449, 170);
             this.txtChietKhau.Name = "txtChietKhau";
             this.txtChietKhau.Size = new System.Drawing.Size(138, 26);
             this.txtChietKhau.TabIndex = 9;
@@ -206,24 +212,24 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(743, 77);
+            this.label5.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(681, 67);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(78, 29);
+            this.label5.Size = new System.Drawing.Size(64, 24);
             this.label5.TabIndex = 8;
             this.label5.Text = "Điểm:";
             // 
             // numericUpDown1
             // 
             this.numericUpDown1.Enabled = false;
-            this.numericUpDown1.Location = new System.Drawing.Point(853, 77);
+            this.numericUpDown1.Location = new System.Drawing.Point(683, 99);
             this.numericUpDown1.Name = "numericUpDown1";
             this.numericUpDown1.Size = new System.Drawing.Size(132, 26);
             this.numericUpDown1.TabIndex = 7;
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(25, 72);
+            this.textBox1.Location = new System.Drawing.Point(156, 95);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(173, 26);
             this.textBox1.TabIndex = 6;
@@ -231,17 +237,16 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(21, 51);
+            this.label4.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
+            this.label4.Location = new System.Drawing.Point(152, 69);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(103, 20);
+            this.label4.Size = new System.Drawing.Size(134, 24);
             this.label4.TabIndex = 5;
             this.label4.Text = "Mã Hóa Đơn:";
             // 
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.White;
-            this.panel2.Controls.Add(this.btnChietKhau);
-            this.panel2.Controls.Add(this.btnUpdate);
             this.panel2.Controls.Add(this.lblSubtotal);
             this.panel2.Controls.Add(this.lblDiscount);
             this.panel2.Controls.Add(this.lblTotalPayable);
@@ -264,15 +269,15 @@
             this.btnChietKhau.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnChietKhau.EnteredBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnChietKhau.EnteredColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnChietKhau.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnChietKhau.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnChietKhau.Image = null;
             this.btnChietKhau.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnChietKhau.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnChietKhau.Location = new System.Drawing.Point(847, 30);
+            this.btnChietKhau.Location = new System.Drawing.Point(843, 160);
             this.btnChietKhau.Name = "btnChietKhau";
             this.btnChietKhau.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnChietKhau.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
-            this.btnChietKhau.Size = new System.Drawing.Size(138, 47);
+            this.btnChietKhau.Size = new System.Drawing.Size(115, 34);
             this.btnChietKhau.TabIndex = 12;
             this.btnChietKhau.Text = "Chiết Khấu";
             this.btnChietKhau.TextAlignment = System.Drawing.StringAlignment.Center;
@@ -285,15 +290,15 @@
             this.btnUpdate.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnUpdate.EnteredBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnUpdate.EnteredColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnUpdate.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnUpdate.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnUpdate.Image = null;
             this.btnUpdate.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnUpdate.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnUpdate.Location = new System.Drawing.Point(623, 30);
+            this.btnUpdate.Location = new System.Drawing.Point(843, 102);
             this.btnUpdate.Name = "btnUpdate";
             this.btnUpdate.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnUpdate.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
-            this.btnUpdate.Size = new System.Drawing.Size(116, 47);
+            this.btnUpdate.Size = new System.Drawing.Size(115, 35);
             this.btnUpdate.TabIndex = 11;
             this.btnUpdate.Text = "Cập Nhật";
             this.btnUpdate.TextAlignment = System.Drawing.StringAlignment.Center;
@@ -340,7 +345,7 @@
             this.btnLuu.Image = null;
             this.btnLuu.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnLuu.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnLuu.Location = new System.Drawing.Point(824, 108);
+            this.btnLuu.Location = new System.Drawing.Point(843, 52);
             this.btnLuu.Name = "btnLuu";
             this.btnLuu.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnLuu.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -350,14 +355,27 @@
             this.btnLuu.TextAlignment = System.Drawing.StringAlignment.Center;
             this.btnLuu.Click += new System.EventHandler(this.btnLuu_Click);
             // 
+            // panelGrid
+            // 
+            this.panelGrid.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(51)))), ((int)(((byte)(63)))));
+            this.panelGrid.Controls.Add(this.dataGridView1);
+            this.panelGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelGrid.EdgeColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(41)))), ((int)(((byte)(50)))));
+            this.panelGrid.Location = new System.Drawing.Point(0, 229);
+            this.panelGrid.Name = "panelGrid";
+            this.panelGrid.Padding = new System.Windows.Forms.Padding(5);
+            this.panelGrid.Size = new System.Drawing.Size(1120, 301);
+            this.panelGrid.SmoothingType = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            this.panelGrid.TabIndex = 11;
+            // 
             // formInHoaDon
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1120, 730);
+            this.Controls.Add(this.panelGrid);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.dataGridView1);
             this.Name = "formInHoaDon";
             this.Text = "In Hóa Đơn";
             this.Load += new System.EventHandler(this.formInHoaDon_Load);
@@ -367,6 +385,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            this.panelGrid.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -396,5 +415,6 @@
         private System.Windows.Forms.TextBox txtSearch;
         private ReaLTaiizor.Controls.Button btnUpdate;
         private ReaLTaiizor.Controls.Button btnChietKhau;
+        private ReaLTaiizor.Controls.Panel panelGrid;
     }
 }

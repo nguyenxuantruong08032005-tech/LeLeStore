@@ -29,9 +29,7 @@
         private void InitializeComponent()
         {
             this.btnSearch = new ReaLTaiizor.Controls.Button();
-            this.btnTichDiem = new ReaLTaiizor.Controls.Button();
             this.btnThanhToan = new ReaLTaiizor.Controls.Button();
-            this.btnChietKhau = new ReaLTaiizor.Controls.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.flpProducts = new System.Windows.Forms.FlowLayoutPanel();
             this.dgvInvoice = new System.Windows.Forms.DataGridView();
@@ -69,27 +67,6 @@
             this.btnSearch.TextAlignment = System.Drawing.StringAlignment.Center;
             this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
-            // btnTichDiem
-            // 
-            this.btnTichDiem.BackColor = System.Drawing.Color.Transparent;
-            this.btnTichDiem.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnTichDiem.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnTichDiem.EnteredBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
-            this.btnTichDiem.EnteredColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnTichDiem.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold);
-            this.btnTichDiem.Image = null;
-            this.btnTichDiem.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnTichDiem.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnTichDiem.Location = new System.Drawing.Point(433, 67);
-            this.btnTichDiem.Name = "btnTichDiem";
-            this.btnTichDiem.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
-            this.btnTichDiem.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
-            this.btnTichDiem.Size = new System.Drawing.Size(175, 64);
-            this.btnTichDiem.TabIndex = 2;
-            this.btnTichDiem.Text = "Tích Điểm";
-            this.btnTichDiem.TextAlignment = System.Drawing.StringAlignment.Center;
-            this.btnTichDiem.Click += new System.EventHandler(this.btnTichDiem_Click);
-            // 
             // btnThanhToan
             // 
             this.btnThanhToan.BackColor = System.Drawing.Color.Transparent;
@@ -101,7 +78,7 @@
             this.btnThanhToan.Image = null;
             this.btnThanhToan.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnThanhToan.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnThanhToan.Location = new System.Drawing.Point(190, 67);
+            this.btnThanhToan.Location = new System.Drawing.Point(419, 67);
             this.btnThanhToan.Name = "btnThanhToan";
             this.btnThanhToan.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnThanhToan.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -110,26 +87,6 @@
             this.btnThanhToan.Text = "Thanh Toán";
             this.btnThanhToan.TextAlignment = System.Drawing.StringAlignment.Center;
             this.btnThanhToan.Click += new System.EventHandler(this.btnThanhToan_Click);
-            // 
-            // btnChietKhau
-            // 
-            this.btnChietKhau.BackColor = System.Drawing.Color.Transparent;
-            this.btnChietKhau.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnChietKhau.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnChietKhau.EnteredBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
-            this.btnChietKhau.EnteredColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnChietKhau.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnChietKhau.Image = null;
-            this.btnChietKhau.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnChietKhau.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnChietKhau.Location = new System.Drawing.Point(672, 67);
-            this.btnChietKhau.Name = "btnChietKhau";
-            this.btnChietKhau.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
-            this.btnChietKhau.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
-            this.btnChietKhau.Size = new System.Drawing.Size(186, 64);
-            this.btnChietKhau.TabIndex = 4;
-            this.btnChietKhau.Text = "Chiết Khấu";
-            this.btnChietKhau.TextAlignment = System.Drawing.StringAlignment.Center;
             // 
             // splitContainer1
             // 
@@ -176,9 +133,7 @@
             // 
             this.panel2.BackColor = System.Drawing.Color.White;
             this.panel2.Controls.Add(this.lblTotalText);
-            this.panel2.Controls.Add(this.btnChietKhau);
             this.panel2.Controls.Add(this.btnThanhToan);
-            this.panel2.Controls.Add(this.btnTichDiem);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel2.EdgeColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(41)))), ((int)(((byte)(50)))));
             this.panel2.Location = new System.Drawing.Point(0, 637);
@@ -249,9 +204,7 @@
 
         #endregion
         private ReaLTaiizor.Controls.Button btnSearch;
-        private ReaLTaiizor.Controls.Button btnTichDiem;
         private ReaLTaiizor.Controls.Button btnThanhToan;
-        private ReaLTaiizor.Controls.Button btnChietKhau;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.FlowLayoutPanel flpProducts;
         private ReaLTaiizor.Controls.Panel panel2;
