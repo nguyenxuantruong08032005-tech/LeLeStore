@@ -187,6 +187,8 @@ namespace LeLeStore
             {
                 txtHoTen.Text = string.Empty;
                 txtChucVu.Text = string.Empty;
+                ClearManagedTextBoxes();
+                EnableTextBoxesForRole(null);
                 ApplyRoleSalaryDefaults(null);
             }
         }
@@ -440,7 +442,13 @@ VALUES
                 textBox.Enabled = false;
             }
         }
-
+        private void ClearManagedTextBoxes()
+        {
+            foreach (var textBox in managedTextBoxes)
+            {
+                textBox.Text = string.Empty;
+            }
+        }
         private void EnableTextBoxesForRole(string role)
         {
             DisableAllManagedTextBoxes();
