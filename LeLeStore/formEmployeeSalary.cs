@@ -14,6 +14,7 @@ namespace LeLeStore
         private readonly string connectionString;
         private readonly TextBox[] managedTextBoxes;
         private readonly Dictionary<string, TextBox[]> roleTextBoxes;
+        private readonly Dictionary<string, (decimal BaseSalary, decimal SalaryCoefficient)> roleSalaryDefaults;
         public formEmployeeSalary()
         {
             InitializeComponent();
@@ -96,6 +97,12 @@ namespace LeLeStore
                     }
                 }
             };
+            roleSalaryDefaults = new Dictionary<string, (decimal BaseSalary, decimal SalaryCoefficient)>(StringComparer.CurrentCultureIgnoreCase)
+            {
+                { "Nhân viên bán hàng", (3_000_000m, 1.1m) },
+                { "Nhân viên kho", (3_200_000m, 1.05m) },
+                { "Quản lý cửa hàng", (5_000_000m, 1.3m) }
+            };
             Load += formEmployeeSalary_Load;
             cboNhanVien.SelectedIndexChanged += cboNhanVien_SelectedIndexChanged;
             btnTinhLuong.Click += btnTinhLuong_Click;
@@ -156,6 +163,7 @@ namespace LeLeStore
                 var chucVu = rowView["ChucVu"] == DBNull.Value ? string.Empty : rowView["ChucVu"].ToString();
                 txtChucVu.Text = chucVu;
                 EnableTextBoxesForRole(chucVu);
+                ApplyRoleSalaryDefaults(chucVu);
                 if (string.Equals(chucVu, "Nhân viên bán hàng", StringComparison.CurrentCultureIgnoreCase)
                     && int.TryParse(rowView["MaNhanVien"].ToString(), out int maNhanVien))
                 {
@@ -179,6 +187,7 @@ namespace LeLeStore
             {
                 txtHoTen.Text = string.Empty;
                 txtChucVu.Text = string.Empty;
+                ApplyRoleSalaryDefaults(null);
             }
         }
 
@@ -225,6 +234,27 @@ namespace LeLeStore
             catch (Exception ex)
             {
                 MessageBox.Show($"Có lỗi xảy ra khi tính lương: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        private void ApplyRoleSalaryDefaults(string role)
+        {
+            if (string.IsNullOrWhiteSpace(role))
+            {
+                txtLuongCoBan.Text = string.Empty;
+                txtHeSoLuong.Text = string.Empty;
+                return;
+            }
+
+            var key = role.Trim();
+            if (roleSalaryDefaults.TryGetValue(key, out var defaults))
+            {
+                txtLuongCoBan.Text = FormatCurrency(defaults.BaseSalary);
+                txtHeSoLuong.Text = defaults.SalaryCoefficient.ToString("N2", CultureInfo.CurrentCulture);
+            }
+            else
+            {
+                txtLuongCoBan.Text = string.Empty;
+                txtHeSoLuong.Text = string.Empty;
             }
         }
 
