@@ -116,16 +116,16 @@
             // 
             // txtChucVu
             // 
-            this.txtChucVu.Location = new System.Drawing.Point(520, 64);
+            this.txtChucVu.Location = new System.Drawing.Point(499, 66);
             this.txtChucVu.Name = "txtChucVu";
             this.txtChucVu.ReadOnly = true;
-            this.txtChucVu.Size = new System.Drawing.Size(191, 30);
+            this.txtChucVu.Size = new System.Drawing.Size(218, 30);
             this.txtChucVu.TabIndex = 5;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(516, 37);
+            this.label3.Location = new System.Drawing.Point(495, 39);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(97, 24);
             this.label3.TabIndex = 4;
@@ -210,7 +210,7 @@
             this.groupBox3.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
             this.groupBox3.Location = new System.Drawing.Point(29, 196);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(847, 128);
+            this.groupBox3.Size = new System.Drawing.Size(918, 128);
             this.groupBox3.TabIndex = 2;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Chấm công – Lương cơ bản";
@@ -218,7 +218,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(679, 39);
+            this.label9.Location = new System.Drawing.Point(713, 39);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(134, 24);
             this.label9.TabIndex = 16;
@@ -226,9 +226,10 @@
             // 
             // txtHeSoLuong
             // 
-            this.txtHeSoLuong.Location = new System.Drawing.Point(679, 66);
+            this.txtHeSoLuong.Location = new System.Drawing.Point(713, 66);
             this.txtHeSoLuong.Name = "txtHeSoLuong";
-            this.txtHeSoLuong.Size = new System.Drawing.Size(120, 30);
+            this.txtHeSoLuong.ReadOnly = true;
+            this.txtHeSoLuong.Size = new System.Drawing.Size(168, 30);
             this.txtHeSoLuong.TabIndex = 15;
             // 
             // label8
@@ -244,7 +245,8 @@
             // 
             this.txtLuongCoBan.Location = new System.Drawing.Point(498, 66);
             this.txtLuongCoBan.Name = "txtLuongCoBan";
-            this.txtLuongCoBan.Size = new System.Drawing.Size(120, 30);
+            this.txtLuongCoBan.ReadOnly = true;
+            this.txtLuongCoBan.Size = new System.Drawing.Size(172, 30);
             this.txtLuongCoBan.TabIndex = 13;
             // 
             // label7

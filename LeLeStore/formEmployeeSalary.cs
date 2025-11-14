@@ -86,7 +86,6 @@ namespace LeLeStore
                     {
                         txtSoNgayLam,
                         txtSoGioLam,
-                        txtLuongTheoGio,
                         txtLuongCoBan,
                         txtHeSoLuong,
                         txtPhuCap,
