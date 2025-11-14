@@ -88,7 +88,7 @@
             this.gbFilterBanHang.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
             this.gbFilterBanHang.Location = new System.Drawing.Point(19, 34);
             this.gbFilterBanHang.Name = "gbFilterBanHang";
-            this.gbFilterBanHang.Size = new System.Drawing.Size(637, 212);
+            this.gbFilterBanHang.Size = new System.Drawing.Size(734, 212);
             this.gbFilterBanHang.TabIndex = 0;
             this.gbFilterBanHang.TabStop = false;
             this.gbFilterBanHang.Text = "Điều kiện lọc";
@@ -128,7 +128,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(386, 43);
+            this.label3.Location = new System.Drawing.Point(444, 41);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(146, 24);
             this.label3.TabIndex = 4;
@@ -137,9 +137,9 @@
             // cboLoaiThongKeBH
             // 
             this.cboLoaiThongKeBH.FormattingEnabled = true;
-            this.cboLoaiThongKeBH.Location = new System.Drawing.Point(390, 70);
+            this.cboLoaiThongKeBH.Location = new System.Drawing.Point(448, 68);
             this.cboLoaiThongKeBH.Name = "cboLoaiThongKeBH";
-            this.cboLoaiThongKeBH.Size = new System.Drawing.Size(238, 32);
+            this.cboLoaiThongKeBH.Size = new System.Drawing.Size(255, 32);
             this.cboLoaiThongKeBH.TabIndex = 5;
             // 
             // btnThongKeBH
@@ -153,7 +153,7 @@
             this.btnThongKeBH.Image = null;
             this.btnThongKeBH.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnThongKeBH.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnThongKeBH.Location = new System.Drawing.Point(441, 128);
+            this.btnThongKeBH.Location = new System.Drawing.Point(499, 126);
             this.btnThongKeBH.Name = "btnThongKeBH";
             this.btnThongKeBH.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnThongKeBH.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -161,6 +161,7 @@
             this.btnThongKeBH.TabIndex = 1;
             this.btnThongKeBH.Text = "Thống Kê";
             this.btnThongKeBH.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnThongKeBH.Click += new System.EventHandler(this.btnThongKeBH_Click);
             // 
             // tabpage
             // 
@@ -170,7 +171,7 @@
             this.tabpage.Location = new System.Drawing.Point(0, 0);
             this.tabpage.Name = "tabpage";
             this.tabpage.SelectedIndex = 0;
-            this.tabpage.Size = new System.Drawing.Size(1260, 823);
+            this.tabpage.Size = new System.Drawing.Size(1355, 807);
             this.tabpage.TabIndex = 1;
             // 
             // tabPageBanHang
@@ -182,7 +183,7 @@
             this.tabPageBanHang.Location = new System.Drawing.Point(4, 29);
             this.tabPageBanHang.Name = "tabPageBanHang";
             this.tabPageBanHang.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageBanHang.Size = new System.Drawing.Size(1252, 790);
+            this.tabPageBanHang.Size = new System.Drawing.Size(1347, 774);
             this.tabPageBanHang.TabIndex = 0;
             this.tabPageBanHang.Text = "Thống kê bán hàng";
             this.tabPageBanHang.UseVisualStyleBackColor = true;
@@ -195,7 +196,7 @@
             this.tabPageKho.Location = new System.Drawing.Point(4, 29);
             this.tabPageKho.Name = "tabPageKho";
             this.tabPageKho.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageKho.Size = new System.Drawing.Size(1252, 790);
+            this.tabPageKho.Size = new System.Drawing.Size(1112, 695);
             this.tabPageKho.TabIndex = 1;
             this.tabPageKho.Text = "Thống kê kho";
             this.tabPageKho.UseVisualStyleBackColor = true;
@@ -209,9 +210,9 @@
             this.gbSummaryBH.Controls.Add(this.txtTongDoanhThu);
             this.gbSummaryBH.Controls.Add(this.label4);
             this.gbSummaryBH.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.gbSummaryBH.Location = new System.Drawing.Point(740, 15);
+            this.gbSummaryBH.Location = new System.Drawing.Point(795, 17);
             this.gbSummaryBH.Name = "gbSummaryBH";
-            this.gbSummaryBH.Size = new System.Drawing.Size(353, 328);
+            this.gbSummaryBH.Size = new System.Drawing.Size(392, 328);
             this.gbSummaryBH.TabIndex = 1;
             this.gbSummaryBH.TabStop = false;
             this.gbSummaryBH.Text = "Khu vực tổng quan";
@@ -267,11 +268,11 @@
             // dgvBanHang
             // 
             this.dgvBanHang.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvBanHang.Location = new System.Drawing.Point(56, 387);
+            this.dgvBanHang.Location = new System.Drawing.Point(19, 381);
             this.dgvBanHang.Name = "dgvBanHang";
             this.dgvBanHang.RowHeadersWidth = 62;
             this.dgvBanHang.RowTemplate.Height = 28;
-            this.dgvBanHang.Size = new System.Drawing.Size(1139, 279);
+            this.dgvBanHang.Size = new System.Drawing.Size(1299, 320);
             this.dgvBanHang.TabIndex = 2;
             // 
             // groupBox3
@@ -454,8 +455,9 @@
             // 
             // formDashBoard
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(1260, 823);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(1355, 807);
             this.Controls.Add(this.tabpage);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "formDashBoard";
