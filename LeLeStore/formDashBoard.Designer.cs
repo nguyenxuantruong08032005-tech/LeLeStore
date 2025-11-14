@@ -196,7 +196,7 @@
             this.tabPageKho.Location = new System.Drawing.Point(4, 29);
             this.tabPageKho.Name = "tabPageKho";
             this.tabPageKho.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageKho.Size = new System.Drawing.Size(1112, 695);
+            this.tabPageKho.Size = new System.Drawing.Size(1347, 774);
             this.tabPageKho.TabIndex = 1;
             this.tabPageKho.Text = "Thống kê kho";
             this.tabPageKho.UseVisualStyleBackColor = true;
@@ -311,6 +311,7 @@
             this.btnThongKeKho.TabIndex = 1;
             this.btnThongKeKho.Text = "Thống Kê";
             this.btnThongKeKho.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnThongKeKho.Click += new System.EventHandler(this.btnThongKeKho_Click);
             // 
             // cboLoaiThongKeKho
             // 

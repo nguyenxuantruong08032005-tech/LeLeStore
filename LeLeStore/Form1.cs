@@ -106,7 +106,7 @@ namespace LeLeStore
             bool canAccessWarehouseMenu = isQuanLy || isBanHang || isKho;
             menuContainer2.Visible = canAccessWarehouseMenu;
             panel2.Visible = canAccessWarehouseMenu;
-            panel3.Visible = canAccessWarehouseMenu; // formTonKho
+         
             panel4.Visible = canAccessWarehouseMenu; // formPhieuNhap
          
         }
@@ -295,10 +295,7 @@ namespace LeLeStore
             OpenChildForm(new formUser());
            
         }
-        private void About_FormClosed(object sender, EventArgs e)
-        {
-            user = null;
-        }
+     
 
         private void sbmenu2_Click(object sender, EventArgs e)
         {OpenChildForm(new formPoint());
@@ -378,7 +375,7 @@ namespace LeLeStore
         private void menuTransition2_Tick(object sender, EventArgs e)
         {
             const int minHeight = 52;
-            const int maxHeight = 162;
+            const int maxHeight = 104;
             const int step = 15;
             if (menuExpand2 == false)
             {
@@ -454,6 +451,11 @@ namespace LeLeStore
         }
 
         private void pnlMain_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void flowLayoutPanel1_Paint(object sender, PaintEventArgs e)
         {
 
         }

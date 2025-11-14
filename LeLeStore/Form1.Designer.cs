@@ -48,8 +48,6 @@
             this.menuContainer2 = new System.Windows.Forms.FlowLayoutPanel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.menu2 = new System.Windows.Forms.Button();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.ptnTonKho = new System.Windows.Forms.Button();
             this.panel4 = new System.Windows.Forms.Panel();
             this.btnPN = new System.Windows.Forms.Button();
             this.menuContainer = new System.Windows.Forms.FlowLayoutPanel();
@@ -77,7 +75,6 @@
             this.pnPayMent.SuspendLayout();
             this.menuContainer2.SuspendLayout();
             this.panel2.SuspendLayout();
-            this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
             this.menuContainer.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -164,6 +161,7 @@
             this.flowLayoutPanel1.Padding = new System.Windows.Forms.Padding(0, 30, 0, 0);
             this.flowLayoutPanel1.Size = new System.Drawing.Size(250, 638);
             this.flowLayoutPanel1.TabIndex = 1;
+            this.flowLayoutPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.flowLayoutPanel1_Paint);
             // 
             // pUser
             // 
@@ -309,7 +307,6 @@
             // 
             this.menuContainer2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(33)))), ((int)(((byte)(36)))));
             this.menuContainer2.Controls.Add(this.panel2);
-            this.menuContainer2.Controls.Add(this.panel3);
             this.menuContainer2.Controls.Add(this.panel4);
             this.menuContainer2.Location = new System.Drawing.Point(0, 295);
             this.menuContainer2.Margin = new System.Windows.Forms.Padding(0);
@@ -345,38 +342,10 @@
             this.menu2.UseVisualStyleBackColor = false;
             this.menu2.Click += new System.EventHandler(this.menu2_Click_1);
             // 
-            // panel3
-            // 
-            this.panel3.Controls.Add(this.ptnTonKho);
-            this.panel3.Location = new System.Drawing.Point(0, 53);
-            this.panel3.Margin = new System.Windows.Forms.Padding(0);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(248, 53);
-            this.panel3.TabIndex = 7;
-            // 
-            // ptnTonKho
-            // 
-            this.ptnTonKho.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(33)))), ((int)(((byte)(36)))));
-            this.ptnTonKho.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ptnTonKho.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
-            this.ptnTonKho.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ptnTonKho.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ptnTonKho.ForeColor = System.Drawing.Color.White;
-            this.ptnTonKho.Image = ((System.Drawing.Image)(resources.GetObject("ptnTonKho.Image")));
-            this.ptnTonKho.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.ptnTonKho.Location = new System.Drawing.Point(0, 0);
-            this.ptnTonKho.Name = "ptnTonKho";
-            this.ptnTonKho.Size = new System.Drawing.Size(248, 53);
-            this.ptnTonKho.TabIndex = 4;
-            this.ptnTonKho.Text = "              Tồn Kho";
-            this.ptnTonKho.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.ptnTonKho.UseVisualStyleBackColor = false;
-            this.ptnTonKho.Click += new System.EventHandler(this.ptnTonKho_Click);
-            // 
             // panel4
             // 
             this.panel4.Controls.Add(this.btnPN);
-            this.panel4.Location = new System.Drawing.Point(0, 106);
+            this.panel4.Location = new System.Drawing.Point(0, 53);
             this.panel4.Margin = new System.Windows.Forms.Padding(0);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(248, 53);
@@ -601,7 +570,6 @@
             this.pnPayMent.ResumeLayout(false);
             this.menuContainer2.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
-            this.panel3.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             this.menuContainer.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
@@ -646,8 +614,6 @@
         private System.Windows.Forms.FlowLayoutPanel menuContainer2;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Button menu2;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Button ptnTonKho;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Timer menuTransition2;
         private System.Windows.Forms.Panel pnlMain;
