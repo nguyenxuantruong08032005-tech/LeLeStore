@@ -374,7 +374,7 @@
             // 
             this.txtDoanhThuCa.Location = new System.Drawing.Point(6, 66);
             this.txtDoanhThuCa.Name = "txtDoanhThuCa";
-            this.txtDoanhThuCa.Size = new System.Drawing.Size(99, 30);
+            this.txtDoanhThuCa.Size = new System.Drawing.Size(143, 30);
             this.txtDoanhThuCa.TabIndex = 7;
             // 
             // groupBox5

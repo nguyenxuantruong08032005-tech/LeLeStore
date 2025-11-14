@@ -157,6 +157,24 @@ namespace LeLeStore
                 var chucVu = rowView["ChucVu"] == DBNull.Value ? string.Empty : rowView["ChucVu"].ToString();
                 txtChucVu.Text = chucVu;
                 EnableTextBoxesForRole(chucVu);
+                if (string.Equals(chucVu, "Nhân viên bán hàng", StringComparison.CurrentCultureIgnoreCase)
+                    && int.TryParse(rowView["MaNhanVien"].ToString(), out int maNhanVien))
+                {
+                    try
+                    {
+                        var doanhThuCa = CalculateSalesRevenue(maNhanVien);
+                        txtDoanhThuCa.Text = FormatCurrency(doanhThuCa);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Không thể tính doanh thu ca: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        txtDoanhThuCa.Text = string.Empty;
+                    }
+                }
+                else
+                {
+                    txtDoanhThuCa.Text = string.Empty;
+                }
             }
             else
             {
@@ -419,7 +437,25 @@ VALUES
                 }
             }
         }
+        private decimal CalculateSalesRevenue(int maNhanVien)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            using (var command = new SqlCommand(
+                       "SELECT SUM(ISNULL(TongTien, 0)) FROM HoaDon WHERE MaNhanVien = @MaNhanVien",
+                       connection))
+            {
+                command.Parameters.Add("@MaNhanVien", SqlDbType.Int).Value = maNhanVien;
+                connection.Open();
 
+                var result = command.ExecuteScalar();
+                if (result == null || result == DBNull.Value)
+                {
+                    return 0m;
+                }
+
+                return Convert.ToDecimal(result, CultureInfo.InvariantCulture);
+            }
+        }
         private string FormatCurrency(decimal value)
         {
             return value.ToString("N2", CultureInfo.CurrentCulture);

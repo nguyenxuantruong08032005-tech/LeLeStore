@@ -359,17 +359,7 @@ namespace LeLeStore
 
         private void btnDashBoard_Click(object sender, EventArgs e)
         {
-            if (dashBoard == null)
-            {
-                dashBoard = new formDashBoard();
-                dashBoard.FormClosed += Dashboard_FormClosed;
-                dashBoard.MdiParent = this;
-                dashBoard.Show();
-            }
-            else
-            {
-                dashBoard.Activate();
-            }
+            OpenChildForm(new formDashBoard());
         }
         private void Dashboard_FormClosed(object sender, EventArgs e)
         {
