@@ -367,7 +367,7 @@ namespace LeLeStore
             var totalAmount = CalculateTotalAmount();
 
             using (var command = new SqlCommand(
-"INSERT INTO HoaDon (NgayLap, TongTien, MaKhachHang, MaNhanVien, , PhuongThucThanhToan) OUTPUT INSERTED.MaHD VALUES (@NgayLap, @TongTien, @MaKhachHang, @MaNhanVien, @PhuongThucThanhToan);", connection, transaction))
+"INSERT INTO HoaDon (NgayLap, TongTien, MaKhachHang, MaNhanVien, PhuongThucThanhToan) OUTPUT INSERTED.MaHD VALUES (@NgayLap, @TongTien, @MaKhachHang, @MaNhanVien, @PhuongThucThanhToan);", connection, transaction))
             {
                 command.Parameters.Add("@NgayLap", SqlDbType.DateTime2).Value = dateTimePicker1.Value;
 
