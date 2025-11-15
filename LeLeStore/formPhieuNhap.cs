@@ -16,6 +16,11 @@ namespace LeLeStore
         private readonly NhaCungCapTableAdapter nhaCungCapTableAdapter = new NhaCungCapTableAdapter();
         private readonly SanPhamTableAdapter sanPhamTableAdapter = new SanPhamTableAdapter();
         private readonly BindingSource giaoDichBindingSource = new BindingSource();
+        private class ProductComboItem
+        {
+            public int MaSP { get; set; }
+            public string Display { get; set; }
+        }
 
         private enum EditMode
         {
@@ -30,7 +35,7 @@ namespace LeLeStore
         private bool detailPendingChanges;
         private int? transactionEditingId;
         private (int MaGD, int MaSP)? detailEditingKey;
-
+        private bool suppressProductComboUpdate;
         public formPhieuNhap()
         {
             InitializeComponent();
@@ -54,7 +59,13 @@ namespace LeLeStore
 
             numericUpDown1.Minimum = 1;
             numericUpDown1.Maximum = 1000000;
-          
+
+            cbMaSP.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbMaSP.DisplayMember = nameof(ProductComboItem.Display);
+            cbMaSP.ValueMember = nameof(ProductComboItem.MaSP);
+
+            txtMaGD1.TextChanged += txtMaGD1_TextChanged;
+
         }
 
         private void groupBox1_Enter(object sender, EventArgs e)
@@ -92,6 +103,92 @@ namespace LeLeStore
             {
                 ExecuteSafely(() => sanPhamTableAdapter.Fill(gStoreDataSet.SanPham), "Không thể tải dữ liệu sản phẩm");
             }
+        }
+        private void UpdateProductComboBoxForTransaction(int? maGd, int? selectedProductId = null)
+        {
+            EnsureLookupDataLoaded();
+
+            int? supplierId = null;
+            if (maGd.HasValue)
+            {
+                var transactionRow = gStoreDataSet.GiaoDichKho.FindByMaGD(maGd.Value);
+                if (transactionRow != null && transactionRow.RowState != DataRowState.Deleted && !transactionRow.IsMaNCCNull())
+                {
+                    supplierId = transactionRow.MaNCC;
+                }
+            }
+
+            var items = gStoreDataSet.SanPham
+                .Where(row => row.RowState != DataRowState.Deleted)
+                .Where(row => !supplierId.HasValue || (!row.IsMaNCCNull() && row.MaNCC == supplierId.Value))
+                .Select(row => new ProductComboItem
+                {
+                    MaSP = row.MaSP,
+                    Display = $"{row.MaSP} - {row.TenSP}"
+                })
+                .OrderBy(item => item.MaSP)
+                .ToList();
+
+            cbMaSP.DataSource = null;
+            cbMaSP.DataSource = items;
+            cbMaSP.SelectedIndex = -1;
+
+            if (selectedProductId.HasValue && items.Any(item => item.MaSP == selectedProductId.Value))
+            {
+                cbMaSP.SelectedValue = selectedProductId.Value;
+            }
+            else if (items.Count == 1)
+            {
+                cbMaSP.SelectedIndex = 0;
+            }
+        }
+
+        private int? GetCurrentDetailTransactionId()
+        {
+            if (int.TryParse(txtMaGD1.Text.Trim(), out int maGd))
+            {
+                return maGd;
+            }
+
+            return null;
+        }
+
+        private int? GetSelectedProductId()
+        {
+            if (cbMaSP.SelectedValue is int selectedValue)
+            {
+                return selectedValue;
+            }
+
+            if (cbMaSP.SelectedItem is ProductComboItem item)
+            {
+                return item.MaSP;
+            }
+
+            if (!string.IsNullOrWhiteSpace(cbMaSP.Text) && int.TryParse(cbMaSP.Text.Trim(), out int parsedValue))
+            {
+                return parsedValue;
+            }
+
+            return null;
+        }
+
+        private bool TrySelectProductForCurrentTransaction(int maSp)
+        {
+            int? currentTransactionId = GetCurrentDetailTransactionId();
+            UpdateProductComboBoxForTransaction(currentTransactionId, maSp);
+
+            return cbMaSP.SelectedValue is int selected && selected == maSp;
+        }
+
+        private void txtMaGD1_TextChanged(object sender, EventArgs e)
+        {
+            if (suppressProductComboUpdate)
+            {
+                return;
+            }
+
+            UpdateProductComboBoxForTransaction(GetCurrentDetailTransactionId(), GetSelectedProductId());
         }
         private void ExecuteSafely(Action action, string errorMessage)
         {
@@ -133,8 +230,12 @@ namespace LeLeStore
             var product = gStoreDataSet.SanPham.FirstOrDefault(row => row.TenSP.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0);
             if (product != null)
             {
-                txtMaSP.Text = product.MaSP.ToString();
+               
                 hasResult = true;
+                if (!TrySelectProductForCurrentTransaction(product.MaSP))
+                {
+                    MessageBox.Show("Sản phẩm không thuộc nhà cung cấp của giao dịch hiện tại.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
 
             if (!hasResult)
@@ -261,7 +362,10 @@ namespace LeLeStore
                 if (newRow != null)
                 {
                     txtMaGD.Text = newRow.MaGD.ToString();
+                    suppressProductComboUpdate = true;
                     txtMaGD1.Text = newRow.MaGD.ToString();
+                    suppressProductComboUpdate = false;
+                    UpdateProductComboBoxForTransaction(newRow.MaGD);
                 }
 
                 RefreshTransactions(false);
@@ -282,7 +386,15 @@ namespace LeLeStore
 
             if (int.TryParse(txtMaGD.Text, out int maGd))
             {
+                suppressProductComboUpdate = true;
                 txtMaGD1.Text = maGd.ToString();
+                txtMaGD1.Text = maGd.ToString();
+                suppressProductComboUpdate = false;
+                UpdateProductComboBoxForTransaction(maGd);
+            }
+            else
+            {
+                UpdateProductComboBoxForTransaction(null);
             }
 
             txtMaGD1.Focus();
@@ -409,7 +521,22 @@ namespace LeLeStore
             txtMaGD.Text = GenerateNextTransactionId().ToString();
             if (detailMode != EditMode.Add)
             {
+                suppressProductComboUpdate = true;
                 txtMaGD1.Text = txtMaGD.Text;
+                suppressProductComboUpdate = false;
+
+                if (int.TryParse(txtMaGD.Text, out int newTransactionId))
+                {
+                    UpdateProductComboBoxForTransaction(newTransactionId);
+                }
+                else
+                {
+                    UpdateProductComboBoxForTransaction(null);
+                }
+            }
+            else
+            {
+                UpdateProductComboBoxForTransaction(GetCurrentDetailTransactionId());
             }
         }
 
@@ -477,16 +604,21 @@ namespace LeLeStore
         {
             if (detailMode != EditMode.Add)
             {
+                suppressProductComboUpdate = true;
                 txtMaGD1.Clear();
+                suppressProductComboUpdate = false;
             }
 
-            txtMaSP.Clear();
+            UpdateProductComboBoxForTransaction(GetCurrentDetailTransactionId());
+            cbMaSP.SelectedIndex = -1;
             numericUpDown1.Value = Math.Max(numericUpDown1.Minimum, 1);
         }
         private void PopulateDetailInputs(GStoreDataSet.ChiTietGiaoDichKhoRow row)
         {
+            suppressProductComboUpdate = true;
             txtMaGD1.Text = row.MaGD.ToString();
-            txtMaSP.Text = row.MaSP.ToString();
+            suppressProductComboUpdate = false;
+            UpdateProductComboBoxForTransaction(row.MaGD, row.MaSP);
             numericUpDown1.Value = ClampQuantity(row.SoLuong);
         }
 
@@ -515,13 +647,14 @@ namespace LeLeStore
                 return false;
             }
 
-            if (!int.TryParse(txtMaSP.Text.Trim(), out maSp))
+            int? selectedProductId = GetSelectedProductId();
+            if (!selectedProductId.HasValue)
             {
-                MessageBox.Show("Mã sản phẩm không hợp lệ.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Vui lòng chọn mã sản phẩm.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 soLuong = 0;
                 return false;
             }
-
+            maSp = selectedProductId.Value;
             soLuong = (int)numericUpDown1.Value;
             if (soLuong <= 0)
             {
@@ -747,24 +880,31 @@ namespace LeLeStore
             if (giaoDichBindingSource.Current is DataRowView view && view.Row is GStoreDataSet.GiaoDichKhoRow row && row.RowState != DataRowState.Deleted)
             {
                 PopulateTransactionInputs(row);
+                int? selectedProductId = GetSelectedProductId();
+                int? targetTransactionId = detailMode != EditMode.Add ? row.MaGD : GetCurrentDetailTransactionId();
+
 
                 if (detailMode != EditMode.Add)
                 {
+                    suppressProductComboUpdate = true;
                     txtMaGD1.Text = row.MaGD.ToString();
+                    suppressProductComboUpdate = false;
+                    targetTransactionId = row.MaGD;
                 }
+
+                if (!targetTransactionId.HasValue)
+                {
+                    targetTransactionId = row.MaGD;
+                }
+                UpdateProductComboBoxForTransaction(targetTransactionId, selectedProductId);
             }
         }
 
         private void dataGridView2_SelectionChanged(object sender, EventArgs e)
         {
-            if (giaoDichBindingSource.Current is DataRowView view && view.Row is GStoreDataSet.GiaoDichKhoRow row && row.RowState != DataRowState.Deleted)
+            if (chiTietGiaoDichKhoBindingSource.Current is DataRowView view && view.Row is GStoreDataSet.ChiTietGiaoDichKhoRow row && row.RowState != DataRowState.Deleted)
             {
-                PopulateTransactionInputs(row);
-
-                if (detailMode != EditMode.Add)
-                {
-                    txtMaGD1.Text = row.MaGD.ToString();
-                }
+                PopulateDetailInputs(row);
             }
         }
     }
