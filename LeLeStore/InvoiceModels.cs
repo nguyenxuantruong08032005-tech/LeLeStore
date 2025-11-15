@@ -18,6 +18,7 @@ namespace LeLeStore
         public int Quantity { get; set; }
 
         public decimal UnitPrice { get; set; }
+        public string PaymentMethod { get; set; } = string.Empty;
         public int? CustomerId { get; set; }
         public decimal Total => UnitPrice * Quantity;
 
@@ -30,6 +31,7 @@ namespace LeLeStore
                 ProductName = ProductName,
                 Quantity = Quantity,
                 UnitPrice = UnitPrice,
+                PaymentMethod = PaymentMethod,
                 CustomerId = CustomerId
             };
         }

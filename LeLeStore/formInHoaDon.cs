@@ -32,6 +32,8 @@ namespace LeLeStore
         private decimal _currentDiscountAmount;
         private decimal _appliedLoyaltyDiscount;
         private int? _selectedCustomerId;
+        private static readonly string[] PaymentMethodOptions = { "Tiền mặt", "Chuyển Khoản", "Card" };
+        private string _selectedPaymentMethod = string.Empty;
         private static readonly object PdfFontInitializationLock = new object();
         private static bool _pdfFontResolverInitialized;
         public bool IsInvoiceSaved => _isSaved;
@@ -43,6 +45,7 @@ namespace LeLeStore
         {
             _invoiceSnapshot = invoiceSnapshot ?? throw new ArgumentNullException(nameof(invoiceSnapshot));
             InitializeComponent();
+            InitializePaymentMethodComboBox();
             dataGridView1.AutoGenerateColumns = false;
             dataGridView1.AllowUserToAddRows = false;
             dataGridView1.MultiSelect = false;
@@ -55,7 +58,7 @@ namespace LeLeStore
             var subtotal = _invoiceLines.Sum(line => line.Total);
             _discountAmount = Math.Min(subtotal, Math.Max(0m, _invoiceSnapshot.DiscountAmount));
             dataGridView1.DataSource = _invoiceLines;
-
+            ApplyPaymentMethodSelection(cbPhuongThucTT.SelectedItem as string ?? string.Empty);
             textBox1.ReadOnly = true;
             txtMaNv.ReadOnly = false;
             dateTimePicker1.Enabled = false;
@@ -74,6 +77,18 @@ namespace LeLeStore
             PopulateInvoiceMetadata();
             UpdateTotalsDisplay();
             TryReloadCustomerData();
+        }
+        private void InitializePaymentMethodComboBox()
+        {
+            cbPhuongThucTT.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbPhuongThucTT.Items.Clear();
+            cbPhuongThucTT.Items.AddRange(PaymentMethodOptions);
+            cbPhuongThucTT.SelectedIndexChanged += cbPhuongThucTT_SelectedIndexChanged;
+
+            if (cbPhuongThucTT.Items.Count > 0)
+            {
+                cbPhuongThucTT.SelectedIndex = 0;
+            }
         }
         private void ConfigureGridColumns()
         {
@@ -141,7 +156,15 @@ namespace LeLeStore
                 }
             };
 
-            dataGridView1.Columns.AddRange(customerColumn, orderColumn, nameColumn, quantityColumn, priceColumn, totalColumn);
+            var paymentMethodColumn = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = nameof(InvoiceLine.PaymentMethod),
+                HeaderText = "Phương thức TT",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                ReadOnly = true
+            };
+
+            dataGridView1.Columns.AddRange(customerColumn, orderColumn, nameColumn, quantityColumn, priceColumn, totalColumn, paymentMethodColumn);
         }
         private void PopulateInvoiceMetadata()
         {
@@ -344,7 +367,7 @@ namespace LeLeStore
             var totalAmount = CalculateTotalAmount();
 
             using (var command = new SqlCommand(
-"INSERT INTO HoaDon (NgayLap, TongTien, MaKhachHang, MaNhanVien) OUTPUT INSERTED.MaHD VALUES (@NgayLap, @TongTien, @MaKhachHang, @MaNhanVien);", connection, transaction))
+"INSERT INTO HoaDon (NgayLap, TongTien, MaKhachHang, MaNhanVien, , PhuongThucThanhToan) OUTPUT INSERTED.MaHD VALUES (@NgayLap, @TongTien, @MaKhachHang, @MaNhanVien, @PhuongThucThanhToan);", connection, transaction))
             {
                 command.Parameters.Add("@NgayLap", SqlDbType.DateTime2).Value = dateTimePicker1.Value;
 
@@ -362,6 +385,15 @@ namespace LeLeStore
                     customerParameter.Value = DBNull.Value;
                 }
                 command.Parameters.Add("@MaNhanVien", SqlDbType.Int).Value = employeeId;
+                var paymentParameter = command.Parameters.Add("@PhuongThucThanhToan", SqlDbType.NVarChar, 50);
+                if (string.IsNullOrWhiteSpace(_selectedPaymentMethod))
+                {
+                    paymentParameter.Value = DBNull.Value;
+                }
+                else
+                {
+                    paymentParameter.Value = _selectedPaymentMethod;
+                }
 
                 var result = command.ExecuteScalar();
 
@@ -464,6 +496,9 @@ namespace LeLeStore
                     graphics.DrawString($"Mã nhân viên: {txtMaNv.Text.Trim()}", labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
                     cursorY += infoLineHeight * 1.5;
 
+                    var paymentMethod = GetSelectedPaymentMethodForDisplay();
+                    graphics.DrawString($"Phương thức thanh toán: {paymentMethod}", labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
+                    cursorY += infoLineHeight * 1.5;
                     graphics.DrawString("Danh sách sản phẩm", labelBoldFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
                     cursorY += infoLineHeight * 1.2;
 
@@ -592,6 +627,30 @@ namespace LeLeStore
         private static double GetLineHeight(XGraphics graphics, XFont font)
         {
             return graphics.MeasureString("Ag", font).Height;
+        }
+        private void cbPhuongThucTT_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ApplyPaymentMethodSelection(cbPhuongThucTT.SelectedItem as string ?? string.Empty);
+        }
+        private void ApplyPaymentMethodSelection(string paymentMethod)
+        {
+            _selectedPaymentMethod = string.IsNullOrWhiteSpace(paymentMethod) ? string.Empty : paymentMethod;
+
+            if (_invoiceLines == null)
+            {
+                return;
+            }
+
+            foreach (var line in _invoiceLines)
+            {
+                line.PaymentMethod = _selectedPaymentMethod;
+            }
+
+            dataGridView1.Refresh();
+        }
+        private string GetSelectedPaymentMethodForDisplay()
+        {
+            return string.IsNullOrWhiteSpace(_selectedPaymentMethod) ? "Không xác định" : _selectedPaymentMethod;
         }
         private void InitializeCustomerFeatures()
         {
