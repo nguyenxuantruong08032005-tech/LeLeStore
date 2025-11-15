@@ -148,6 +148,7 @@
             this.txtMaNCC.Name = "txtMaNCC";
             this.txtMaNCC.Size = new System.Drawing.Size(84, 30);
             this.txtMaNCC.TabIndex = 4;
+            this.txtMaNCC.TextChanged += new System.EventHandler(this.txtMaNCC_TextChanged);
             // 
             // dateTimePicker1
             // 

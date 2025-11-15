@@ -65,6 +65,8 @@ namespace LeLeStore
             cbMaSP.ValueMember = nameof(ProductComboItem.MaSP);
 
             txtMaGD1.TextChanged += txtMaGD1_TextChanged;
+            txtMaNCC.TextChanged += txtMaNCC_TextChanged;
+
 
         }
 
@@ -117,7 +119,13 @@ namespace LeLeStore
                     supplierId = transactionRow.MaNCC;
                 }
             }
-
+            if (!supplierId.HasValue)
+            {
+                if (int.TryParse(txtMaNCC.Text.Trim(), out int parsedSupplierId))
+                {
+                    supplierId = parsedSupplierId;
+                }
+            }
             var items = gStoreDataSet.SanPham
                 .Where(row => row.RowState != DataRowState.Deleted)
                 .Where(row => !supplierId.HasValue || (!row.IsMaNCCNull() && row.MaNCC == supplierId.Value))
@@ -907,6 +915,16 @@ namespace LeLeStore
             {
                 PopulateDetailInputs(row);
             }
+        }
+
+        private void txtMaNCC_TextChanged(object sender, EventArgs e)
+        {
+            if (suppressProductComboUpdate)
+            {
+                return;
+            }
+
+            UpdateProductComboBoxForTransaction(GetCurrentDetailTransactionId(), GetSelectedProductId());
         }
     }
 }
