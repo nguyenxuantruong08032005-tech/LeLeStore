@@ -651,6 +651,7 @@ namespace LeLeStore
             if (!selectedProductId.HasValue)
             {
                 MessageBox.Show("Vui lòng chọn mã sản phẩm.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                maSp = 0;
                 soLuong = 0;
                 return false;
             }

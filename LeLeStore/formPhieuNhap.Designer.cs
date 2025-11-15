@@ -518,7 +518,7 @@
             this.cbMaSP.FormattingEnabled = true;
             this.cbMaSP.Location = new System.Drawing.Point(530, 64);
             this.cbMaSP.Name = "cbMaSP";
-            this.cbMaSP.Size = new System.Drawing.Size(163, 32);
+            this.cbMaSP.Size = new System.Drawing.Size(229, 32);
             this.cbMaSP.TabIndex = 6;
             // 
             // formPhieuNhap
