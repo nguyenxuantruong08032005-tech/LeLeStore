@@ -15,6 +15,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Net;
+using System.Net.Http;
+
 namespace LeLeStore
 {
     public partial class formInHoaDon : Form
@@ -36,6 +39,14 @@ namespace LeLeStore
         private string _selectedPaymentMethod = string.Empty;
         private static readonly object PdfFontInitializationLock = new object();
         private static bool _pdfFontResolverInitialized;
+        // ==== Cấu hình tài khoản nhận chuyển khoản (đổi theo của bạn) ====
+        private const string BankBin = "970418";          // Ví dụ: 970436 = Vietcombank (đổi đúng BIN ngân hàng)
+        private const string AccountNo = "8810239241";      // Số tài khoản nhận
+        private const string AccountName = "CONG TY LELE";    // Tên chủ TK (không dấu càng tốt)
+
+        // UI runtime cho QR
+        
+
         public bool IsInvoiceSaved => _isSaved;
         public formInHoaDon() : this(new InvoiceSnapshot(Array.Empty<InvoiceLine>(), DateTime.Now, null, string.Empty))
         {
@@ -45,6 +56,8 @@ namespace LeLeStore
         {
             _invoiceSnapshot = invoiceSnapshot ?? throw new ArgumentNullException(nameof(invoiceSnapshot));
             InitializeComponent();
+           
+
             InitializePaymentMethodComboBox();
             dataGridView1.AutoGenerateColumns = false;
             dataGridView1.AllowUserToAddRows = false;
@@ -65,6 +78,74 @@ namespace LeLeStore
 
           
             InitializeCustomerFeatures();
+        }
+        
+
+
+        // Xây URL ảnh VietQR
+        private string BuildVietQrUrl(decimal amount, string addInfo)
+        {
+            var encodedInfo = Uri.EscapeDataString(addInfo ?? "");
+            var encodedName = Uri.EscapeDataString(AccountName ?? "");
+            var amt = Convert.ToInt64(Math.Round(amount, 0)); // số nguyên VND
+
+            // qr_only.png = chỉ mã QR (gọn)
+            return $"https://img.vietqr.io/image/{BankBin}-{AccountNo}-qr_only.png?amount={amt}&addInfo={encodedInfo}&accountName={encodedName}";
+        }
+
+        // Tải ảnh QR (async) về PictureBox
+        private async Task LoadQrToPictureBoxAsync(string url)
+        {
+            using (var http = new HttpClient())
+            {
+                var bytes = await http.GetByteArrayAsync(url);
+                using (var ms = new MemoryStream(bytes))
+                {
+                    var img = Image.FromStream(ms);
+                    picQR.Image = img;
+                }
+            }
+        }
+
+        // Cập nhật UI QR dựa trên phương thức TT + tổng tiền
+        private async Task UpdatePaymentQrUIAsync()
+        {
+            if (string.Equals(_selectedPaymentMethod, "Chuyển Khoản", StringComparison.OrdinalIgnoreCase))
+            {
+                picQR.Visible = true;
+
+                var total = CalculateTotalAmount();
+                var maHd = GetInvoiceIdentifier();
+                var addInfo = string.IsNullOrWhiteSpace(maHd)
+                    ? "Thanh toan don hang"
+                    : $"Thanh toan HD {maHd}";
+
+                var url = BuildVietQrUrl(total, addInfo);
+
+                try
+                {
+                    await LoadQrToPictureBoxAsync(url);
+                }
+                catch
+                {
+                    picQR.Image = null;
+                }
+            }
+            else
+            {
+                picQR.Visible = false;
+                picQR.Image = null;
+            }
+        }
+
+
+        // Dùng cho PDF (tải bytes đồng bộ)
+        private byte[] DownloadQrBytesForPdf(string url)
+        {
+            using (var wc = new WebClient())
+            {
+                return wc.DownloadData(url);
+            }
         }
 
         private void panel1_Click(object sender, EventArgs e)
@@ -451,6 +532,9 @@ namespace LeLeStore
             lblSubtotal.Text = "Tổng trước giảm: " + summary.Subtotal.ToString("N0", _currencyCulture) + " ₫";
             lblDiscount.Text = "Chiết khấu: " + summary.Discount.ToString("N0", _currencyCulture) + " ₫";
             lblTotalPayable.Text = "Tổng thanh toán: " + summary.Total.ToString("N0", _currencyCulture) + " ₫";
+            // Tổng thay đổi => cập nhật lại QR nếu đang là chuyển khoản
+            _ = UpdatePaymentQrUIAsync();
+
         }
 
         private void ExportInvoiceToPdf(string filePath)
@@ -471,11 +555,13 @@ namespace LeLeStore
                 using (var graphics = XGraphics.FromPdfPage(page))
                 {
                     var fontOptions = new XPdfFontOptions(PdfFontEncoding.Unicode, PdfFontEmbedding.Always);
-                    var titleFont = new XFont("DejaVu Sans", 18, XFontStyle.Bold, fontOptions);
-                    var labelFont = new XFont("DejaVu Sans", 12, XFontStyle.Regular, fontOptions);
-                    var labelBoldFont = new XFont("DejaVu Sans", 12, XFontStyle.Bold, fontOptions);
-                    var tableHeaderFont = new XFont("DejaVu Sans", 11, XFontStyle.Bold, fontOptions);
-                    var tableCellFont = new XFont("DejaVu Sans", 11, XFontStyle.Regular, fontOptions);
+
+                    var titleFont = new XFont(PdfEmbeddedFontResolver.FamilyName, 18, XFontStyle.Bold, fontOptions);
+                    var labelFont = new XFont(PdfEmbeddedFontResolver.FamilyName, 12, XFontStyle.Regular, fontOptions);
+                    var labelBoldFont = new XFont(PdfEmbeddedFontResolver.FamilyName, 12, XFontStyle.Bold, fontOptions);
+                    var tableHeaderFont = new XFont(PdfEmbeddedFontResolver.FamilyName, 11, XFontStyle.Bold, fontOptions);
+                    var tableCellFont = new XFont(PdfEmbeddedFontResolver.FamilyName, 11, XFontStyle.Regular, fontOptions);
+
 
                     const double margin = 50;
                     double availableWidth = page.Width - (2 * margin);
@@ -499,6 +585,49 @@ namespace LeLeStore
                     var paymentMethod = GetSelectedPaymentMethodForDisplay();
                     graphics.DrawString($"Phương thức thanh toán: {paymentMethod}", labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
                     cursorY += infoLineHeight * 1.5;
+                    double qrBottomY = cursorY; // lưu chiều cao thấp nhất mà QR chiếm
+
+                    // Nếu là chuyển khoản thì vẽ QR vào PDF (góc phải)
+                    // Nếu là chuyển khoản thì vẽ QR vào PDF (góc phải)
+                    if (string.Equals(_selectedPaymentMethod, "Chuyển Khoản", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var totalForQr = totalAmount; // tổng sau chiết khấu
+                        var maHd = GetInvoiceIdentifier();
+                        var addInfo = string.IsNullOrWhiteSpace(maHd) ? "Thanh toan don hang" : $"Thanh toan HD {maHd}";
+                        var qrUrl = BuildVietQrUrl(totalForQr, addInfo);
+
+                        try
+                        {
+                            var bytes = DownloadQrBytesForPdf(qrUrl);
+                            using (var ms = new MemoryStream(bytes))
+                            using (var ximg = XImage.FromStream(ms))
+                            {
+                                double qrSize = 140; // px PDF
+                                double qrLeft = left + (availableWidth - qrSize); // canh phải
+                                double qrTop = cursorY;                           // ngay dưới dòng "Phương thức...”
+                                graphics.DrawImage(ximg, qrLeft, qrTop, qrSize, qrSize);
+
+                                // Ghi chú dưới QR
+                                var noteY = qrTop + qrSize + 4;
+                                graphics.DrawString($"{AccountName}", labelFont, XBrushes.Black,
+                                    new XRect(qrLeft, noteY, qrSize, infoLineHeight), XStringFormats.TopCenter);
+                                noteY += infoLineHeight;
+                                graphics.DrawString($"{AccountNo} ({BankBin})", labelFont, XBrushes.Black,
+                                    new XRect(qrLeft, noteY, qrSize, infoLineHeight), XStringFormats.TopCenter);
+
+                                // cập nhật đáy của QR (bao gồm cả phần chữ)
+                                qrBottomY = noteY + infoLineHeight;
+                            }
+                        }
+                        catch
+                        {
+                            // Không chặn in nếu không tải được QR
+                        }
+                    }
+
+                    // Đảm bảo phần bảng nằm dưới QR (nếu có QR)
+                    cursorY = Math.Max(cursorY, qrBottomY) + infoLineHeight * 0.5;
+
                     graphics.DrawString("Danh sách sản phẩm", labelBoldFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
                     cursorY += infoLineHeight * 1.2;
 
@@ -605,19 +734,15 @@ namespace LeLeStore
             return DateTime.Now.ToString("yyyyMMddHHmmss", CultureInfo.InvariantCulture);
         }
 
+       
+
         private static void EnsurePdfFontResolver()
         {
-            if (_pdfFontResolverInitialized)
-            {
-                return ;
-            }
+            if (_pdfFontResolverInitialized) return;
 
             lock (PdfFontInitializationLock)
             {
-                if (_pdfFontResolverInitialized)
-                {
-                    return;
-                }
+                if (_pdfFontResolverInitialized) return;
 
                 GlobalFontSettings.FontResolver = new PdfEmbeddedFontResolver();
                 _pdfFontResolverInitialized = true;
@@ -631,6 +756,7 @@ namespace LeLeStore
         private void cbPhuongThucTT_SelectedIndexChanged(object sender, EventArgs e)
         {
             ApplyPaymentMethodSelection(cbPhuongThucTT.SelectedItem as string ?? string.Empty);
+            
         }
         private void ApplyPaymentMethodSelection(string paymentMethod)
         {
@@ -647,6 +773,8 @@ namespace LeLeStore
             }
 
             dataGridView1.Refresh();
+            _ = UpdatePaymentQrUIAsync();
+
         }
         private string GetSelectedPaymentMethodForDisplay()
         {
