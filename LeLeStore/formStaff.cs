@@ -57,7 +57,7 @@ namespace LeLeStore
         // ===================== HELPER =====================
         private bool Confirm(string message, MessageBoxIcon icon = MessageBoxIcon.Question)
         {
-            return MessageBox.Show(message, "Xác nhận", MessageBoxButtons.YesNo, icon) == DialogResult.Yes;
+            return MessageBox.Show(message, "Xác nhận", MessageBoxButtons.OKCancel, icon) == DialogResult.OK;
         }
 
         private void ArmTwoStep(OperationMode mode, string armedNotice)
@@ -94,7 +94,7 @@ namespace LeLeStore
             txtTenNV.Focus();
             if (Confirm("Bạn có chắc chắn muốn thêm Nhân viên mới?"))
             {
-                ArmTwoStep(OperationMode.Add, "Hãy nhập thông tin và nhấn THÊM lần nữa để lưu.");
+                ArmTwoStep(OperationMode.Add, "Nhấn THÊM lần nữa để lưu.");
             }
             else
             {
@@ -127,7 +127,7 @@ namespace LeLeStore
             txtTenNV.Focus();
             if (Confirm("Bạn có chắc chắn muốn cập nhật thông tin nhân viên này?"))
             {
-                ArmTwoStep(OperationMode.Edit, "Đã sẵn sàng chỉnh sửa. Nhấn SỬA lần nữa để lưu thay đổi.");
+                ArmTwoStep(OperationMode.Edit, "Nhấn SỬA lần nữa để lưu thay đổi.");
             }
             else
             {
@@ -158,7 +158,7 @@ namespace LeLeStore
             PopulateTextBoxes(row);
             if (Confirm("Bạn có chắc chắn muốn xóa nhân viên này?", MessageBoxIcon.Warning))
             {
-                ArmTwoStep(OperationMode.Delete, "Đã đánh dấu xóa. Nhấn XÓA lần nữa để xác nhận xóa.");
+                ArmTwoStep(OperationMode.Delete, "Nhấn XÓA lần nữa để xác nhận xóa.");
             }
             else
             {
@@ -301,8 +301,11 @@ namespace LeLeStore
             gStoreDataSet.NhanVien.AddNhanVienRow(newRow);
             currentRow = newRow;
 
-            CommitChanges(() => newRow.MaNhanVien);
-            MessageBox.Show("Đã thêm nhân viên thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+           
+            if (CommitChanges(() => newRow.MaNhanVien))
+            {
+                NotifySaved();
+            }
         }
         private void SaveEditedNhanVien()
         {
@@ -400,8 +403,11 @@ namespace LeLeStore
                 currentRow.SetMaNguoiDungNull();
             }
 
-            CommitChanges(() => currentRow.MaNhanVien);
-            MessageBox.Show("Đã cập nhật thông tin nhân viên.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            
+            if (CommitChanges(() => currentRow.MaNhanVien))
+            {
+                NotifySaved();
+            }
         }
         private void DeleteNhanVien()
         {
@@ -411,11 +417,7 @@ namespace LeLeStore
                 return;
             }
 
-            var dialogResult = MessageBox.Show("Bạn có chắc chắn muốn xóa nhân viên này không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (dialogResult != DialogResult.Yes)
-            {
-                return;
-            }
+          
 
             int? nextSelectionId = null;
             if (dataGridView1.CurrentRow != null && dataGridView1.CurrentRow.Index > 0)
@@ -433,11 +435,13 @@ namespace LeLeStore
             }
 
             currentRow.Delete();
-            CommitChanges(() => nextSelectionId);
-            MessageBox.Show("Đã xóa nhân viên.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (CommitChanges(() => currentRow.MaNhanVien))
+            {
+                NotifySaved();
+            }
         }
 
-        private void CommitChanges(Func<int?> selectIdProvider)
+        private bool CommitChanges(Func<int?> selectIdProvider)
         {
             try
             {
@@ -448,10 +452,12 @@ namespace LeLeStore
                 int? selectId = selectIdProvider != null ? selectIdProvider() : (int?)null;
                 ReloadData(selectId);
                 ResetState();
+                return true;
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Không thể lưu dữ liệu. Chi tiết: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
             }
         }
         private void ReloadData(int? selectId)
