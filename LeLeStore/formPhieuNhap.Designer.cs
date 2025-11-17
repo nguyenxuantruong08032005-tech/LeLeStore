@@ -51,6 +51,7 @@
             this.btnXoaCT = new ReaLTaiizor.Controls.Button();
             this.btnThemCT = new ReaLTaiizor.Controls.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.cbMaSP = new System.Windows.Forms.ComboBox();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.label8 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
@@ -65,7 +66,6 @@
             this.chiTietGiaoDichKhoTableAdapter = new LeLeStore.GStoreDataSetTableAdapters.ChiTietGiaoDichKhoTableAdapter();
             this.btnSearch = new ReaLTaiizor.Controls.Button();
             this.txtSearch = new System.Windows.Forms.TextBox();
-            this.cbMaSP = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -389,9 +389,17 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Chi Tiết Giao Dịch";
             // 
+            // cbMaSP
+            // 
+            this.cbMaSP.FormattingEnabled = true;
+            this.cbMaSP.Location = new System.Drawing.Point(530, 64);
+            this.cbMaSP.Name = "cbMaSP";
+            this.cbMaSP.Size = new System.Drawing.Size(312, 32);
+            this.cbMaSP.TabIndex = 6;
+            // 
             // numericUpDown1
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(784, 60);
+            this.numericUpDown1.Location = new System.Drawing.Point(902, 61);
             this.numericUpDown1.Name = "numericUpDown1";
             this.numericUpDown1.Size = new System.Drawing.Size(130, 30);
             this.numericUpDown1.TabIndex = 5;
@@ -399,7 +407,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(780, 32);
+            this.label8.Location = new System.Drawing.Point(898, 33);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(112, 24);
             this.label8.TabIndex = 3;
@@ -513,14 +521,6 @@
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.Size = new System.Drawing.Size(199, 26);
             this.txtSearch.TabIndex = 20;
-            // 
-            // cbMaSP
-            // 
-            this.cbMaSP.FormattingEnabled = true;
-            this.cbMaSP.Location = new System.Drawing.Point(530, 64);
-            this.cbMaSP.Name = "cbMaSP";
-            this.cbMaSP.Size = new System.Drawing.Size(229, 32);
-            this.cbMaSP.TabIndex = 6;
             // 
             // formPhieuNhap
             // 

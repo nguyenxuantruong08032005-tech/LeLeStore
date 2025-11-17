@@ -32,6 +32,8 @@ namespace LeLeStore
         private OperationMode currentMode = OperationMode.None;
         private GStoreDataSet.NhanVienRow currentRow;
         private NhanVienSnapshot originalValues;
+        private OperationMode pendingMode = OperationMode.None;
+        private bool awaitingConfirmation = false;
         public formStaff()
         {
             InitializeComponent();
@@ -39,7 +41,7 @@ namespace LeLeStore
             btnThem.Click += btnThem_Click;
             btnXoa.Click += btnXoa_Click;
             btnSua.Click += btnSua_Click;
-            btnLuu.Click += btnLuu_Click;
+
             dataGridView1.SelectionChanged += dataGridView1_SelectionChanged;
             txtMaNV.ReadOnly = true;
             SetTextBoxesReadOnly(true);
@@ -52,9 +54,37 @@ namespace LeLeStore
             LoadRowFromCurrentSelection();
 
         }
+        // ===================== HELPER =====================
+        private bool Confirm(string message, MessageBoxIcon icon = MessageBoxIcon.Question)
+        {
+            return MessageBox.Show(message, "Xác nhận", MessageBoxButtons.YesNo, icon) == DialogResult.Yes;
+        }
+
+        private void ArmTwoStep(OperationMode mode, string armedNotice)
+        {
+            pendingMode = mode;
+            awaitingConfirmation = true;
+            MessageBox.Show(armedNotice, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void NotifySaved()
+        {
+            MessageBox.Show("Đã lưu vào SQL và DataGridView.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void NotifyDeleted()
+        {
+            MessageBox.Show("Đã xóa khỏi SQL và DataGridView.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
 
         private void btnThem_Click(object sender, EventArgs e)
         {
+            if (pendingMode == OperationMode.Add && awaitingConfirmation)
+            {
+                SaveNewNhanVien();
+                ResetConfirmation();
+                return;
+            }
             currentMode = OperationMode.Add;
             currentRow = null;
             originalValues = null;
@@ -62,6 +92,15 @@ namespace LeLeStore
             SetTextBoxesReadOnly(false);
             ClearTextBoxes();
             txtTenNV.Focus();
+            if (Confirm("Bạn có chắc chắn muốn thêm Nhân viên mới?"))
+            {
+                ArmTwoStep(OperationMode.Add, "Hãy nhập thông tin và nhấn THÊM lần nữa để lưu.");
+            }
+            else
+            {
+                ResetState();
+                LoadRowFromCurrentSelection();
+            }
         }
 
         private void btnSua_Click(object sender, EventArgs e)
@@ -72,6 +111,12 @@ namespace LeLeStore
                 MessageBox.Show("Vui lòng chọn nhân viên cần sửa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
+            if (pendingMode == OperationMode.Edit && awaitingConfirmation)
+            {
+                SaveEditedNhanVien();
+                ResetConfirmation();
+                return;
+            }
 
             currentMode = OperationMode.Edit;
             currentRow = row;
@@ -80,6 +125,15 @@ namespace LeLeStore
             SetTextBoxesReadOnly(false);
             PopulateTextBoxes(row);
             txtTenNV.Focus();
+            if (Confirm("Bạn có chắc chắn muốn cập nhật thông tin nhân viên này?"))
+            {
+                ArmTwoStep(OperationMode.Edit, "Đã sẵn sàng chỉnh sửa. Nhấn SỬA lần nữa để lưu thay đổi.");
+            }
+            else
+            {
+                ResetState();
+                LoadRowFromCurrentSelection();
+            }
         }
 
         private void btnXoa_Click(object sender, EventArgs e)
@@ -90,33 +144,30 @@ namespace LeLeStore
                 MessageBox.Show("Vui lòng chọn nhân viên cần xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
-
+            if (pendingMode == OperationMode.Delete && awaitingConfirmation)
+            {
+                DeleteNhanVien();
+                ResetConfirmation();
+                return;
+            }
             currentMode = OperationMode.Delete;
             currentRow = row;
             originalValues = null;
 
             SetTextBoxesReadOnly(true);
             PopulateTextBoxes(row);
-        }
-
-        private void btnLuu_Click(object sender, EventArgs e)
-        {
-            switch (currentMode)
+            if (Confirm("Bạn có chắc chắn muốn xóa nhân viên này?", MessageBoxIcon.Warning))
             {
-                case OperationMode.Add:
-                    SaveNewNhanVien();
-                    break;
-                case OperationMode.Edit:
-                    SaveEditedNhanVien();
-                    break;
-                case OperationMode.Delete:
-                    DeleteNhanVien();
-                    break;
-                default:
-                    MessageBox.Show("Vui lòng chọn chức năng Thêm, Sửa hoặc Xóa trước khi lưu.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    break;
+                ArmTwoStep(OperationMode.Delete, "Đã đánh dấu xóa. Nhấn XÓA lần nữa để xác nhận xóa.");
+            }
+            else
+            {
+                ResetState();
+                LoadRowFromCurrentSelection();
             }
         }
+
+        
 
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
@@ -441,7 +492,11 @@ namespace LeLeStore
                 LoadRowFromCurrentSelection();
             }
         }
-
+        private void ResetConfirmation()
+        {
+            pendingMode = OperationMode.None;
+            awaitingConfirmation = false;
+        }
         private void ResetState()
         {
             currentMode = OperationMode.None;

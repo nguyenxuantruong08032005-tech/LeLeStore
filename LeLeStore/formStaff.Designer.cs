@@ -317,7 +317,7 @@
             this.btnLuu.TabIndex = 25;
             this.btnLuu.Text = "LƯU";
             this.btnLuu.TextAlignment = System.Drawing.StringAlignment.Center;
-            this.btnLuu.Click += new System.EventHandler(this.btnLuu_Click);
+            
             // 
             // btnThem
             // 

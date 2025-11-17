@@ -20,6 +20,10 @@ namespace LeLeStore
         {
             public int MaSP { get; set; }
             public string Display { get; set; }
+            public override string ToString()
+            {
+                return string.IsNullOrWhiteSpace(Display) ? base.ToString() : Display;
+            }
         }
 
         private enum EditMode
