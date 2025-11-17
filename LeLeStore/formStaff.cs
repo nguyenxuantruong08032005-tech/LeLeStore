@@ -64,17 +64,15 @@ namespace LeLeStore
         {
             pendingMode = mode;
             awaitingConfirmation = true;
-            MessageBox.Show(armedNotice, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (!string.IsNullOrEmpty(armedNotice))
+            {
+                MessageBox.Show(armedNotice, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
-        private void NotifySaved()
+        private void ShowSuccess(string message)
         {
-            MessageBox.Show("Đã lưu vào SQL và DataGridView.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        private void NotifyDeleted()
-        {
-            MessageBox.Show("Đã xóa khỏi SQL và DataGridView.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(message, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void btnThem_Click(object sender, EventArgs e)
@@ -94,7 +92,7 @@ namespace LeLeStore
             txtTenNV.Focus();
             if (Confirm("Bạn có chắc chắn muốn thêm Nhân viên mới?"))
             {
-                ArmTwoStep(OperationMode.Add, "Nhấn THÊM lần nữa để lưu.");
+                ArmTwoStep(OperationMode.Add, string.Empty);
             }
             else
             {
@@ -127,7 +125,7 @@ namespace LeLeStore
             txtTenNV.Focus();
             if (Confirm("Bạn có chắc chắn muốn cập nhật thông tin nhân viên này?"))
             {
-                ArmTwoStep(OperationMode.Edit, "Nhấn SỬA lần nữa để lưu thay đổi.");
+                ArmTwoStep(OperationMode.Edit, string.Empty);
             }
             else
             {
@@ -158,7 +156,7 @@ namespace LeLeStore
             PopulateTextBoxes(row);
             if (Confirm("Bạn có chắc chắn muốn xóa nhân viên này?", MessageBoxIcon.Warning))
             {
-                ArmTwoStep(OperationMode.Delete, "Nhấn XÓA lần nữa để xác nhận xóa.");
+                ArmTwoStep(OperationMode.Delete, string.Empty);
             }
             else
             {
@@ -244,18 +242,17 @@ namespace LeLeStore
         }
         private void SaveNewNhanVien()
         {
-            string hoTen = NormalizeRequiredText(txtTenNV.Text);
-            if (string.IsNullOrEmpty(hoTen))
+            if (!ValidateRequiredFields())
             {
-                MessageBox.Show("Họ tên không được để trống.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-           
-            if (!TryParseMaNguoiDung(out int? maNguoiDung))
-            {
+                
                 return;
             }
 
+            if (!TryParseMaNguoiDung(out int maNguoiDung))
+            {
+                return;
+            }
+            string hoTen = NormalizeRequiredText(txtTenNV.Text);
             string chucVu = NormalizeOptionalText(txtCV.Text);
             string soDienThoai = NormalizeOptionalText(txtSDT.Text);
             string diaChi = NormalizeOptionalText(txtDC.Text);
@@ -289,14 +286,7 @@ namespace LeLeStore
                 newRow.DiaChi = diaChi;
             }
 
-            if (maNguoiDung.HasValue)
-            {
-                newRow.MaNguoiDung = maNguoiDung.Value;
-            }
-            else
-            {
-                newRow.SetMaNguoiDungNull();
-            }
+            newRow.MaNguoiDung = maNguoiDung;
 
             gStoreDataSet.NhanVien.AddNhanVienRow(newRow);
             currentRow = newRow;
@@ -304,7 +294,7 @@ namespace LeLeStore
            
             if (CommitChanges(() => newRow.MaNhanVien))
             {
-                NotifySaved();
+                ShowSuccess("Đã thêm nhân viên thành công !");
             }
         }
         private void SaveEditedNhanVien()
@@ -315,18 +305,17 @@ namespace LeLeStore
                 return;
             }
 
+            if (!ValidateRequiredFields())
+            {
+               
+                return;
+            }
+
+            if (!TryParseMaNguoiDung(out int maNguoiDung))
+            {
+                return;
+            }
             string hoTen = NormalizeRequiredText(txtTenNV.Text);
-            if (string.IsNullOrEmpty(hoTen))
-            {
-                MessageBox.Show("Họ tên không được để trống.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            if (!TryParseMaNguoiDung(out int? maNguoiDung))
-            {
-                return;
-            }
-
             string chucVu = NormalizeOptionalText(txtCV.Text);
             string soDienThoai = NormalizeOptionalText(txtSDT.Text);
             string diaChi = NormalizeOptionalText(txtDC.Text);
@@ -394,19 +383,12 @@ namespace LeLeStore
                 currentRow.DiaChi = diaChi;
             }
 
-            if (maNguoiDung.HasValue)
-            {
-                currentRow.MaNguoiDung = maNguoiDung.Value;
-            }
-            else
-            {
-                currentRow.SetMaNguoiDungNull();
-            }
+            currentRow.MaNguoiDung = maNguoiDung;
 
-            
+
             if (CommitChanges(() => currentRow.MaNhanVien))
             {
-                NotifySaved();
+                ShowSuccess("Đã cập nhật nhân viên thành công !");
             }
         }
         private void DeleteNhanVien()
@@ -437,7 +419,7 @@ namespace LeLeStore
             currentRow.Delete();
             if (CommitChanges(() => currentRow.MaNhanVien))
             {
-                NotifySaved();
+                ShowSuccess("Đã xóa Nhân viên");
             }
         }
 
@@ -519,24 +501,40 @@ namespace LeLeStore
             return string.IsNullOrWhiteSpace(value) ? string.Empty : value.Trim();
         }
 
-        private bool TryParseMaNguoiDung(out int? maNguoiDung)
+        private bool ValidateRequiredFields()
         {
-            string value = txtMaND.Text.Trim();
-            if (string.IsNullOrEmpty(value))
+            if (string.IsNullOrWhiteSpace(txtTenNV.Text))
             {
-                maNguoiDung = null;
+                MessageBox.Show("Không được để trống Họ tên.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtCV.Text))
+            {
+                MessageBox.Show("Không được để trống Chức vụ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtSDT.Text))
+            {
+                MessageBox.Show("Không được để trống Số điện thoại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
                 return true;
             }
 
-            int parsed;
-            if (int.TryParse(value, out parsed))
+        private bool TryParseMaNguoiDung(out int maNguoiDung)
+        {
+            string value = txtMaND.Text.Trim();
+            if (int.TryParse(value, out int parsed))
             {
                 maNguoiDung = parsed;
                 return true;
             }
 
             MessageBox.Show("Mã người dùng phải là số.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            maNguoiDung = null;
+            maNguoiDung = 0;
             return false;
         }
        
