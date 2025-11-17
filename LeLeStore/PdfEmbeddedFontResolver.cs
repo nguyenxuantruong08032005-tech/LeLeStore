@@ -6,6 +6,9 @@ namespace LeLeStore
 {
     internal sealed class PdfEmbeddedFontResolver : IFontResolver
     {
+        private static readonly object InitializationLock = new object();
+        private static bool _isRegistered;
+
         private const string RegularFontKey = "dejavusans#r";
         private const string BoldFontKey = "dejavusans#b";
 
@@ -20,7 +23,24 @@ namespace LeLeStore
             _regularFontData = LoadFontData("DejaVuSans.ttf");
             _boldFontData = LoadFontData("DejaVuSans-Bold.ttf");
         }
+        public static void RegisterGlobal()
+        {
+            if (_isRegistered)
+            {
+                return;
+            }
 
+            lock (InitializationLock)
+            {
+                if (_isRegistered)
+                {
+                    return;
+                }
+
+                GlobalFontSettings.FontResolver = new PdfEmbeddedFontResolver();
+                _isRegistered = true;
+            }
+        }
         public FontResolverInfo ResolveTypeface(string familyName, bool isBold, bool isItalic)
         {
             // Nếu không truyền family thì mặc định dùng DejaVu Sans

@@ -37,8 +37,7 @@ namespace LeLeStore
         private int? _selectedCustomerId;
         private static readonly string[] PaymentMethodOptions = { "Tiền mặt", "Chuyển Khoản", "Card" };
         private string _selectedPaymentMethod = string.Empty;
-        private static readonly object PdfFontInitializationLock = new object();
-        private static bool _pdfFontResolverInitialized;
+       
         // ==== Cấu hình tài khoản nhận chuyển khoản (đổi theo của bạn) ====
         private const string BankBin = "970418";          // Ví dụ: 970436 = Vietcombank (đổi đúng BIN ngân hàng)
         private const string AccountNo = "8810239241";      // Số tài khoản nhận
@@ -539,7 +538,7 @@ namespace LeLeStore
 
         private void ExportInvoiceToPdf(string filePath)
         {
-            EnsurePdfFontResolver();
+            PdfEmbeddedFontResolver.RegisterGlobal();
 
             var lines = _invoiceLines.ToList();
             var summary = CalculateFinancialSummary();
@@ -736,18 +735,7 @@ namespace LeLeStore
 
        
 
-        private static void EnsurePdfFontResolver()
-        {
-            if (_pdfFontResolverInitialized) return;
-
-            lock (PdfFontInitializationLock)
-            {
-                if (_pdfFontResolverInitialized) return;
-
-                GlobalFontSettings.FontResolver = new PdfEmbeddedFontResolver();
-                _pdfFontResolverInitialized = true;
-            }
-        }
+       
 
         private static double GetLineHeight(XGraphics graphics, XFont font)
         {
