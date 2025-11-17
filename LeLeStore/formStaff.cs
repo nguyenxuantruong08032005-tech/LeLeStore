@@ -12,39 +12,22 @@ namespace LeLeStore
 {
     public partial class formStaff : Form
     {
-        private enum OperationMode
-        {
-            None,
-            Add,
-            Edit,
-            Delete
-        }
+      
 
-        private class NhanVienSnapshot
-        {
-            public string HoTen { get; set; }
-            public string ChucVu { get; set; }
-            public string SoDienThoai { get; set; }
-            public string DiaChi { get; set; }
-            public int? MaNguoiDung { get; set; }
-        }
-
-        private OperationMode currentMode = OperationMode.None;
+     
         private GStoreDataSet.NhanVienRow currentRow;
-        private NhanVienSnapshot originalValues;
-        private OperationMode pendingMode = OperationMode.None;
-        private bool awaitingConfirmation = false;
+     
+
         public formStaff()
         {
             InitializeComponent();
 
-            btnThem.Click += btnThem_Click;
-            btnXoa.Click += btnXoa_Click;
-            btnSua.Click += btnSua_Click;
+            
 
             dataGridView1.SelectionChanged += dataGridView1_SelectionChanged;
             txtMaNV.ReadOnly = true;
-            SetTextBoxesReadOnly(true);
+            SetTextBoxesReadOnly(false);
+           
         }
 
         private void formStaff_Load(object sender, EventArgs e)
@@ -55,50 +38,87 @@ namespace LeLeStore
 
         }
         // ===================== HELPER =====================
-        private bool Confirm(string message, MessageBoxIcon icon = MessageBoxIcon.Question)
-        {
-            return MessageBox.Show(message, "Xác nhận", MessageBoxButtons.OKCancel, icon) == DialogResult.OK;
-        }
-
-        private void ArmTwoStep(OperationMode mode, string armedNotice)
-        {
-            pendingMode = mode;
-            awaitingConfirmation = true;
-            if (!string.IsNullOrEmpty(armedNotice))
-            {
-                MessageBox.Show(armedNotice, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-        }
+     
+        
 
         private void ShowSuccess(string message)
         {
             MessageBox.Show(message, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+        // Trạng thái 2-bước
+        private enum OperationMode { None, Add, Edit, Delete }
+        private OperationMode pendingMode = OperationMode.None;
+        private bool awaitingConfirmation = false;
+
+        private void ArmTwoStep(OperationMode mode)
+        {
+            pendingMode = mode;
+            awaitingConfirmation = true;
+        }
+        private void ResetTwoStep()
+        {
+            pendingMode = OperationMode.None;
+            awaitingConfirmation = false;
+        }
+
+        // Confirm OK/Cancel
+        private bool Confirm(string message, MessageBoxIcon icon = MessageBoxIcon.Question)
+        {
+            return MessageBox.Show(message, "Xác nhận", MessageBoxButtons.OKCancel, icon) == DialogResult.OK;
+        }
+
+        // Thông báo kết quả
+        private void NotifySaved()
+        {
+            MessageBox.Show("Đã lưu vào SQL và DataGridView.", "Thông báo",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+        private void NotifyDeleted()
+        {
+            MessageBox.Show("Đã xóa khỏi SQL và DataGridView.", "Thông báo",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
 
         private void btnThem_Click(object sender, EventArgs e)
         {
+            // LẦN 2: thực thi lưu
             if (pendingMode == OperationMode.Add && awaitingConfirmation)
             {
-                SaveNewNhanVien();
-                ResetConfirmation();
+                // validate lúc lưu (sau khi user đã nhập)
+                if (!ValidateRequiredFields()) return;
+                if (!TryParseMaNguoiDung(out int maNguoiDung)) return;
+
+                string hoTen = NormalizeRequiredText(txtTenNV.Text);
+                string chucVu = NormalizeOptionalText(txtCV.Text);
+                string soDienThoai = NormalizeOptionalText(txtSDT.Text);
+                string diaChi = NormalizeOptionalText(txtDC.Text);
+
+                var newRow = gStoreDataSet.NhanVien.NewNhanVienRow();
+                newRow.HoTen = hoTen;
+                if (string.IsNullOrEmpty(chucVu)) newRow.SetChucVuNull(); else newRow.ChucVu = chucVu;
+                if (string.IsNullOrEmpty(soDienThoai)) newRow.SetSoDienThoaiNull(); else newRow.SoDienThoai = soDienThoai;
+                if (string.IsNullOrEmpty(diaChi)) newRow.SetDiaChiNull(); else newRow.DiaChi = diaChi;
+                newRow.MaNguoiDung = maNguoiDung;
+
+                gStoreDataSet.NhanVien.AddNhanVienRow(newRow);
+                currentRow = newRow;
+
+                if (CommitChanges(() => newRow.MaNhanVien))
+                {
+                    ResetTwoStep();
+                    NotifySaved();
+                    // tùy chọn: ClearTextBoxes(); // nếu muốn dọn sau khi đã lưu
+                }
                 return;
             }
-            currentMode = OperationMode.Add;
-            currentRow = null;
-            originalValues = null;
 
-            SetTextBoxesReadOnly(false);
-            ClearTextBoxes();
+            // LẦN 1: hỏi xác nhận -> OK thì dọn trống để nhập mới
+            if (!Confirm("Bạn có chắc chắn muốn thêm Nhân viên mới?")) return;
+
+            ArmTwoStep(OperationMode.Add);          // vào “thế chờ”
+            SetTextBoxesReadOnly(false);            // cho phép nhập
+            ClearTextBoxes();                       // <<< dọn sạch ngay sau khi OK như bạn yêu cầu
             txtTenNV.Focus();
-            if (Confirm("Bạn có chắc chắn muốn thêm Nhân viên mới?"))
-            {
-                ArmTwoStep(OperationMode.Add, string.Empty);
-            }
-            else
-            {
-                ResetState();
-                LoadRowFromCurrentSelection();
-            }
         }
 
         private void btnSua_Click(object sender, EventArgs e)
@@ -109,30 +129,82 @@ namespace LeLeStore
                 MessageBox.Show("Vui lòng chọn nhân viên cần sửa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
-            if (pendingMode == OperationMode.Edit && awaitingConfirmation)
+
+            if (!ValidateRequiredFields())
             {
-                SaveEditedNhanVien();
-                ResetConfirmation();
                 return;
             }
 
-            currentMode = OperationMode.Edit;
-            currentRow = row;
-            originalValues = CreateSnapshot(row);
-
-            SetTextBoxesReadOnly(false);
-            PopulateTextBoxes(row);
-            txtTenNV.Focus();
-            if (Confirm("Bạn có chắc chắn muốn cập nhật thông tin nhân viên này?"))
+            if (!TryParseMaNguoiDung(out int maNguoiDung))
             {
-                ArmTwoStep(OperationMode.Edit, string.Empty);
+                return;
+            }
+
+            string hoTen = NormalizeRequiredText(txtTenNV.Text);
+            string chucVu = NormalizeOptionalText(txtCV.Text);
+            string soDienThoai = NormalizeOptionalText(txtSDT.Text);
+            string diaChi = NormalizeOptionalText(txtDC.Text);
+
+            string originalHoTen = NormalizeRequiredText(row.HoTen);
+            string originalChucVu = NormalizeOptionalText(row.IsChucVuNull() ? null : row.ChucVu);
+            string originalSoDienThoai = NormalizeOptionalText(row.IsSoDienThoaiNull() ? null : row.SoDienThoai);
+            string originalDiaChi = NormalizeOptionalText(row.IsDiaChiNull() ? null : row.DiaChi);
+            int? originalMaNguoiDung = row.IsMaNguoiDungNull() ? (int?)null : row.MaNguoiDung;
+
+            bool hasChanges =
+                !string.Equals(hoTen, originalHoTen, StringComparison.Ordinal) ||
+                !string.Equals(chucVu, originalChucVu, StringComparison.Ordinal) ||
+                !string.Equals(soDienThoai, originalSoDienThoai, StringComparison.Ordinal) ||
+                !string.Equals(diaChi, originalDiaChi, StringComparison.Ordinal) ||
+                maNguoiDung != originalMaNguoiDung;
+            if (!hasChanges)
+            {
+                MessageBox.Show("Không có thay đổi.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            if (!Confirm("Bạn có chắc chắn muốn cập nhật thông tin nhân viên này?"))
+            {
+                return;
+            }
+
+            row.HoTen = hoTen;
+
+            if (string.IsNullOrEmpty(chucVu))
+            {
+                row.SetChucVuNull();
             }
             else
             {
-                ResetState();
-                LoadRowFromCurrentSelection();
+                row.ChucVu = chucVu;
+            }
+
+            if (string.IsNullOrEmpty(soDienThoai))
+            {
+                row.SetSoDienThoaiNull();
+            }
+            else
+            {
+                row.SoDienThoai = soDienThoai;
+            }
+
+            if (string.IsNullOrEmpty(diaChi))
+            {
+                row.SetDiaChiNull();
+            }
+            else
+            {
+                row.DiaChi = diaChi;
+            }
+
+            row.MaNguoiDung = maNguoiDung;
+
+            if (CommitChanges(() => row.MaNhanVien))
+            {
+                ShowSuccess("Đã cập nhật nhân viên thành công !");
             }
         }
+        
 
         private void btnXoa_Click(object sender, EventArgs e)
         {
@@ -142,40 +214,24 @@ namespace LeLeStore
                 MessageBox.Show("Vui lòng chọn nhân viên cần xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
-            if (pendingMode == OperationMode.Delete && awaitingConfirmation)
+
+            if (!Confirm("Bạn có chắc chắn muốn xóa nhân viên này?", MessageBoxIcon.Warning))
             {
-                DeleteNhanVien();
-                ResetConfirmation();
                 return;
             }
-            currentMode = OperationMode.Delete;
-            currentRow = row;
-            originalValues = null;
 
-            SetTextBoxesReadOnly(true);
-            PopulateTextBoxes(row);
-            if (Confirm("Bạn có chắc chắn muốn xóa nhân viên này?", MessageBoxIcon.Warning))
-            {
-                ArmTwoStep(OperationMode.Delete, string.Empty);
-            }
-            else
-            {
-                ResetState();
-                LoadRowFromCurrentSelection();
-            }
+            currentRow = row;
+
+            DeleteNhanVien();
         }
 
         
 
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
-            if (currentMode != OperationMode.None)
-            {
-                return;
-            }
-
             LoadRowFromCurrentSelection();
         }
+
         private void LoadRowFromCurrentSelection()
         {
             var row = GetSelectedRow();
@@ -203,7 +259,7 @@ namespace LeLeStore
         }
         private void PopulateTextBoxes(GStoreDataSet.NhanVienRow row)
         {
-            
+
             txtTenNV.Text = row.HoTen;
             txtCV.Text = row.IsChucVuNull() ? string.Empty : row.ChucVu;
             txtSDT.Text = row.IsSoDienThoaiNull() ? string.Empty : row.SoDienThoai;
@@ -229,178 +285,17 @@ namespace LeLeStore
             txtMaND.ReadOnly = readOnly;
         }
 
-        private NhanVienSnapshot CreateSnapshot(GStoreDataSet.NhanVienRow row)
-        {
-            return new NhanVienSnapshot
-            {
-                HoTen = row.HoTen,
-                ChucVu = row.IsChucVuNull() ? null : row.ChucVu,
-                SoDienThoai = row.IsSoDienThoaiNull() ? null : row.SoDienThoai,
-                DiaChi = row.IsDiaChiNull() ? null : row.DiaChi,
-                MaNguoiDung = row.IsMaNguoiDungNull() ? (int?)null : row.MaNguoiDung
-            };
-        }
-        private void SaveNewNhanVien()
-        {
-            if (!ValidateRequiredFields())
-            {
-                
-                return;
-            }
-
-            if (!TryParseMaNguoiDung(out int maNguoiDung))
-            {
-                return;
-            }
-            string hoTen = NormalizeRequiredText(txtTenNV.Text);
-            string chucVu = NormalizeOptionalText(txtCV.Text);
-            string soDienThoai = NormalizeOptionalText(txtSDT.Text);
-            string diaChi = NormalizeOptionalText(txtDC.Text);
-
-            var newRow = gStoreDataSet.NhanVien.NewNhanVienRow();
-            newRow.HoTen = hoTen;
-            if (string.IsNullOrEmpty(chucVu))
-            {
-                newRow.SetChucVuNull();
-            }
-            else
-            {
-                newRow.ChucVu = chucVu;
-            }
-
-            if (string.IsNullOrEmpty(soDienThoai))
-            {
-                newRow.SetSoDienThoaiNull();
-            }
-            else
-            {
-                newRow.SoDienThoai = soDienThoai;
-            }
-
-            if (string.IsNullOrEmpty(diaChi))
-            {
-                newRow.SetDiaChiNull();
-            }
-            else
-            {
-                newRow.DiaChi = diaChi;
-            }
-
-            newRow.MaNguoiDung = maNguoiDung;
-
-            gStoreDataSet.NhanVien.AddNhanVienRow(newRow);
-            currentRow = newRow;
-
-           
-            if (CommitChanges(() => newRow.MaNhanVien))
-            {
-                ShowSuccess("Đã thêm nhân viên thành công !");
-            }
-        }
-        private void SaveEditedNhanVien()
-        {
-            if (currentRow == null)
-            {
-                MessageBox.Show("Không có nhân viên được chọn để sửa.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            if (!ValidateRequiredFields())
-            {
-               
-                return;
-            }
-
-            if (!TryParseMaNguoiDung(out int maNguoiDung))
-            {
-                return;
-            }
-            string hoTen = NormalizeRequiredText(txtTenNV.Text);
-            string chucVu = NormalizeOptionalText(txtCV.Text);
-            string soDienThoai = NormalizeOptionalText(txtSDT.Text);
-            string diaChi = NormalizeOptionalText(txtDC.Text);
-
-            string originalHoTen = NormalizeRequiredText(originalValues != null ? originalValues.HoTen : null);
-            string originalChucVu = NormalizeOptionalText(originalValues != null ? originalValues.ChucVu : null);
-            string originalSoDienThoai = NormalizeOptionalText(originalValues != null ? originalValues.SoDienThoai : null);
-            string originalDiaChi = NormalizeOptionalText(originalValues != null ? originalValues.DiaChi : null);
-            int? originalMaNguoiDung = originalValues != null ? originalValues.MaNguoiDung : null;
-
-            bool hasChanges = false;
-            if (!string.Equals(hoTen, originalHoTen, StringComparison.Ordinal))
-            {
-                hasChanges = true;
-            }
-            else if (!string.Equals(chucVu, originalChucVu, StringComparison.Ordinal))
-            {
-                hasChanges = true;
-            }
-            else if (!string.Equals(soDienThoai, originalSoDienThoai, StringComparison.Ordinal))
-            {
-                hasChanges = true;
-            }
-            else if (!string.Equals(diaChi, originalDiaChi, StringComparison.Ordinal))
-            {
-                hasChanges = true;
-            }
-            else if (maNguoiDung != originalMaNguoiDung)
-            {
-                hasChanges = true;
-            }
-
-            if (!hasChanges)
-            {
-                MessageBox.Show("Không có thay đổi.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-            
-            currentRow.HoTen = hoTen;
-
-            if (string.IsNullOrEmpty(chucVu))
-            {
-                currentRow.SetChucVuNull();
-            }
-            else
-            {
-                currentRow.ChucVu = chucVu;
-            }
-
-            if (string.IsNullOrEmpty(soDienThoai))
-            {
-                currentRow.SetSoDienThoaiNull();
-            }
-            else
-            {
-                currentRow.SoDienThoai = soDienThoai;
-            }
-
-            if (string.IsNullOrEmpty(diaChi))
-            {
-                currentRow.SetDiaChiNull();
-            }
-            else
-            {
-                currentRow.DiaChi = diaChi;
-            }
-
-            currentRow.MaNguoiDung = maNguoiDung;
-
-
-            if (CommitChanges(() => currentRow.MaNhanVien))
-            {
-                ShowSuccess("Đã cập nhật nhân viên thành công !");
-            }
-        }
-        private void DeleteNhanVien()
+        private bool DeleteNhanVien()
         {
             if (currentRow == null)
             {
                 MessageBox.Show("Không có nhân viên được chọn để xóa.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                return false;
             }
 
-          
 
+
+            int deletedId = currentRow.MaNhanVien;
             int? nextSelectionId = null;
             if (dataGridView1.CurrentRow != null && dataGridView1.CurrentRow.Index > 0)
             {
@@ -417,11 +312,18 @@ namespace LeLeStore
             }
 
             currentRow.Delete();
-            if (CommitChanges(() => currentRow.MaNhanVien))
+            if (CommitChanges(() => nextSelectionId ?? deletedId))
             {
                 ShowSuccess("Đã xóa Nhân viên");
+                return true;
             }
+
+            return false;
         }
+
+
+
+       
 
         private bool CommitChanges(Func<int?> selectIdProvider)
         {
@@ -433,7 +335,7 @@ namespace LeLeStore
                 nhanVienTableAdapter.Update(gStoreDataSet.NhanVien);
                 int? selectId = selectIdProvider != null ? selectIdProvider() : (int?)null;
                 ReloadData(selectId);
-                ResetState();
+                
                 return true;
             }
             catch (Exception ex)
@@ -480,17 +382,8 @@ namespace LeLeStore
                 LoadRowFromCurrentSelection();
             }
         }
-        private void ResetConfirmation()
-        {
-            pendingMode = OperationMode.None;
-            awaitingConfirmation = false;
-        }
-        private void ResetState()
-        {
-            currentMode = OperationMode.None;
-            originalValues = null;
-            SetTextBoxesReadOnly(true);
-        }
+       
+      
         private string NormalizeOptionalText(string value)
         {
             return string.IsNullOrWhiteSpace(value) ? string.Empty : value.Trim();
