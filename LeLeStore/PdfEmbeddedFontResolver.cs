@@ -43,19 +43,10 @@ namespace LeLeStore
         }
         public FontResolverInfo ResolveTypeface(string familyName, bool isBold, bool isItalic)
         {
-            // Nếu không truyền family thì mặc định dùng DejaVu Sans
-            if (string.IsNullOrWhiteSpace(familyName))
-                familyName = FamilyName;
-
-            // Map tất cả “DejaVu Sans”, “DejaVuSans” về font của mình
-            if (familyName.Equals(FamilyName, StringComparison.OrdinalIgnoreCase) ||
-                familyName.Equals("DejaVuSans", StringComparison.OrdinalIgnoreCase))
-            {
-                return new FontResolverInfo(isBold ? BoldFontKey : RegularFontKey);
-            }
-
-            // Các font khác để PdfSharp/platform tự xử lý
-            return PlatformFontResolver.ResolveTypeface(familyName, isBold, isItalic);
+            // Đảm bảo mọi text đều dùng cùng bộ font Unicode (kể cả khi PdfSharp
+            // yêu cầu một font khác). Điều này tránh tình trạng thiếu glyph cho
+            // các ký tự có dấu tiếng Việt như â, ê, ô.
+            return new FontResolverInfo(isBold ? BoldFontKey : RegularFontKey);
         }
 
         public byte[] GetFont(string faceName)
