@@ -13,15 +13,18 @@ namespace LeLeStore
 {
     public partial class formUser : Form
     {
+        private bool isAddingUser = false;
+        private bool isEditingUser = false;
+        private DataRowView selectedEditRow;
         public formUser()
         {
             InitializeComponent();
-           
+
 
         }
 
-        
-       
+
+
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
@@ -54,13 +57,16 @@ namespace LeLeStore
         {
             if (nguoiDungBindingSource.Current is DataRowView currentRow)
             {
-                DialogResult result = MessageBox.Show("Bạn có chắc chắn muốn xóa người dùng này?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                DialogResult result = MessageBox.Show("Bạn chắc chắn muốn xóa người dùng này ?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (result == DialogResult.Yes)
                 {
                     try
                     {
                         currentRow.Delete();
-                        MessageBox.Show("Đã xóa người dùng khỏi danh sách. Nhấn LƯU để cập nhật vào cơ sở dữ liệu.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        nguoiDungBindingSource.EndEdit();
+                        nguoiDungTableAdapter.Update(gStoreDataSet.NguoiDung);
+                        nguoiDungTableAdapter.Fill(gStoreDataSet.NguoiDung);
+                        MessageBox.Show("Đã xóa người dùng thành công !", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     catch (Exception ex)
                     {
@@ -72,43 +78,108 @@ namespace LeLeStore
 
         private void btnSua_Click_1(object sender, EventArgs e)
         {
-            if (nguoiDungBindingSource.Current is DataRowView currentRow)
+            if (!isEditingUser)
             {
-                try
+                if (nguoiDungBindingSource.Current is DataRowView currentRow)
                 {
-                    currentRow.BeginEdit();
-                    currentRow["TenDangNhap"] = txtTenDN.Text.Trim();
-                    currentRow["MatKhau"] = txtMK.Text;
-                    currentRow["VaiTro"] = txtVaiTro.Text.Trim();
-                    currentRow.EndEdit();
-                    MessageBox.Show("Cập nhật thông tin người dùng thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    DialogResult confirm = MessageBox.Show("Bạn muốn sửa thông tin người dùng ?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (confirm == DialogResult.Yes)
+                    {
+                        isEditingUser = true;
+                        selectedEditRow = currentRow;
+                        ClearUserInputs();
+                    }
                 }
-                catch (Exception ex)
-                {
-                    currentRow.CancelEdit();
-                    MessageBox.Show($"Không thể cập nhật thông tin người dùng. Lỗi: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                return;
             }
-        }
 
-        private void btnLuu_Click(object sender, EventArgs e)
-        {
+            if (selectedEditRow == null)
+            {
+                MessageBox.Show("Vui lòng chọn người dùng cần sửa từ danh sách.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                isEditingUser = false;
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtTenDN.Text) || string.IsNullOrWhiteSpace(txtMK.Text) || string.IsNullOrWhiteSpace(txtVaiTro.Text))
+            {
+                MessageBox.Show("Vui lòng nhập đầy đủ thông tin trước khi cập nhật.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             try
             {
-                this.Validate();
+                selectedEditRow.BeginEdit();
+                selectedEditRow["TenDangNhap"] = txtTenDN.Text.Trim();
+                selectedEditRow["MatKhau"] = txtMK.Text;
+                selectedEditRow["VaiTro"] = txtVaiTro.Text.Trim();
+                selectedEditRow.EndEdit();
                 nguoiDungBindingSource.EndEdit();
-                int affectedRows = this.nguoiDungTableAdapter.Update(this.gStoreDataSet.NguoiDung);
-                if (affectedRows > 0)
-                {
-                    MessageBox.Show("Đã lưu thay đổi vào cơ sở dữ liệu.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    this.nguoiDungTableAdapter.Fill(this.gStoreDataSet.NguoiDung);
-                }
-              
+                nguoiDungTableAdapter.Update(gStoreDataSet.NguoiDung);
+                nguoiDungTableAdapter.Fill(gStoreDataSet.NguoiDung);
+                MessageBox.Show("Đã cập nhật thông tin người dùng thành công !", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Không thể lưu thay đổi. Lỗi: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                selectedEditRow.CancelEdit();
+                MessageBox.Show($"Không thể cập nhật thông tin người dùng. Lỗi: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                isEditingUser = false;
+                selectedEditRow = null;
+            }
+        }
+        private void ClearUserInputs()
+        {
+            txtMaDung.Clear();
+            txtTenDN.Clear();
+            txtMK.Clear();
+            txtVaiTro.Clear();
+        }
+
+        private void btnThem_Click(object sender, EventArgs e)
+        {
+            if (!isAddingUser)
+            {
+                DialogResult confirm = MessageBox.Show("Bạn muốn thêm người dùng mới ?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (confirm == DialogResult.Yes)
+                {
+                    isAddingUser = true;
+                    ClearUserInputs();
+                }
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtTenDN.Text) || string.IsNullOrWhiteSpace(txtMK.Text) || string.IsNullOrWhiteSpace(txtVaiTro.Text))
+            {
+                MessageBox.Show("Vui lòng nhập đầy đủ thông tin người dùng mới.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                var newRow = gStoreDataSet.NguoiDung.NewNguoiDungRow();
+                newRow.TenDangNhap = txtTenDN.Text.Trim();
+                newRow.MatKhau = txtMK.Text;
+                newRow.VaiTro = txtVaiTro.Text.Trim();
+                gStoreDataSet.NguoiDung.AddNguoiDungRow(newRow);
+
+                nguoiDungBindingSource.EndEdit();
+                nguoiDungTableAdapter.Update(gStoreDataSet.NguoiDung);
+                nguoiDungTableAdapter.Fill(gStoreDataSet.NguoiDung);
+
+                MessageBox.Show("Đã thêm người dùng mới thành công !", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Không thể thêm người dùng mới. Lỗi: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                isAddingUser = false;
             }
         }
     }
 }
+
+

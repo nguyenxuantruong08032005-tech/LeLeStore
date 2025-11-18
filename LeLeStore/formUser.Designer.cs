@@ -259,7 +259,6 @@
             this.btnLuu.TabIndex = 12;
             this.btnLuu.Text = "LƯU";
             this.btnLuu.TextAlignment = System.Drawing.StringAlignment.Center;
-            this.btnLuu.Click += new System.EventHandler(this.btnLuu_Click);
             // 
             // btnThem
             // 
@@ -280,6 +279,7 @@
             this.btnThem.TabIndex = 13;
             this.btnThem.Text = "THÊM";
             this.btnThem.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnThem.Click += new System.EventHandler(this.btnThem_Click);
             // 
             // formUser
             // 
