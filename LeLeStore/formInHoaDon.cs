@@ -639,7 +639,18 @@ namespace LeLeStore
                     graphics.DrawString(ToPdfText("Danh sach san pham"), labelBoldFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
                     cursorY += infoLineHeight * 1.2;
 
-                    double[] columnWidths = { 50, 220, 70, 110, 110 };
+                    double[] baseColumnWidths = { 50, 220, 70, 110, 110 };
+                    double totalBaseWidth = baseColumnWidths.Sum();
+                    double widthScale = availableWidth / totalBaseWidth;
+                    double[] columnWidths = baseColumnWidths
+                        .Select(w => Math.Round(w * widthScale, 2))
+                        .ToArray();
+
+                    double widthAdjustment = availableWidth - columnWidths.Sum();
+                    if (Math.Abs(widthAdjustment) > 0.01)
+                    {
+                        columnWidths[columnWidths.Length - 1] += widthAdjustment;
+                    }
                     double headerHeight = GetLineHeight(graphics, tableHeaderFont) + 8;
                     double rowHeight = GetLineHeight(graphics, tableCellFont) + 8;
 
