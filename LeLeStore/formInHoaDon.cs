@@ -576,21 +576,22 @@ namespace LeLeStore
                     double cursorY = margin;
 
                     double titleHeight = GetLineHeight(graphics, titleFont);
-                    graphics.DrawString("HOÁ ĐƠN BÁN HÀNG", titleFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, titleHeight), XStringFormats.TopCenter);
+                    graphics.DrawString(ToPdfText("HOA DON BAN HANG"), titleFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, titleHeight), XStringFormats.TopCenter);
                     cursorY += titleHeight + 12;
 
                     double infoLineHeight = GetLineHeight(graphics, labelFont);
-                    graphics.DrawString($"Mã hoá đơn: {GetInvoiceIdentifier()}", labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
+                    graphics.DrawString(ToPdfText($"Ma hoa don: {GetInvoiceIdentifier()}"), labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
+
                     cursorY += infoLineHeight;
 
-                    graphics.DrawString($"Ngày lập: {dateTimePicker1.Value:dd/MM/yyyy HH:mm}", labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
+                    graphics.DrawString(ToPdfText($"Ngay lap: {dateTimePicker1.Value:dd/MM/yyyy HH:mm}"), labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
                     cursorY += infoLineHeight;
 
-                    graphics.DrawString($"Mã nhân viên: {txtMaNv.Text.Trim()}", labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
+                    graphics.DrawString(ToPdfText($"Ma nhan vien: {txtMaNv.Text.Trim()}"), labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
                     cursorY += infoLineHeight * 1.5;
 
-                    var paymentMethod = GetSelectedPaymentMethodForDisplay();
-                    graphics.DrawString($"Phương thức thanh toán: {paymentMethod}", labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
+                    var paymentMethod = ToPdfText(GetSelectedPaymentMethodForDisplay());
+                    graphics.DrawString(ToPdfText($"Phuong thuc thanh toan: {paymentMethod}"), labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
                     cursorY += infoLineHeight * 1.5;
                     double qrBottomY = cursorY; // lưu chiều cao thấp nhất mà QR chiếm
 
@@ -616,11 +617,11 @@ namespace LeLeStore
 
                                 // Ghi chú dưới QR
                                 var noteY = qrTop + qrSize + 4;
-                                graphics.DrawString($"{AccountName}", labelFont, XBrushes.Black,
+                                graphics.DrawString(ToPdfText(AccountName), labelFont, XBrushes.Black,
                                     new XRect(qrLeft, noteY, qrSize, infoLineHeight), XStringFormats.TopCenter);
                                 noteY += infoLineHeight;
-                                graphics.DrawString($"{AccountNo} ({BankBin})", labelFont, XBrushes.Black,
-                                    new XRect(qrLeft, noteY, qrSize, infoLineHeight), XStringFormats.TopCenter);
+                                graphics.DrawString(ToPdfText($"{AccountNo} ({BankBin})"), labelFont, XBrushes.Black,
+                                   new XRect(qrLeft, noteY, qrSize, infoLineHeight), XStringFormats.TopCenter);
 
                                 // cập nhật đáy của QR (bao gồm cả phần chữ)
                                 qrBottomY = noteY + infoLineHeight;
@@ -635,7 +636,7 @@ namespace LeLeStore
                     // Đảm bảo phần bảng nằm dưới QR (nếu có QR)
                     cursorY = Math.Max(cursorY, qrBottomY) + infoLineHeight * 0.5;
 
-                    graphics.DrawString("Danh sách sản phẩm", labelBoldFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
+                    graphics.DrawString(ToPdfText("Danh sach san pham"), labelBoldFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
                     cursorY += infoLineHeight * 1.2;
 
                     double[] columnWidths = { 50, 220, 70, 110, 110 };
@@ -644,7 +645,7 @@ namespace LeLeStore
 
                     var borderPen = new XPen(XColors.Black, 0.75);
                     var headerBrush = new XSolidBrush(XColor.FromArgb(235, 235, 235));
-                    var headerTexts = new[] { "STT", "Tên sản phẩm", "SL", "Đơn giá", "Thành tiền" };
+                    var headerTexts = new[] { "STT", "Ten san pham", "SL", "Don gia", "Thanh tien" };
                     var headerFormat = new XStringFormat
                     {
                         Alignment = XStringAlignment.Center,
@@ -657,7 +658,7 @@ namespace LeLeStore
                     {
                         var cellRect = new XRect(cursorX, cursorY, columnWidths[i], headerHeight);
                         graphics.DrawRectangle(borderPen, headerBrush, cellRect);
-                        graphics.DrawString(headerTexts[i], tableHeaderFont, XBrushes.Black, cellRect, headerFormat);
+                        graphics.DrawString(ToPdfText(headerTexts[i]), tableHeaderFont, XBrushes.Black, cellRect, headerFormat);
                         cursorX += columnWidths[i];
                     }
 
@@ -682,7 +683,7 @@ namespace LeLeStore
                         var rowValues = new[]
                         {
                             line.Sequence.ToString(CultureInfo.InvariantCulture),
-                            line.ProductName,
+                            ToPdfText(line.ProductName),
                             line.Quantity.ToString(CultureInfo.InvariantCulture),
                             line.UnitPrice.ToString("N0", _currencyCulture),
                             line.Total.ToString("N0", _currencyCulture)
@@ -712,19 +713,47 @@ namespace LeLeStore
 
                     cursorY += infoLineHeight;
 
-                    graphics.DrawString($"Tổng trước giảm: {subtotalAmount.ToString("N0", _currencyCulture)} VND", labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
+                    graphics.DrawString(ToPdfText($"Tong truoc giam: {subtotalAmount.ToString("N0", _currencyCulture)} VND"), labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
                     cursorY += infoLineHeight;
 
                     if (discountAmount > 0)
                     {
-                        graphics.DrawString($"Chiết khấu: {discountAmount.ToString("N0", _currencyCulture)} VND", labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
+                        graphics.DrawString(ToPdfText($"Chiet khau: {discountAmount.ToString("N0", _currencyCulture)} VND"), labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
                         cursorY += infoLineHeight;
                     }
-                    graphics.DrawString($"Tổng cộng: {totalAmount.ToString("N0", _currencyCulture)} VND", labelBoldFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
+                    graphics.DrawString(ToPdfText($"Tong cong: {totalAmount.ToString("N0", _currencyCulture)} VND"), labelBoldFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
                 }
                 document.Save(filePath);
             }
         }
+        private static string RemoveDiacritics(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return string.Empty;
+            }
+
+            var normalized = text.Normalize(NormalizationForm.FormD);
+            var sb = new StringBuilder(normalized.Length);
+
+            foreach (var ch in normalized)
+            {
+                var category = CharUnicodeInfo.GetUnicodeCategory(ch);
+
+                if (category != UnicodeCategory.NonSpacingMark)
+                {
+                    sb.Append(ch);
+                }
+            }
+
+            return sb.ToString().Normalize(NormalizationForm.FormC);
+        }
+
+        private static string ToPdfText(string text)
+        {
+            return RemoveDiacritics(text ?? string.Empty);
+        }
+
 
         private string GetInvoiceIdentifier()
         {
