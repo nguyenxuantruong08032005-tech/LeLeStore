@@ -13,7 +13,10 @@ namespace LeLeStore
         // Đăng ký global trong Program.cs: PdfEmbeddedFontResolver.RegisterGlobal();
         public static void RegisterGlobal()
         {
-            GlobalFontSettings.FontResolver = new PdfEmbeddedFontResolver();
+            if (GlobalFontSettings.FontResolver == null)
+            {
+                GlobalFontSettings.FontResolver = new PdfEmbeddedFontResolver();
+            }
         }
 
         // Trả về "ID font" tương ứng với family + style
