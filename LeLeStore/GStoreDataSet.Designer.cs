@@ -10751,9 +10751,9 @@ SELECT MaKhachHang, HoTen, SoDienThoai, DiaChi, DiemTichLuy, MaNhanVien FROM Kha
             this._adapter.TableMappings.Add(tableMapping);
             this._adapter.DeleteCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.DeleteCommand.Connection = this.Connection;
-            this._adapter.DeleteCommand.CommandText = "DELETE FROM [dbo].[NguoiDung] WHERE (([MaNguoiDung] = @Original_MaNguoiDung) AND " +
-                "([TenDangNhap] = @Original_TenDangNhap) AND ([MatKhau] = @Original_MatKhau) AND " +
-                "([VaiTro] = @Original_VaiTro))";
+            this._adapter.DeleteCommand.CommandText = "DELETE FROM [NguoiDung] WHERE (([MaNguoiDung] = @Original_MaNguoiDung) AND ([TenD" +
+                "angNhap] = @Original_TenDangNhap) AND ([MatKhau] = @Original_MatKhau) AND ([VaiT" +
+                "ro] = @Original_VaiTro))";
             this._adapter.DeleteCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_MaNguoiDung", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "MaNguoiDung", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_TenDangNhap", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "TenDangNhap", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
@@ -10761,16 +10761,16 @@ SELECT MaKhachHang, HoTen, SoDienThoai, DiaChi, DiemTichLuy, MaNhanVien FROM Kha
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_VaiTro", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "VaiTro", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.InsertCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.InsertCommand.Connection = this.Connection;
-            this._adapter.InsertCommand.CommandText = "INSERT INTO [dbo].[NguoiDung] ([TenDangNhap], [MatKhau], [VaiTro]) VALUES (@TenDa" +
-                "ngNhap, @MatKhau, @VaiTro);\r\nSELECT MaNguoiDung, TenDangNhap, MatKhau, VaiTro FR" +
-                "OM NguoiDung WHERE (MaNguoiDung = SCOPE_IDENTITY())";
+            this._adapter.InsertCommand.CommandText = "INSERT INTO [NguoiDung] ([TenDangNhap], [MatKhau], [VaiTro]) VALUES (@TenDangNhap" +
+                ", @MatKhau, @VaiTro);\r\nSELECT MaNguoiDung, TenDangNhap, MatKhau, VaiTro FROM Ngu" +
+                "oiDung WHERE (MaNguoiDung = SCOPE_IDENTITY())";
             this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@TenDangNhap", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "TenDangNhap", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@MatKhau", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "MatKhau", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@VaiTro", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "VaiTro", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.UpdateCommand.Connection = this.Connection;
-            this._adapter.UpdateCommand.CommandText = @"UPDATE [dbo].[NguoiDung] SET [TenDangNhap] = @TenDangNhap, [MatKhau] = @MatKhau, [VaiTro] = @VaiTro WHERE (([MaNguoiDung] = @Original_MaNguoiDung) AND ([TenDangNhap] = @Original_TenDangNhap) AND ([MatKhau] = @Original_MatKhau) AND ([VaiTro] = @Original_VaiTro));
+            this._adapter.UpdateCommand.CommandText = @"UPDATE [NguoiDung] SET [TenDangNhap] = @TenDangNhap, [MatKhau] = @MatKhau, [VaiTro] = @VaiTro WHERE (([MaNguoiDung] = @Original_MaNguoiDung) AND ([TenDangNhap] = @Original_TenDangNhap) AND ([MatKhau] = @Original_MatKhau) AND ([VaiTro] = @Original_VaiTro));
 SELECT MaNguoiDung, TenDangNhap, MatKhau, VaiTro FROM NguoiDung WHERE (MaNguoiDung = @MaNguoiDung)";
             this._adapter.UpdateCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@TenDangNhap", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "TenDangNhap", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
@@ -10796,7 +10796,7 @@ SELECT MaNguoiDung, TenDangNhap, MatKhau, VaiTro FROM NguoiDung WHERE (MaNguoiDu
             this._commandCollection = new global::System.Data.SqlClient.SqlCommand[1];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = "SELECT MaNguoiDung, TenDangNhap, MatKhau, VaiTro FROM dbo.NguoiDung";
+            this._commandCollection[0].CommandText = "SELECT MaNguoiDung, TenDangNhap, MatKhau, VaiTro\r\nFROM   NguoiDung";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
         }
         
