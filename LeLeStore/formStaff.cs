@@ -12,11 +12,73 @@ namespace LeLeStore
 {
     public partial class formStaff : Form
     {
-      
+        private enum OperationMode { None, Add, Edit, Delete }
+        private OperationMode mode = OperationMode.None;
 
-     
+
         private GStoreDataSet.NhanVienRow currentRow;
-     
+        private void SetMode(OperationMode m)
+        {
+            mode = m;
+            bool canEdit = (m == OperationMode.Add || m == OperationMode.Edit);
+
+            // Textboxes
+            txtMaNV.ReadOnly = true;
+            SetTextBoxesReadOnly(!canEdit); // ô nhập mở khi Add/Edit
+
+            // Buttons
+            btnThem.Enabled = (m != OperationMode.Edit);      // đang Edit thì khóa Thêm
+            btnXoa.Enabled = (m == OperationMode.None);      // chỉ cho xóa ở xem thường
+            btnSua.Enabled = (m != OperationMode.Add);       // đang Add thì khóa Sửa
+
+            btnThem.Text = (m == OperationMode.Add) ? "Lưu" : "Thêm";
+            btnSua.Text = (m == OperationMode.Edit) ? "Lưu" : "Sửa";
+
+            // 👉 Hủy chỉ bật khi đang Add/Edit
+            btnHuy.Enabled = (m != OperationMode.None);
+        }
+        private void CancelPendingEdits()
+        {
+            try { this.Validate(); } catch { }
+            try { dataGridView1.CancelEdit(); } catch { }
+            try { nhanVienBindingSource.CancelEdit(); } catch { }
+
+            // Nếu currentRow đang ở trạng thái sửa thêm trong DataSet thì rollback
+            if (currentRow != null &&
+                (currentRow.RowState == DataRowState.Modified || currentRow.RowState == DataRowState.Added))
+            {
+                currentRow.RejectChanges();
+            }
+            else
+            {
+                // Thử lấy row hiện chọn rồi rollback nếu cần
+                if (dataGridView1.CurrentRow?.DataBoundItem is DataRowView rv &&
+                    rv.Row is GStoreDataSet.NhanVienRow r &&
+                    (r.RowState == DataRowState.Modified || r.RowState == DataRowState.Added))
+                {
+                    r.RejectChanges();
+                }
+            }
+        }
+
+        private void ReloadInputs()
+        {
+            // Nạp lại textbox theo selection hiện tại
+            LoadRowFromCurrentSelection();
+            try { nhanVienBindingSource.ResetCurrentItem(); } catch { }
+        }
+
+        private bool AskConfirm(string msg, MessageBoxIcon icon = MessageBoxIcon.Question)
+        {
+            return MessageBox.Show(msg, "Xác nhận", MessageBoxButtons.YesNo, icon) == DialogResult.Yes;
+        }
+
+        private void CommitUI()
+        {
+            Validate();
+            try { dataGridView1.EndEdit(); } catch { }
+            nhanVienBindingSource.EndEdit();
+        }
 
         public formStaff()
         {
@@ -46,83 +108,60 @@ namespace LeLeStore
             MessageBox.Show(message, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         // Trạng thái 2-bước
-        private enum OperationMode { None, Add, Edit, Delete }
-        private OperationMode pendingMode = OperationMode.None;
-        private bool awaitingConfirmation = false;
+        
+       
 
-        private void ArmTwoStep(OperationMode mode)
-        {
-            pendingMode = mode;
-            awaitingConfirmation = true;
-        }
-        private void ResetTwoStep()
-        {
-            pendingMode = OperationMode.None;
-            awaitingConfirmation = false;
-        }
+        
+       
+       
 
-        // Confirm OK/Cancel
-        private bool Confirm(string message, MessageBoxIcon icon = MessageBoxIcon.Question)
-        {
-            return MessageBox.Show(message, "Xác nhận", MessageBoxButtons.OKCancel, icon) == DialogResult.OK;
-        }
-
-        // Thông báo kết quả
-        private void NotifySaved()
-        {
-            MessageBox.Show("Đã lưu vào SQL và DataGridView.", "Thông báo",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-        private void NotifyDeleted()
-        {
-            MessageBox.Show("Đã xóa khỏi SQL và DataGridView.", "Thông báo",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
+      
 
         private void btnThem_Click(object sender, EventArgs e)
         {
-            // LẦN 2: thực thi lưu
-            if (pendingMode == OperationMode.Add && awaitingConfirmation)
+            CommitUI();
+
+            if (mode != OperationMode.Add)
             {
-                // validate lúc lưu (sau khi user đã nhập)
-                if (!ValidateRequiredFields()) return;
-                if (!TryParseMaNguoiDung(out int maNguoiDung)) return;
+                if (!AskConfirm("Bạn muốn thêm Nhân viên mới?")) return;
 
-                string hoTen = NormalizeRequiredText(txtTenNV.Text);
-                string chucVu = NormalizeOptionalText(txtCV.Text);
-                string soDienThoai = NormalizeOptionalText(txtSDT.Text);
-                string diaChi = NormalizeOptionalText(txtDC.Text);
-
-                var newRow = gStoreDataSet.NhanVien.NewNhanVienRow();
-                newRow.HoTen = hoTen;
-                if (string.IsNullOrEmpty(chucVu)) newRow.SetChucVuNull(); else newRow.ChucVu = chucVu;
-                if (string.IsNullOrEmpty(soDienThoai)) newRow.SetSoDienThoaiNull(); else newRow.SoDienThoai = soDienThoai;
-                if (string.IsNullOrEmpty(diaChi)) newRow.SetDiaChiNull(); else newRow.DiaChi = diaChi;
-                newRow.MaNguoiDung = maNguoiDung;
-
-                gStoreDataSet.NhanVien.AddNhanVienRow(newRow);
-                currentRow = newRow;
-
-                if (CommitChanges(() => newRow.MaNhanVien))
-                {
-                    ResetTwoStep();
-                    NotifySaved();
-                    // tùy chọn: ClearTextBoxes(); // nếu muốn dọn sau khi đã lưu
-                }
+                SetMode(OperationMode.Add);
+                ClearTextBoxes();
+                txtTenNV.Focus();
                 return;
             }
 
-            // LẦN 1: hỏi xác nhận -> OK thì dọn trống để nhập mới
-            if (!Confirm("Bạn có chắc chắn muốn thêm Nhân viên mới?")) return;
+            // Pha lưu
+            if (!ValidateRequiredFields()) return;
+            if (!TryParseMaNguoiDung(out int maNguoiDung)) return;
+            if (!AskConfirm("Xác nhận lưu nhân viên mới?")) return;
 
-            ArmTwoStep(OperationMode.Add);          // vào “thế chờ”
-            SetTextBoxesReadOnly(false);            // cho phép nhập
-            ClearTextBoxes();                       // <<< dọn sạch ngay sau khi OK như bạn yêu cầu
-            txtTenNV.Focus();
+            string hoTen = NormalizeRequiredText(txtTenNV.Text);
+            string chucVu = NormalizeOptionalText(txtCV.Text);
+            string soDienThoai = NormalizeOptionalText(txtSDT.Text);
+            string diaChi = NormalizeOptionalText(txtDC.Text);
+
+            var newRow = gStoreDataSet.NhanVien.NewNhanVienRow();
+            newRow.HoTen = hoTen;
+            if (string.IsNullOrEmpty(chucVu)) newRow.SetChucVuNull(); else newRow.ChucVu = chucVu;
+            if (string.IsNullOrEmpty(soDienThoai)) newRow.SetSoDienThoaiNull(); else newRow.SoDienThoai = soDienThoai;
+            if (string.IsNullOrEmpty(diaChi)) newRow.SetDiaChiNull(); else newRow.DiaChi = diaChi;
+            newRow.MaNguoiDung = maNguoiDung;
+
+            gStoreDataSet.NhanVien.AddNhanVienRow(newRow);
+
+            // Lưu + reload và focus về bản ghi mới (theo ID sinh ra)
+            if (CommitChanges(() => newRow.MaNhanVien))
+            {
+                MessageBox.Show("Đã thêm Nhân viên.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                SetMode(OperationMode.None);
+            }
         }
 
         private void btnSua_Click(object sender, EventArgs e)
         {
+            CommitUI();
+
             var row = GetSelectedRow();
             if (row == null)
             {
@@ -130,84 +169,46 @@ namespace LeLeStore
                 return;
             }
 
-            if (!ValidateRequiredFields())
+            if (mode != OperationMode.Edit)
             {
+                if (!AskConfirm("Bạn muốn sửa thông tin nhân viên này?")) return;
+
+                // Vào chế độ Edit: đổ sẵn dữ liệu (đã có PopulateTextBoxes khi chọn)
+                SetMode(OperationMode.Edit);
+                txtTenNV.Focus();
                 return;
             }
 
-            if (!TryParseMaNguoiDung(out int maNguoiDung))
-            {
-                return;
-            }
+            // Pha lưu
+            if (!ValidateRequiredFields()) return;
+            if (!TryParseMaNguoiDung(out int maNguoiDung)) return;
+            if (!AskConfirm("Xác nhận lưu thay đổi thông tin nhân viên?")) return;
 
             string hoTen = NormalizeRequiredText(txtTenNV.Text);
             string chucVu = NormalizeOptionalText(txtCV.Text);
             string soDienThoai = NormalizeOptionalText(txtSDT.Text);
             string diaChi = NormalizeOptionalText(txtDC.Text);
 
-            string originalHoTen = NormalizeRequiredText(row.HoTen);
-            string originalChucVu = NormalizeOptionalText(row.IsChucVuNull() ? null : row.ChucVu);
-            string originalSoDienThoai = NormalizeOptionalText(row.IsSoDienThoaiNull() ? null : row.SoDienThoai);
-            string originalDiaChi = NormalizeOptionalText(row.IsDiaChiNull() ? null : row.DiaChi);
-            int? originalMaNguoiDung = row.IsMaNguoiDungNull() ? (int?)null : row.MaNguoiDung;
-
-            bool hasChanges =
-                !string.Equals(hoTen, originalHoTen, StringComparison.Ordinal) ||
-                !string.Equals(chucVu, originalChucVu, StringComparison.Ordinal) ||
-                !string.Equals(soDienThoai, originalSoDienThoai, StringComparison.Ordinal) ||
-                !string.Equals(diaChi, originalDiaChi, StringComparison.Ordinal) ||
-                maNguoiDung != originalMaNguoiDung;
-            if (!hasChanges)
-            {
-                MessageBox.Show("Không có thay đổi.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-
-            if (!Confirm("Bạn có chắc chắn muốn cập nhật thông tin nhân viên này?"))
-            {
-                return;
-            }
-
+            // So sánh thay đổi (tuỳ thích giữ đoạn của bạn); ở đây cập nhật trực tiếp
             row.HoTen = hoTen;
-
-            if (string.IsNullOrEmpty(chucVu))
-            {
-                row.SetChucVuNull();
-            }
-            else
-            {
-                row.ChucVu = chucVu;
-            }
-
-            if (string.IsNullOrEmpty(soDienThoai))
-            {
-                row.SetSoDienThoaiNull();
-            }
-            else
-            {
-                row.SoDienThoai = soDienThoai;
-            }
-
-            if (string.IsNullOrEmpty(diaChi))
-            {
-                row.SetDiaChiNull();
-            }
-            else
-            {
-                row.DiaChi = diaChi;
-            }
-
+            if (string.IsNullOrEmpty(chucVu)) row.SetChucVuNull(); else row.ChucVu = chucVu;
+            if (string.IsNullOrEmpty(soDienThoai)) row.SetSoDienThoaiNull(); else row.SoDienThoai = soDienThoai;
+            if (string.IsNullOrEmpty(diaChi)) row.SetDiaChiNull(); else row.DiaChi = diaChi;
             row.MaNguoiDung = maNguoiDung;
 
+            // Lưu + reload và quay lại đúng bản ghi đang sửa
             if (CommitChanges(() => row.MaNhanVien))
             {
-                ShowSuccess("Đã cập nhật nhân viên thành công !");
+                MessageBox.Show("Đã cập nhật nhân viên thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                SetMode(OperationMode.None);
             }
         }
         
 
         private void btnXoa_Click(object sender, EventArgs e)
         {
+            if (mode != OperationMode.None) return; // tránh xóa khi đang Add/Edit
+
             var row = GetSelectedRow();
             if (row == null)
             {
@@ -215,13 +216,9 @@ namespace LeLeStore
                 return;
             }
 
-            if (!Confirm("Bạn có chắc chắn muốn xóa nhân viên này?", MessageBoxIcon.Warning))
-            {
-                return;
-            }
+            if (!AskConfirm("Bạn có chắc chắn muốn xóa nhân viên này?", MessageBoxIcon.Warning)) return;
 
             currentRow = row;
-
             DeleteNhanVien();
         }
 
@@ -430,6 +427,28 @@ namespace LeLeStore
             maNguoiDung = 0;
             return false;
         }
-       
+
+        private void btnHuy_Click(object sender, EventArgs e)
+        {
+            // Nếu không ở chế độ Add/Edit thì chỉ đồng bộ lại UI rồi thoát
+            if (mode == OperationMode.None)
+            {
+                ReloadInputs();
+                return;
+            }
+
+            if (MessageBox.Show("Hủy các thay đổi đang thực hiện?", "Xác nhận",
+                                MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                return;
+
+            // Hủy mọi thay đổi treo
+            CancelPendingEdits();
+
+            // Trả UI về trạng thái bình thường
+            SetMode(OperationMode.None);
+
+            // Làm tươi phần nhập theo dòng đang chọn
+            ReloadInputs();
+        }
     }
 }

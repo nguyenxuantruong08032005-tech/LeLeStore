@@ -4,104 +4,50 @@ using PdfSharp.Fonts;
 
 namespace LeLeStore
 {
-    internal sealed class PdfEmbeddedFontResolver : IFontResolver
+    public class PdfEmbeddedFontResolver : IFontResolver
     {
-        private static readonly object InitializationLock = new object();
-        private static bool _isRegistered;
+        // Định danh nội bộ cho 2 font
+        private const string DejaVuSansRegularId = "DejaVuSans#Regular";
+        private const string DejaVuSansBoldId = "DejaVuSans#Bold";
 
-        private const string RegularFontKey = "dejavusans#r";
-        private const string BoldFontKey = "dejavusans#b";
-
-        // Đây là tên family bạn sẽ dùng trong XFont
-        public const string FamilyName = "DejaVu Sans";
-
-        private readonly byte[] _regularFontData;
-        private readonly byte[] _boldFontData;
-
-        public PdfEmbeddedFontResolver()
-        {
-            _regularFontData = LoadFontData("DejaVuSans.ttf");
-            _boldFontData = LoadFontData("DejaVuSans-Bold.ttf");
-        }
+        // Đăng ký global trong Program.cs: PdfEmbeddedFontResolver.RegisterGlobal();
         public static void RegisterGlobal()
         {
-            if (_isRegistered)
-            {
-                return;
-            }
-
-            lock (InitializationLock)
-            {
-                if (_isRegistered)
-                {
-                    return;
-                }
-
-                GlobalFontSettings.FontResolver = new PdfEmbeddedFontResolver();
-                _isRegistered = true;
-            }
+            GlobalFontSettings.FontResolver = new PdfEmbeddedFontResolver();
         }
+
+        // Trả về "ID font" tương ứng với family + style
         public FontResolverInfo ResolveTypeface(string familyName, bool isBold, bool isItalic)
         {
-            // Đảm bảo mọi text đều dùng cùng bộ font Unicode (kể cả khi PdfSharp
-            // yêu cầu một font khác). Điều này tránh tình trạng thiếu glyph cho
-            // các ký tự có dấu tiếng Việt như â, ê, ô.
-            return new FontResolverInfo(isBold ? BoldFontKey : RegularFontKey);
+            // Không dùng italic, nên gộp chung
+            var name = familyName?.Trim().ToLowerInvariant();
+
+            if (name == "dejavusans" || name == "sans-serif" || name == "arial")
+            {
+                if (isBold)
+                    return new FontResolverInfo(DejaVuSansBoldId);
+
+                return new FontResolverInfo(DejaVuSansRegularId);
+            }
+
+            // Font lạ -> fallback về DejaVuSans
+            return new FontResolverInfo(DejaVuSansRegularId);
         }
 
+        // Trả về bytes của font theo ID phía trên
         public byte[] GetFont(string faceName)
         {
             switch (faceName)
             {
-                case RegularFontKey:
-                    return _regularFontData;
+                case DejaVuSansRegularId:
+                    return Properties.Resources.DejaVuSans;          // tên resource trong hình
 
-                case BoldFontKey:
-                    return _boldFontData;
+                case DejaVuSansBoldId:
+                    return Properties.Resources.DejaVuSans_Bold;      // tên resource trong hình
 
                 default:
-                    throw new InvalidOperationException(
-                        $"Không tìm thấy dữ liệu phông chữ cho khóa '{faceName}'.");
+                    throw new ArgumentException("Unknown font: " + faceName);
             }
-        }
-
-        private static byte[] LoadFontData(string fileName)
-        {
-            var baseDirectory = AppDomain.CurrentDomain.BaseDirectory ?? string.Empty;
-
-            // 1. Tìm font dạng file trong folder output
-            var searchPaths = new[]
-            {
-                Path.Combine(baseDirectory, "Resources", "Fonts", fileName),
-                Path.Combine(baseDirectory, "Fonts", fileName),
-                Path.Combine(baseDirectory, fileName)
-            };
-
-            foreach (var path in searchPaths)
-            {
-                if (!string.IsNullOrEmpty(path) && File.Exists(path))
-                {
-                    return File.ReadAllBytes(path);
-                }
-            }
-
-            // 2. Nếu không có file, thử load từ Embedded Resource
-            var resourceName = $"LeLeStore.Resources.Fonts.{fileName}";
-            var assembly = typeof(PdfEmbeddedFontResolver).Assembly;
-
-            using (var stream = assembly.GetManifestResourceStream(resourceName))
-            {
-                if (stream != null)
-                {
-                    using (var memoryStream = new MemoryStream())
-                    {
-                        stream.CopyTo(memoryStream);
-                        return memoryStream.ToArray();
-                    }
-                }
-            }
-
-            throw new FileNotFoundException($"Không thể tải phông chữ '{fileName}'.", fileName);
         }
     }
 }

@@ -325,12 +325,9 @@
     <None Include="Resources\Businessman_52px.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\Fonts\DejaVuSans-Bold.ttf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Fonts\DejaVuSans.ttf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <None Include="Resources\DejaVuSans-Bold.ttf" />
+    <None Include="Resources\DejaVuSans.ttf" />
+    <None Include="Resources\icons8-search-24.png" />
     <None Include="Resources\Image1.bmp" />
   </ItemGroup>
   <ItemGroup>

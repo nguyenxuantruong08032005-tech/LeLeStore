@@ -54,6 +54,25 @@ namespace LeLeStore
                 txtDiaChiNCC.ReadOnly = true;
                 txtManv.ReadOnly = true;
             }
+            // 👉 Hủy chỉ bật khi đang Add/Edit/Delete (khác None)
+            btnHuy.Enabled = (operation != SupplierOperation.None);
+        }
+        private void CancelPendingEdits()
+        {
+            // Hủy edit ở UI/BindingSource
+            try { this.Validate(); } catch { }
+            try { dataGridView1.CancelEdit(); } catch { }
+            try { nhaCungCapBindingSource.CancelEdit(); } catch { }
+
+            // Hủy thay đổi treo ở DataSet (chỉ bảng NhaCungCap)
+            try { gStoreDataSet.NhaCungCap.RejectChanges(); } catch { }
+        }
+
+        private void ReloadInputs()
+        {
+            // Đồng bộ lại textbox theo dòng đang chọn
+            PopulateInputsFromSelection();
+            try { nhaCungCapBindingSource.ResetCurrentItem(); } catch { }
         }
 
         private void PopulateInputsFromSelection()
@@ -122,182 +141,227 @@ namespace LeLeStore
             return true;
         }
 
-        private void SaveNewSupplier()
-        {
-            if (!TryValidateInputs(out string tenNcc, out string soDienThoai, out string diaChi, out int maNhanVien))
-            {
-                return;
-            }
+        
+        
 
-            try
-            {
-                nhaCungCapTableAdapter.Insert(tenNcc, string.IsNullOrWhiteSpace(soDienThoai) ? null : soDienThoai, string.IsNullOrWhiteSpace(diaChi) ? null : diaChi, maNhanVien);
-                RefreshData();
-                MessageBox.Show("Thêm nhà cung cấp thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Không thể thêm nhà cung cấp. Lỗi: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                SetOperation(SupplierOperation.None);
-            }
+        private void RefreshData(int? focusKey = null)
+        {
+            RefreshDataAndRestoreByKey(focusKey);
         }
 
-        private void SaveEditedSupplier()
-        {
-            if (!int.TryParse(txtMaNCC.Text, out int maNcc))
-            {
-                MessageBox.Show("Không xác định được nhà cung cấp cần sửa.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            if (!TryValidateInputs(out string tenNcc, out string soDienThoai, out string diaChi, out int maNhanVien))
-            {
-                return;
-            }
-
-            var row = gStoreDataSet.NhaCungCap.FindByMaNCC(maNcc);
-            if (row == null)
-            {
-                MessageBox.Show("Không tìm thấy nhà cung cấp cần sửa.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            try
-            {
-                row.TenNCC = tenNcc;
-                if (string.IsNullOrWhiteSpace(soDienThoai))
-                {
-                    row.SetSoDienThoaiNull();
-                }
-                else
-                {
-                    row.SoDienThoai = soDienThoai;
-                }
-
-                if (string.IsNullOrWhiteSpace(diaChi))
-                {
-                    row.SetDiaChiNull();
-                }
-                else
-                {
-                    row.DiaChi = diaChi;
-                }
-
-                row.MaNhanVien = maNhanVien;
-
-                nhaCungCapTableAdapter.Update(row);
-                RefreshData();
-                MessageBox.Show("Cập nhật nhà cung cấp thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Không thể cập nhật nhà cung cấp. Lỗi: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                SetOperation(SupplierOperation.None);
-            }
-        }
-
-        private void DeleteSupplier()
-        {
-            if (!int.TryParse(txtMaNCC.Text, out int maNcc))
-            {
-                MessageBox.Show("Không xác định được nhà cung cấp cần xóa.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            var row = gStoreDataSet.NhaCungCap.FindByMaNCC(maNcc);
-            if (row == null)
-            {
-                MessageBox.Show("Không tìm thấy nhà cung cấp cần xóa.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            var confirm = MessageBox.Show("Bạn có chắc chắn muốn xóa nhà cung cấp này?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (confirm != DialogResult.Yes)
-            {
-                return;
-            }
-
-            try
-            {
-                row.Delete();
-                nhaCungCapTableAdapter.Update(gStoreDataSet.NhaCungCap);
-                RefreshData();
-                MessageBox.Show("Xóa nhà cung cấp thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Không thể xóa nhà cung cấp. Lỗi: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                SetOperation(SupplierOperation.None);
-            }
-        }
-
-        private void RefreshData()
-        {
-            gStoreDataSet.NhaCungCap.Clear();
-            nhaCungCapTableAdapter.Fill(gStoreDataSet.NhaCungCap);
-            PopulateInputsFromSelection();
-        }
 
         private void btnThem_Click(object sender, EventArgs e)
         {
-            SetOperation(SupplierOperation.Add);
-            ClearInputFields();
-            txtMaNCC.Text = string.Empty;
-            txtTenNCC.Focus();
+            CommitUI();
+
+            if (_currentOperation != SupplierOperation.Add)
+            {
+                // XÁC NHẬN BƯỚC VÀO CHẾ ĐỘ THÊM
+                if (!AskConfirm("Bạn muốn thêm nhà cung cấp mới?")) return;
+
+                SetOperation(SupplierOperation.Add);
+                ClearInputFields();
+                txtMaNCC.Text = string.Empty;
+                txtTenNCC.Focus();
+
+                btnSua.Enabled = false;
+                btnXoa.Enabled = false;
+                btnThem.Text = "Lưu";
+                return;
+            }
+
+            // Đang ở chế độ Thêm -> Lưu
+            if (!TryValidateInputs(out string tenNcc, out string soDienThoai, out string diaChi, out int maNhanVien))
+                return;
+
+            // XÁC NHẬN TRƯỚC KHI LƯU
+            if (!AskConfirm("Xác nhận thêm nhà cung cấp này?")) return;
+
+            try
+            {
+                nhaCungCapTableAdapter.Insert(
+                    tenNcc,
+                    string.IsNullOrWhiteSpace(soDienThoai) ? null : soDienThoai,
+                    string.IsNullOrWhiteSpace(diaChi) ? null : diaChi,
+                    maNhanVien
+                );
+
+                RefreshData(focusKey: null);
+                nhaCungCapBindingSource.Position = nhaCungCapBindingSource.Count - 1;
+
+                MessageBox.Show("Thêm nhà cung cấp thành công.", "Thông báo",
+                                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Không thể thêm nhà cung cấp. Lỗi: {ex.Message}", "Lỗi",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                SetOperation(SupplierOperation.None);
+                btnSua.Enabled = true;
+                btnXoa.Enabled = true;
+                btnThem.Text = "Thêm";
+            }
         }
 
         private void btnSua_Click(object sender, EventArgs e)
         {
-            var row = GetCurrentSupplierRow();
+
+            CommitUI();
+
+            var row = GetCurrentRow();
             if (row == null)
             {
-                MessageBox.Show("Vui lòng chọn nhà cung cấp cần sửa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Vui lòng chọn nhà cung cấp cần sửa.", "Thông báo",
+                                MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
-            SetOperation(SupplierOperation.Edit);
-            PopulateInputs(row);
+            if (_currentOperation != SupplierOperation.Edit)
+            {
+                // XÁC NHẬN BƯỚC VÀO CHẾ ĐỘ SỬA
+                if (!AskConfirm("Bạn muốn sửa thông tin nhà cung cấp này?")) return;
+
+                SetOperation(SupplierOperation.Edit);
+                PopulateInputs(row);
+
+                btnThem.Enabled = false;
+                btnXoa.Enabled = false;
+                btnSua.Text = "Lưu";
+                return;
+            }
+
+            // Đang ở chế độ Sửa -> Lưu
+            if (!int.TryParse(txtMaNCC.Text, out int maNcc))
+            {
+                MessageBox.Show("Không xác định được nhà cung cấp cần sửa.", "Lỗi",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (!TryValidateInputs(out string tenNcc, out string soDienThoai, out string diaChi, out int maNhanVien))
+                return;
+
+            // XÁC NHẬN TRƯỚC KHI LƯU
+            if (!AskConfirm("Xác nhận lưu thay đổi thông tin nhà cung cấp?")) return;
+
+            var editRow = gStoreDataSet.NhaCungCap.FindByMaNCC(maNcc);
+            if (editRow == null)
+            {
+                MessageBox.Show("Không tìm thấy nhà cung cấp cần sửa.", "Lỗi",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            try
+            {
+                editRow.TenNCC = tenNcc;
+                if (string.IsNullOrWhiteSpace(soDienThoai)) editRow.SetSoDienThoaiNull(); else editRow.SoDienThoai = soDienThoai;
+                if (string.IsNullOrWhiteSpace(diaChi)) editRow.SetDiaChiNull(); else editRow.DiaChi = diaChi;
+                editRow.MaNhanVien = maNhanVien;
+
+                nhaCungCapBindingSource.EndEdit();
+                nhaCungCapTableAdapter.Update(editRow);
+
+                // Không Fill để tránh nhảy con trỏ
+                nhaCungCapBindingSource.ResetCurrentItem();
+
+                MessageBox.Show("Cập nhật nhà cung cấp thành công.", "Thông báo",
+                                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Không thể cập nhật nhà cung cấp. Lỗi: {ex.Message}", "Lỗi",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                SetOperation(SupplierOperation.None);
+                btnThem.Enabled = true;
+                btnXoa.Enabled = true;
+                btnSua.Text = "Sửa";
+            }
         }
 
         private void btnXoa_Click(object sender, EventArgs e)
         {
-            var row = GetCurrentSupplierRow();
+            CommitUI();
+
+            var row = GetCurrentRow();
             if (row == null)
             {
                 MessageBox.Show("Vui lòng chọn nhà cung cấp cần xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
-            SetOperation(SupplierOperation.Delete);
-            PopulateInputs(row);
+            var confirm = MessageBox.Show("Bạn có chắc chắn muốn xóa nhà cung cấp này?", "Xác nhận",
+                                          MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirm != DialogResult.Yes) return;
+
+            int key = row.MaNCC;
+            // Sau khi xóa, sẽ đưa con trỏ về bản ghi trước đó
+            int desiredPos = Math.Max(0, nhaCungCapBindingSource.Position - 1);
+
+            try
+            {
+                row.Delete();
+                nhaCungCapBindingSource.EndEdit();
+                nhaCungCapTableAdapter.Update(gStoreDataSet.NhaCungCap);
+
+                // Fill lại để đồng bộ với DB rồi đưa con trỏ tới vị trí mong muốn
+                RefreshData(focusKey: null);
+                if (nhaCungCapBindingSource.Count > 0)
+                    nhaCungCapBindingSource.Position = Math.Min(desiredPos, nhaCungCapBindingSource.Count - 1);
+
+                MessageBox.Show("Xóa nhà cung cấp thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Không thể xóa nhà cung cấp. Lỗi: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
-        private void btnLuu_Click(object sender, EventArgs e)
+
+        private void CommitUI()
         {
-            switch (_currentOperation)
+            this.Validate();
+            try { dataGridView1.EndEdit(); } catch { /* Đảm bảo đúng tên DataGridView */ }
+            nhaCungCapBindingSource.EndEdit();
+        }
+
+        private GStoreDataSet.NhaCungCapRow GetCurrentRow()
+        {
+            CommitUI();
+            if (dataGridView1.CurrentRow?.DataBoundItem is DataRowView rv)
+                return rv.Row as GStoreDataSet.NhaCungCapRow;
+            return null;
+        }
+
+        private void RefreshDataAndRestoreByKey(int? keyToFocus)
+        {
+            // Fill lại nhưng không làm mất vị trí bản ghi mong muốn
+            gStoreDataSet.NhaCungCap.Clear();
+            nhaCungCapTableAdapter.Fill(gStoreDataSet.NhaCungCap);
+
+            if (keyToFocus.HasValue)
             {
-                case SupplierOperation.Add:
-                    SaveNewSupplier();
-                    break;
-                case SupplierOperation.Edit:
-                    SaveEditedSupplier();
-                    break;
-                case SupplierOperation.Delete:
-                    DeleteSupplier();
-                    break;
-                default:
-                    MessageBox.Show("Vui lòng chọn chức năng Thêm, Sửa hoặc Xóa trước khi lưu.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    break;
+                var rows = gStoreDataSet.NhaCungCap.Select($"MaNCC = {keyToFocus.Value}");
+                if (rows.Length > 0)
+                {
+                    var row = rows[0];
+                    int pos = gStoreDataSet.NhaCungCap.Rows.IndexOf(row);
+                    if (pos >= 0) nhaCungCapBindingSource.Position = pos;
+                }
             }
+
+            PopulateInputsFromSelection();
+        }
+        private bool AskConfirm(string message)
+        {
+            return MessageBox.Show(message, "Xác nhận",
+                                   MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
         }
 
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
@@ -308,6 +372,36 @@ namespace LeLeStore
             }
 
             PopulateInputsFromSelection();
+        }
+
+        private void btnHuy_Click(object sender, EventArgs e)
+        {
+            // Nếu không ở chế độ thao tác thì chỉ làm tươi lại dữ liệu đang hiển thị
+            if (_currentOperation == SupplierOperation.None)
+            {
+                ReloadInputs();
+                return;
+            }
+
+            var confirm = MessageBox.Show("Hủy các thay đổi đang thực hiện?",
+                                          "Xác nhận",
+                                          MessageBoxButtons.YesNo,
+                                          MessageBoxIcon.Question);
+            if (confirm != DialogResult.Yes) return;
+
+            // Rollback mọi chỉnh sửa chưa lưu
+            CancelPendingEdits();
+
+            // Trả UI về trạng thái bình thường
+            SetOperation(SupplierOperation.None);
+
+            // Mở lại các nút và nhãn nút như cũ
+            btnThem.Enabled = true; btnThem.Text = "Thêm";
+            btnSua.Enabled = true; btnSua.Text = "Sửa";
+            btnXoa.Enabled = true;
+
+            // Làm tươi khu nhập theo selection hiện tại
+            ReloadInputs();
         }
     }
 }

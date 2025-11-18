@@ -45,8 +45,6 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.btnXoa = new ReaLTaiizor.Controls.Button();
             this.btnSua = new ReaLTaiizor.Controls.Button();
-            this.btnLuu = new ReaLTaiizor.Controls.Button();
-            this.btnLuuCT = new ReaLTaiizor.Controls.Button();
             this.btnSuaCT = new ReaLTaiizor.Controls.Button();
             this.btnXoaCT = new ReaLTaiizor.Controls.Button();
             this.btnThemCT = new ReaLTaiizor.Controls.Button();
@@ -66,6 +64,8 @@
             this.chiTietGiaoDichKhoTableAdapter = new LeLeStore.GStoreDataSetTableAdapters.ChiTietGiaoDichKhoTableAdapter();
             this.btnSearch = new ReaLTaiizor.Controls.Button();
             this.txtSearch = new System.Windows.Forms.TextBox();
+            this.btnHuy = new ReaLTaiizor.Controls.Button();
+            this.btnHuyCT = new ReaLTaiizor.Controls.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -224,6 +224,7 @@
             this.dataGridView1.RowTemplate.Height = 28;
             this.dataGridView1.Size = new System.Drawing.Size(830, 150);
             this.dataGridView1.TabIndex = 8;
+            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
             // 
             // btnXoa
@@ -268,48 +269,6 @@
             this.btnSua.TextAlignment = System.Drawing.StringAlignment.Center;
             this.btnSua.Click += new System.EventHandler(this.btnSua_Click);
             // 
-            // btnLuu
-            // 
-            this.btnLuu.BackColor = System.Drawing.Color.Transparent;
-            this.btnLuu.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnLuu.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnLuu.EnteredBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
-            this.btnLuu.EnteredColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnLuu.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnLuu.Image = null;
-            this.btnLuu.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnLuu.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnLuu.Location = new System.Drawing.Point(839, 403);
-            this.btnLuu.Name = "btnLuu";
-            this.btnLuu.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
-            this.btnLuu.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
-            this.btnLuu.Size = new System.Drawing.Size(101, 44);
-            this.btnLuu.TabIndex = 11;
-            this.btnLuu.Text = "Lưu";
-            this.btnLuu.TextAlignment = System.Drawing.StringAlignment.Center;
-            this.btnLuu.Click += new System.EventHandler(this.btnLuu_Click);
-            // 
-            // btnLuuCT
-            // 
-            this.btnLuuCT.BackColor = System.Drawing.Color.Transparent;
-            this.btnLuuCT.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnLuuCT.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnLuuCT.EnteredBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
-            this.btnLuuCT.EnteredColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnLuuCT.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnLuuCT.Image = null;
-            this.btnLuuCT.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnLuuCT.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnLuuCT.Location = new System.Drawing.Point(1209, 620);
-            this.btnLuuCT.Name = "btnLuuCT";
-            this.btnLuuCT.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
-            this.btnLuuCT.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
-            this.btnLuuCT.Size = new System.Drawing.Size(101, 44);
-            this.btnLuuCT.TabIndex = 17;
-            this.btnLuuCT.Text = "Lưu";
-            this.btnLuuCT.TextAlignment = System.Drawing.StringAlignment.Center;
-            this.btnLuuCT.Click += new System.EventHandler(this.btnLuuCT_Click);
-            // 
             // btnSuaCT
             // 
             this.btnSuaCT.BackColor = System.Drawing.Color.Transparent;
@@ -321,7 +280,7 @@
             this.btnSuaCT.Image = null;
             this.btnSuaCT.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnSuaCT.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnSuaCT.Location = new System.Drawing.Point(1049, 620);
+            this.btnSuaCT.Location = new System.Drawing.Point(1012, 623);
             this.btnSuaCT.Name = "btnSuaCT";
             this.btnSuaCT.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnSuaCT.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -342,7 +301,7 @@
             this.btnXoaCT.Image = null;
             this.btnXoaCT.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnXoaCT.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnXoaCT.Location = new System.Drawing.Point(880, 623);
+            this.btnXoaCT.Location = new System.Drawing.Point(863, 623);
             this.btnXoaCT.Name = "btnXoaCT";
             this.btnXoaCT.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnXoaCT.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -501,17 +460,17 @@
             this.btnSearch.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnSearch.EnteredBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnSearch.EnteredColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnSearch.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSearch.Image = null;
+            this.btnSearch.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
+            this.btnSearch.Image = global::LeLeStore.Properties.Resources.icons8_search_24;
             this.btnSearch.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnSearch.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
             this.btnSearch.Location = new System.Drawing.Point(1135, 12);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnSearch.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
-            this.btnSearch.Size = new System.Drawing.Size(116, 47);
+            this.btnSearch.Size = new System.Drawing.Size(151, 47);
             this.btnSearch.TabIndex = 19;
-            this.btnSearch.Text = "Tìm kiếm";
+            this.btnSearch.Text = "       Tìm kiếm";
             this.btnSearch.TextAlignment = System.Drawing.StringAlignment.Center;
             this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
@@ -522,20 +481,62 @@
             this.txtSearch.Size = new System.Drawing.Size(199, 26);
             this.txtSearch.TabIndex = 20;
             // 
+            // btnHuy
+            // 
+            this.btnHuy.BackColor = System.Drawing.Color.Transparent;
+            this.btnHuy.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
+            this.btnHuy.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnHuy.EnteredBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
+            this.btnHuy.EnteredColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
+            this.btnHuy.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnHuy.Image = null;
+            this.btnHuy.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnHuy.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
+            this.btnHuy.Location = new System.Drawing.Point(851, 403);
+            this.btnHuy.Name = "btnHuy";
+            this.btnHuy.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
+            this.btnHuy.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
+            this.btnHuy.Size = new System.Drawing.Size(101, 44);
+            this.btnHuy.TabIndex = 21;
+            this.btnHuy.Text = "Hủy";
+            this.btnHuy.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnHuy.Click += new System.EventHandler(this.btnHuy_Click);
+            // 
+            // btnHuyCT
+            // 
+            this.btnHuyCT.BackColor = System.Drawing.Color.Transparent;
+            this.btnHuyCT.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
+            this.btnHuyCT.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnHuyCT.EnteredBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
+            this.btnHuyCT.EnteredColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
+            this.btnHuyCT.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnHuyCT.Image = null;
+            this.btnHuyCT.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnHuyCT.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
+            this.btnHuyCT.Location = new System.Drawing.Point(1167, 623);
+            this.btnHuyCT.Name = "btnHuyCT";
+            this.btnHuyCT.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
+            this.btnHuyCT.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
+            this.btnHuyCT.Size = new System.Drawing.Size(101, 44);
+            this.btnHuyCT.TabIndex = 22;
+            this.btnHuyCT.Text = "Hủy";
+            this.btnHuyCT.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnHuyCT.Click += new System.EventHandler(this.btnHuyCT_Click);
+            // 
             // formPhieuNhap
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1346, 737);
+            this.Controls.Add(this.btnHuyCT);
+            this.Controls.Add(this.btnHuy);
             this.Controls.Add(this.txtSearch);
             this.Controls.Add(this.btnSearch);
             this.Controls.Add(this.dataGridView2);
-            this.Controls.Add(this.btnLuuCT);
             this.Controls.Add(this.btnSuaCT);
             this.Controls.Add(this.btnXoaCT);
             this.Controls.Add(this.btnThemCT);
             this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.btnLuu);
             this.Controls.Add(this.btnSua);
             this.Controls.Add(this.btnXoa);
             this.Controls.Add(this.dataGridView1);
@@ -577,8 +578,6 @@
         private System.Windows.Forms.DataGridView dataGridView1;
         private ReaLTaiizor.Controls.Button btnXoa;
         private ReaLTaiizor.Controls.Button btnSua;
-        private ReaLTaiizor.Controls.Button btnLuu;
-        private ReaLTaiizor.Controls.Button btnLuuCT;
         private ReaLTaiizor.Controls.Button btnSuaCT;
         private ReaLTaiizor.Controls.Button btnXoaCT;
         private ReaLTaiizor.Controls.Button btnThemCT;
@@ -599,5 +598,7 @@
         private ReaLTaiizor.Controls.Button btnSearch;
         private System.Windows.Forms.TextBox txtSearch;
         private System.Windows.Forms.ComboBox cbMaSP;
+        private ReaLTaiizor.Controls.Button btnHuy;
+        private ReaLTaiizor.Controls.Button btnHuyCT;
     }
 }

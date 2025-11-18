@@ -12,6 +12,72 @@ namespace LeLeStore
 {
     public partial class formUpdateClient : Form
     {
+        // ---- đặt trong class ----
+        private void CommitUI()
+        {
+            Validate();
+            try { dataGridView1.EndEdit(); } catch { }
+            khachHangBindingSource.EndEdit();
+        }
+
+        private bool AskConfirm(string msg, MessageBoxIcon icon = MessageBoxIcon.Question)
+        {
+            return MessageBox.Show(msg, "Xác nhận", MessageBoxButtons.YesNo, icon) == DialogResult.Yes;
+        }
+
+        private void RefreshDataAndRestoreByKey(int? keyToFocus)
+        {
+            gStoreDataSet.KhachHang.Clear();
+            khachHangTableAdapter.Fill(gStoreDataSet.KhachHang);
+
+            if (keyToFocus.HasValue)
+            {
+                var rows = gStoreDataSet.KhachHang.Select($"MaKhachHang = {keyToFocus.Value}");
+                if (rows.Length > 0)
+                {
+                    var row = rows[0];
+                    int pos = gStoreDataSet.KhachHang.Rows.IndexOf(row);
+                    if (pos >= 0) khachHangBindingSource.Position = pos;
+                }
+            }
+
+            PopulateInputsFromSelection();
+        }
+
+     
+
+        // ---- Cập nhật SetOperation để đổi text/khóa nút ----
+        private void SetOperation(ClientOperation operation)
+        {
+            _currentOperation = operation;
+
+            bool canEditFields = operation == ClientOperation.Add || operation == ClientOperation.Edit;
+            bool isDelete = operation == ClientOperation.Delete;
+
+            txtMaKH.ReadOnly = true;
+            txtTenKH.ReadOnly = !canEditFields;
+            txtSDTKH.ReadOnly = !canEditFields;
+            txtDiaChiKH.ReadOnly = !canEditFields;
+            txtMaNVKH.ReadOnly = !canEditFields;
+
+            // Điểm chỉ nhập khi Thêm
+            txtDiem.ReadOnly = operation != ClientOperation.Add;
+
+            if (isDelete)
+            {
+                txtTenKH.ReadOnly = txtSDTKH.ReadOnly = txtDiaChiKH.ReadOnly =
+                txtMaNVKH.ReadOnly = txtDiem.ReadOnly = true;
+            }
+
+            // Đồng bộ nút (giả sử bạn có 3 nút: btnThem, btnSua, btnXoa)
+            btnThem.Enabled = (operation != ClientOperation.Edit && operation != ClientOperation.Delete);
+            btnSua.Enabled = (operation != ClientOperation.Add && operation != ClientOperation.Delete);
+            btnXoa.Enabled = (operation == ClientOperation.None);
+
+            btnThem.Text = (operation == ClientOperation.Add) ? "Lưu" : "Thêm";
+            btnSua.Text = (operation == ClientOperation.Edit) ? "Lưu" : "Sửa";
+        }
+
         private enum ClientOperation
         {
             None,
@@ -35,31 +101,7 @@ namespace LeLeStore
             PopulateInputsFromSelection();
 
         }
-        private void SetOperation(ClientOperation operation)
-        {
-            _currentOperation = operation;
-
-            bool canEditFields = operation == ClientOperation.Add || operation == ClientOperation.Edit;
-            bool isDelete = operation == ClientOperation.Delete;
-
-            txtMaKH.ReadOnly = true;
-            txtTenKH.ReadOnly = !canEditFields;
-            txtSDTKH.ReadOnly = !canEditFields;
-            txtDiaChiKH.ReadOnly = !canEditFields;
-            txtMaNVKH.ReadOnly = !canEditFields;
-
-            // Điểm tích lũy chỉ cho phép nhập khi thêm mới
-            txtDiem.ReadOnly = operation != ClientOperation.Add;
-
-            if (isDelete)
-            {
-                txtTenKH.ReadOnly = true;
-                txtSDTKH.ReadOnly = true;
-                txtDiaChiKH.ReadOnly = true;
-                txtMaNVKH.ReadOnly = true;
-                txtDiem.ReadOnly = true;
-            }
-        }
+      
 
         private void PopulateInputsFromSelection()
         {
@@ -167,21 +209,51 @@ namespace LeLeStore
             return true;
         }
 
-        private void SaveNewClient()
+
+
+
+
+
+
+        private void RefreshData(int? focusKey = null)
         {
-            if (!TryValidateInputsForAdd(out string hoTen, out string soDienThoai, out string diaChi, out int diemTichLuy, out int maNhanVien))
+            RefreshDataAndRestoreByKey(focusKey);
+        }
+
+        private void btnThem_Click(object sender, EventArgs e)
+        {
+            CommitUI();
+
+            if (_currentOperation != ClientOperation.Add)
             {
+                if (!AskConfirm("Bạn muốn thêm khách hàng mới?")) return;
+
+                SetOperation(ClientOperation.Add);
+                ClearInputFields();
+                txtTenKH.Focus();
                 return;
             }
 
+            // Pha lưu
+            if (!TryValidateInputsForAdd(out string hoTen, out string soDienThoai, out string diaChi, out int diemTichLuy, out int maNhanVien))
+                return;
+
+            if (!AskConfirm("Xác nhận lưu khách hàng mới?")) return;
+
             try
             {
-                khachHangTableAdapter.Insert(hoTen,
+                khachHangTableAdapter.Insert(
+                    hoTen,
                     string.IsNullOrWhiteSpace(soDienThoai) ? null : soDienThoai,
                     string.IsNullOrWhiteSpace(diaChi) ? null : diaChi,
                     diemTichLuy,
-                    maNhanVien);
-                RefreshData();
+                    maNhanVien
+                );
+
+                // Sau Insert: Fill + focus về cuối (hoặc nếu biết ID mới, truyền vào RefreshData(idMoi))
+                RefreshData(focusKey: null);
+                khachHangBindingSource.Position = Math.Max(0, khachHangBindingSource.Count - 1);
+
                 MessageBox.Show("Thêm khách hàng thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
@@ -192,10 +264,31 @@ namespace LeLeStore
             {
                 SetOperation(ClientOperation.None);
             }
+
         }
 
-        private void SaveEditedClient()
+        private void btnSua_Click(object sender, EventArgs e)
         {
+            CommitUI();
+
+            var row = GetCurrentClientRow();
+            if (row == null)
+            {
+                MessageBox.Show("Vui lòng chọn khách hàng cần sửa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            if (_currentOperation != ClientOperation.Edit)
+            {
+                if (!AskConfirm("Bạn muốn sửa thông tin khách hàng này?")) return;
+
+                SetOperation(ClientOperation.Edit);
+                PopulateInputs(row);
+                txtTenKH.Focus();
+                return;
+            }
+
+            // Pha lưu
             if (!int.TryParse(txtMaKH.Text, out int maKhachHang))
             {
                 MessageBox.Show("Không xác định được khách hàng cần sửa.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -203,12 +296,12 @@ namespace LeLeStore
             }
 
             if (!TryValidateInputsForEdit(out string hoTen, out string soDienThoai, out string diaChi, out int maNhanVien))
-            {
                 return;
-            }
 
-            var row = gStoreDataSet.KhachHang.FindByMaKhachHang(maKhachHang);
-            if (row == null)
+            if (!AskConfirm("Xác nhận lưu thay đổi thông tin khách hàng?")) return;
+
+            var editRow = gStoreDataSet.KhachHang.FindByMaKhachHang(maKhachHang);
+            if (editRow == null)
             {
                 MessageBox.Show("Không tìm thấy khách hàng cần sửa.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -216,30 +309,17 @@ namespace LeLeStore
 
             try
             {
-                row.HoTen = hoTen;
+                editRow.HoTen = hoTen;
+                if (string.IsNullOrWhiteSpace(soDienThoai)) editRow.SetSoDienThoaiNull(); else editRow.SoDienThoai = soDienThoai;
+                if (string.IsNullOrWhiteSpace(diaChi)) editRow.SetDiaChiNull(); else editRow.DiaChi = diaChi;
+                editRow.MaNhanVien = maNhanVien;
 
-                if (string.IsNullOrWhiteSpace(soDienThoai))
-                {
-                    row.SetSoDienThoaiNull();
-                }
-                else
-                {
-                    row.SoDienThoai = soDienThoai;
-                }
+                khachHangBindingSource.EndEdit();
+                khachHangTableAdapter.Update(editRow);
 
-                if (string.IsNullOrWhiteSpace(diaChi))
-                {
-                    row.SetDiaChiNull();
-                }
-                else
-                {
-                    row.DiaChi = diaChi;
-                }
+                // KHÔNG Fill để tránh reset con trỏ; chỉ cập nhật hiển thị:
+                khachHangBindingSource.ResetCurrentItem();
 
-                row.MaNhanVien = maNhanVien;
-
-                khachHangTableAdapter.Update(row);
-                RefreshData();
                 MessageBox.Show("Cập nhật khách hàng thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
@@ -252,73 +332,10 @@ namespace LeLeStore
             }
         }
 
-        private void DeleteClient()
-        {
-            if (!int.TryParse(txtMaKH.Text, out int maKhachHang))
-            {
-                MessageBox.Show("Không xác định được khách hàng cần xóa.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            var row = gStoreDataSet.KhachHang.FindByMaKhachHang(maKhachHang);
-            if (row == null)
-            {
-                MessageBox.Show("Không tìm thấy khách hàng cần xóa.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            var confirm = MessageBox.Show("Bạn có chắc chắn muốn xóa khách hàng này?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (confirm != DialogResult.Yes)
-            {
-                return;
-            }
-
-            try
-            {
-                row.Delete();
-                khachHangTableAdapter.Update(gStoreDataSet.KhachHang);
-                RefreshData();
-                MessageBox.Show("Xóa khách hàng thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Không thể xóa khách hàng. Lỗi: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                SetOperation(ClientOperation.None);
-            }
-        }
-
-        private void RefreshData()
-        {
-            gStoreDataSet.KhachHang.Clear();
-            khachHangTableAdapter.Fill(gStoreDataSet.KhachHang);
-            PopulateInputsFromSelection();
-        }
-
-        private void btnThem_Click(object sender, EventArgs e)
-        {
-            SetOperation(ClientOperation.Add);
-            ClearInputFields();
-            txtTenKH.Focus();
-        }
-
-        private void btnSua_Click(object sender, EventArgs e)
-        {
-            var row = GetCurrentClientRow();
-            if (row == null)
-            {
-                MessageBox.Show("Vui lòng chọn khách hàng cần sửa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-
-            SetOperation(ClientOperation.Edit);
-            PopulateInputs(row);
-        }
-
         private void btnXoa_Click(object sender, EventArgs e)
         {
+            CommitUI();
+
             var row = GetCurrentClientRow();
             if (row == null)
             {
@@ -326,28 +343,30 @@ namespace LeLeStore
                 return;
             }
 
-            SetOperation(ClientOperation.Delete);
-            PopulateInputs(row);
-        }
+            if (!AskConfirm("Bạn có chắc chắn muốn xóa khách hàng này?", MessageBoxIcon.Warning)) return;
 
-        private void btnLuu_Click(object sender, EventArgs e)
-        {
-            switch (_currentOperation)
+            // Sau xóa: đưa con trỏ về bản ghi trước
+            int desiredPos = Math.Max(0, khachHangBindingSource.Position - 1);
+
+            try
             {
-                case ClientOperation.Add:
-                    SaveNewClient();
-                    break;
-                case ClientOperation.Edit:
-                    SaveEditedClient();
-                    break;
-                case ClientOperation.Delete:
-                    DeleteClient();
-                    break;
-                default:
-                    MessageBox.Show("Vui lòng chọn chức năng Thêm, Sửa hoặc Xóa trước khi lưu.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    break;
+                row.Delete();
+                khachHangBindingSource.EndEdit();
+                khachHangTableAdapter.Update(gStoreDataSet.KhachHang);
+
+                RefreshData(focusKey: null);
+                if (khachHangBindingSource.Count > 0)
+                    khachHangBindingSource.Position = Math.Min(desiredPos, khachHangBindingSource.Count - 1);
+
+                MessageBox.Show("Xóa khách hàng thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Không thể xóa khách hàng. Lỗi: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        
 
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
@@ -357,6 +376,35 @@ namespace LeLeStore
             }
 
             PopulateInputsFromSelection();
+        }
+
+        private void btnHuy_Click(object sender, EventArgs e)
+        {
+            // Nếu đang không ở chế độ Add/Edit thì chỉ làm tươi inputs theo selection hiện tại
+            if (_currentOperation == ClientOperation.None)
+            {
+                PopulateInputsFromSelection();
+                return;
+            }
+
+            if (!AskConfirm("Hủy các thay đổi khách hàng đang thực hiện?")) return;
+
+            // Lưu khóa hiện tại (nếu có) để sau khi hủy sẽ focus đúng lại
+            int? focusKey = null;
+            if (int.TryParse(txtMaKH.Text.Trim(), out int parsedId))
+                focusKey = parsedId;
+
+            // Rollback mọi chỉnh sửa chưa lưu
+            try { Validate(); } catch { }
+            try { dataGridView1.CancelEdit(); } catch { }
+            try { khachHangBindingSource.CancelEdit(); } catch { }
+            try { gStoreDataSet.KhachHang.RejectChanges(); } catch { }
+
+            // Trả UI về trạng thái bình thường
+            SetOperation(ClientOperation.None);
+
+            // Khôi phục dữ liệu + đưa con trỏ về đúng bản ghi (nếu còn)
+            RefreshDataAndRestoreByKey(focusKey);
         }
     }
 }

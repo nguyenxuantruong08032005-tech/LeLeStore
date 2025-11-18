@@ -101,6 +101,26 @@ namespace LeLeStore.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] DejaVuSans {
+            get {
+                object obj = ResourceManager.GetObject("DejaVuSans", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] DejaVuSans_Bold {
+            get {
+                object obj = ResourceManager.GetObject("DejaVuSans_Bold", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap Forgot_Password_48px {
@@ -116,6 +136,16 @@ namespace LeLeStore.Properties {
         internal static System.Drawing.Bitmap icons8_name_tag_100 {
             get {
                 object obj = ResourceManager.GetObject("icons8_name_tag_100", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_search_24 {
+            get {
+                object obj = ResourceManager.GetObject("icons8_search_24", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

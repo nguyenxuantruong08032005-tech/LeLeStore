@@ -33,6 +33,10 @@ namespace LeLeStore
         {
             // TODO: This line of code loads data into the 'gStoreDataSet.SanPham' table. You can move, or remove it, as needed.
             this.sanPhamTableAdapter.Fill(this.gStoreDataSet.SanPham);
+            // số lượng
+          
+
+           
 
         }
 
@@ -41,11 +45,7 @@ namespace LeLeStore
 
         }
 
-        private void ConfigureGridAppearance()
-        {
-            dataGridView1.RowTemplate.Height = 120;
-            dataGridView1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-        }
+        
         private void SetOperation(ProductOperation operation)
         {
             _currentOperation = operation;
@@ -79,7 +79,17 @@ namespace LeLeStore
                 btnChonAnh.Enabled = false;
             }
 
-            btnLuu.Enabled = operation != ProductOperation.None;
+            // Đổi text & khóa nút
+            btnThem.Text = (operation == ProductOperation.Add) ? "Lưu" : "Thêm";
+            btnSua.Text = (operation == ProductOperation.Edit) ? "Lưu" : "Sửa";
+
+            btnThem.Enabled = (operation != ProductOperation.Edit && operation != ProductOperation.Delete);
+            btnSua.Enabled = (operation != ProductOperation.Add && operation != ProductOperation.Delete);
+            btnXoa.Enabled = (operation == ProductOperation.None);
+
+            // Hủy chỉ bật khi đang thao tác
+            btnHuy.Enabled = (operation != ProductOperation.None);
+
         }
 
         private void PopulateInputsFromSelection()
@@ -397,38 +407,175 @@ namespace LeLeStore
             PopulateInputsFromSelection();
             dataGridView1.Refresh();
         }
+        private void CommitUI()
+        {
+            Validate();
+            try { dataGridView1.EndEdit(); } catch { }
+            sanPhamBindingSource.EndEdit();   // nếu tên BindingSource khác, đổi lại
+        }
 
+        private bool AskConfirm(string msg, MessageBoxIcon icon = MessageBoxIcon.Question)
+            => MessageBox.Show(msg, "Xác nhận", MessageBoxButtons.YesNo, icon) == DialogResult.Yes;
         private void btnThem_Click(object sender, EventArgs e)
         {
-            SetOperation(ProductOperation.Add);
-            ClearInputFields();
-            txtTenSP.Focus();
+            CommitUI();
+
+            // PHA 1: chuyển sang chế độ thêm
+            if (_currentOperation != ProductOperation.Add)
+            {
+                if (!AskConfirm("Bạn muốn thêm sản phẩm mới?")) return;
+
+                SetOperation(ProductOperation.Add);
+                ClearInputFields();
+                txtTenSP.Focus();
+                return;
+            }
+
+            // PHA 2: LƯU
+            if (!TryValidateInputs(out string tenSp, out decimal donGia, out int soLuong,
+                                   out DateTime? hanSuDung, out int maLoai, out int maDvt,
+                                   out int? maNcc, out int? maNhanVien, out string hinhAnhPath))
+                return;
+
+            if (!AskConfirm("Xác nhận lưu sản phẩm mới?")) return;
+
+            try
+            {
+                sanPhamTableAdapter.Insert(
+                    tenSp, donGia, soLuong, hanSuDung, maLoai, maDvt,
+                    maNcc, maNhanVien,
+                    string.IsNullOrWhiteSpace(hinhAnhPath) ? null : NormalizeImagePath(hinhAnhPath)
+                );
+
+                // nạp lại & focus dòng cuối (thường là bản ghi mới)
+                RefreshData();
+                sanPhamBindingSource.Position = Math.Max(0, sanPhamBindingSource.Count - 1);
+
+                MessageBox.Show("Thêm sản phẩm thành công.", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Không thể thêm sản phẩm.\n" + ex.Message, "Lỗi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                SetOperation(ProductOperation.None);
+            }
         }
 
         private void btnSua_Click(object sender, EventArgs e)
         {
+            CommitUI();
+
             var row = GetCurrentProductRow();
-            if (row == null)
+            if (row == null || row.RowState == DataRowState.Deleted)
             {
-                MessageBox.Show("Vui lòng chọn sản phẩm cần sửa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Vui lòng chọn sản phẩm cần sửa.", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
-            SetOperation(ProductOperation.Edit);
-            PopulateInputs(row);
+            // PHA 1: vào chế độ sửa
+            if (_currentOperation != ProductOperation.Edit)
+            {
+                if (!AskConfirm("Bạn muốn sửa sản phẩm này?")) return;
+
+                SetOperation(ProductOperation.Edit);
+                PopulateInputs(row);
+                txtTenSP.Focus();
+                return;
+            }
+
+            // PHA 2: LƯU
+            if (!int.TryParse(txtMaSP.Text, out int maSp))
+            {
+                MessageBox.Show("Không xác định được sản phẩm cần sửa.", "Lỗi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (!TryValidateInputs(out string tenSp, out decimal donGia, out int soLuong,
+                                   out DateTime? hanSuDung, out int maLoai, out int maDvt,
+                                   out int? maNcc, out int? maNhanVien, out string hinhAnhPath))
+                return;
+
+            if (!AskConfirm("Xác nhận lưu thay đổi sản phẩm?")) return;
+
+            var editRow = gStoreDataSet.SanPham.FindByMaSP(maSp);
+            if (editRow == null)
+            {
+                MessageBox.Show("Không tìm thấy sản phẩm.", "Lỗi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            try
+            {
+                editRow.TenSP = tenSp;
+                editRow.DonGia = donGia;
+                editRow.SoLuong = soLuong;
+
+                if (hanSuDung.HasValue) editRow.HanSuDung = hanSuDung.Value; else editRow.SetHanSuDungNull();
+                editRow.MaLoai = maLoai;
+                editRow.MaDVT = maDvt;
+                if (maNcc.HasValue) editRow.MaNCC = maNcc.Value; else editRow.SetMaNCCNull();
+                if (maNhanVien.HasValue) editRow.MaNhanVien = maNhanVien.Value; else editRow.SetMaNhanVienNull();
+                if (string.IsNullOrWhiteSpace(hinhAnhPath)) editRow.SetHinhAnhNull(); else editRow.HinhAnh = NormalizeImagePath(hinhAnhPath);
+
+                sanPhamBindingSource.EndEdit();
+                sanPhamTableAdapter.Update(editRow);     // không Fill lại để giữ vị trí
+                sanPhamBindingSource.ResetCurrentItem(); // refresh UI hàng hiện tại
+
+                MessageBox.Show("Cập nhật sản phẩm thành công.", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Không thể cập nhật sản phẩm.\n" + ex.Message, "Lỗi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                SetOperation(ProductOperation.None);
+            }
         }
 
         private void btnXoa_Click(object sender, EventArgs e)
         {
+            CommitUI();
+
             var row = GetCurrentProductRow();
-            if (row == null)
+            if (row == null || row.RowState == DataRowState.Deleted)
             {
-                MessageBox.Show("Vui lòng chọn sản phẩm cần xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Vui lòng chọn sản phẩm cần xóa.", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
-            SetOperation(ProductOperation.Delete);
-            PopulateInputs(row);
+            if (!AskConfirm("Bạn có chắc chắn muốn xóa sản phẩm này?", MessageBoxIcon.Warning)) return;
+
+            int desiredPos = Math.Max(0, sanPhamBindingSource.Position - 1);
+
+            try
+            {
+                row.Delete();
+                sanPhamBindingSource.EndEdit();
+                sanPhamTableAdapter.Update(gStoreDataSet.SanPham);
+
+                RefreshData();
+                if (sanPhamBindingSource.Count > 0)
+                    sanPhamBindingSource.Position = Math.Min(desiredPos, sanPhamBindingSource.Count - 1);
+
+                MessageBox.Show("Xóa sản phẩm thành công.", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Không thể xóa sản phẩm.\n" + ex.Message, "Lỗi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnLuu_Click(object sender, EventArgs e)
@@ -633,6 +780,46 @@ namespace LeLeStore
         private void label1_Click(object sender, EventArgs e)
         {
 
+        }
+        private void CancelPendingUiEdits()
+        {
+            try { Validate(); } catch { }
+            try { dataGridView1.CancelEdit(); } catch { }
+            try { sanPhamBindingSource.CancelEdit(); } catch { }
+
+            // Nếu dòng hiện tại đã bị sửa trong DataSet thì rollback tại chỗ
+            var row = GetCurrentProductRow();
+            if (row != null && (row.RowState == DataRowState.Modified || row.RowState == DataRowState.Added))
+            {
+                row.RejectChanges();
+            }
+        }
+
+        private void btnHuy_Click(object sender, EventArgs e)
+        {
+            // Nếu không ở chế độ thao tác thì thôi
+            if (_currentOperation == ProductOperation.None)
+            {
+                PopulateInputsFromSelection();
+                return;
+            }
+
+            // Xác nhận
+            var confirm = MessageBox.Show(
+                "Hủy các thay đổi đang thực hiện?",
+                "Xác nhận",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (confirm != DialogResult.Yes) return;
+
+            // Hủy mọi chỉnh sửa treo ở UI/BindingSource
+            CancelPendingUiEdits();
+
+            // Trả UI về trạng thái bình thường + nạp lại dữ liệu của dòng đang chọn
+            SetOperation(ProductOperation.None);
+            PopulateInputsFromSelection();
+            UpdateImagePreview(); // đảm bảo ảnh hiển thị đúng
         }
     }
 }

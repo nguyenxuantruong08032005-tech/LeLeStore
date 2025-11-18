@@ -44,7 +44,15 @@ namespace LeLeStore
         private const string AccountName = "CONG TY LELE";    // Tên chủ TK (không dấu càng tốt)
 
         // UI runtime cho QR
-        
+        // === THÊM ĐOẠN NÀY VÀO ===
+        // Static constructor - Chạy một lần duy nhất khi
+        // lớp này được sử dụng lần đầu tiên.
+        static formInHoaDon()
+        {
+            // Đăng ký font resolver trên toàn cục
+            PdfEmbeddedFontResolver.RegisterGlobal();
+        }
+        // === HẾT ĐOẠN THÊM ===
 
         public bool IsInvoiceSaved => _isSaved;
         public formInHoaDon() : this(new InvoiceSnapshot(Array.Empty<InvoiceLine>(), DateTime.Now, null, string.Empty))
@@ -538,7 +546,7 @@ namespace LeLeStore
 
         private void ExportInvoiceToPdf(string filePath)
         {
-            PdfEmbeddedFontResolver.RegisterGlobal();
+           
 
             var lines = _invoiceLines.ToList();
             var summary = CalculateFinancialSummary();
@@ -555,11 +563,11 @@ namespace LeLeStore
                 {
                     var fontOptions = new XPdfFontOptions(PdfFontEncoding.Unicode, PdfFontEmbedding.Always);
 
-                    var titleFont = new XFont(PdfEmbeddedFontResolver.FamilyName, 18, XFontStyle.Bold, fontOptions);
-                    var labelFont = new XFont(PdfEmbeddedFontResolver.FamilyName, 12, XFontStyle.Regular, fontOptions);
-                    var labelBoldFont = new XFont(PdfEmbeddedFontResolver.FamilyName, 12, XFontStyle.Bold, fontOptions);
-                    var tableHeaderFont = new XFont(PdfEmbeddedFontResolver.FamilyName, 11, XFontStyle.Bold, fontOptions);
-                    var tableCellFont = new XFont(PdfEmbeddedFontResolver.FamilyName, 11, XFontStyle.Regular, fontOptions);
+                    var titleFont = new XFont("DejaVuSans", 18, XFontStyle.Bold, fontOptions);
+                    var labelFont = new XFont("DejaVuSans", 12, XFontStyle.Regular, fontOptions);
+                    var labelBoldFont = new XFont("DejaVuSans", 12, XFontStyle.Bold, fontOptions);
+                    var tableHeaderFont = new XFont("DejaVuSans", 11, XFontStyle.Bold, fontOptions);
+                    var tableCellFont = new XFont("DejaVuSans", 11, XFontStyle.Regular, fontOptions);
 
 
                     const double margin = 50;

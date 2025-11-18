@@ -25,7 +25,57 @@ namespace LeLeStore
                 return string.IsNullOrWhiteSpace(Display) ? base.ToString() : Display;
             }
         }
+        private bool AskConfirm(string msg, MessageBoxIcon icon = MessageBoxIcon.Question)
+    => MessageBox.Show(msg, "Xác nhận", MessageBoxButtons.YesNo, icon) == DialogResult.Yes;
 
+        private void CommitUI()
+        {
+            Validate();
+            try { dataGridView1.EndEdit(); } catch { }
+            try { dataGridView2.EndEdit(); } catch { }
+            giaoDichBindingSource.EndEdit();
+            chiTietGiaoDichKhoBindingSource.EndEdit();
+        }
+
+        // Điều khiển 2-pha cho header
+        private void SetTransactionMode(EditMode m)
+        {
+            transactionMode = m;
+
+            bool canEdit = (m == EditMode.Add || m == EditMode.Edit);
+            txtMaGD.ReadOnly = true;
+            cbLoaiGD.Enabled = canEdit;
+            dateTimePicker1.Enabled = canEdit;
+            txtMaNCC.ReadOnly = !canEdit;
+            txtMaNV.ReadOnly = !canEdit;
+
+            btnThem.Enabled = (m != EditMode.Edit);
+            btnSua.Enabled = (m != EditMode.Add);
+            btnXoa.Enabled = (m == EditMode.None);
+            btnThem.Text = (m == EditMode.Add) ? "Lưu" : "Thêm";
+            btnSua.Text = (m == EditMode.Edit) ? "Lưu" : "Sửa";
+
+            // Khi đang Add/Edit header, chặn sửa/xóa chi tiết
+            btnThemCT.Enabled = btnSuaCT.Enabled = btnXoaCT.Enabled = (m == EditMode.None);
+        }
+
+        // Điều khiển 2-pha cho detail
+        private void SetDetailMode(EditMode m)
+        {
+            detailMode = m;
+
+            bool canEdit = (m == EditMode.Add || m == EditMode.Edit);
+            txtMaGD1.ReadOnly = !canEdit;
+            cbMaSP.Enabled = canEdit;
+            numericUpDown1.Enabled = canEdit;
+
+            btnThemCT.Text = (m == EditMode.Add) ? "Lưu CT" : "Thêm";
+            btnSuaCT.Text = (m == EditMode.Edit) ? "Lưu CT" : "Sửa";
+
+            // Khi đang Add/Edit detail, khóa header
+            bool lockHeader = (m != EditMode.None);
+            btnThem.Enabled = btnSua.Enabled = btnXoa.Enabled = !lockHeader;
+        }
         private enum EditMode
         {
             None,
@@ -258,271 +308,433 @@ namespace LeLeStore
 
         private void btnThem_Click(object sender, EventArgs e)
         {
-            transactionMode = EditMode.Add;
-            transactionEditingId = null;
-            transactionPendingChanges = false;
-            ClearTransactionInputs();
-            cbLoaiGD.Focus();
+            CommitUI();
+
+            if (transactionMode != EditMode.Add)
+            {
+                if (!AskConfirm("Bạn muốn tạo giao dịch kho mới?")) return;
+
+                SetTransactionMode(EditMode.Add);
+                ClearTransactionInputs();    // đã auto sinh MaGD mới
+                cbLoaiGD.Focus();
+                return;
+            }
+
+            // Pha LƯU
+            if (!TryGetTransactionValues(out string loaiGD, out DateTime ngayGD, out int? maNcc, out int maNV))
+                return;
+
+            if (!AskConfirm("Xác nhận lưu giao dịch mới?")) return;
+
+            try
+            {
+                // Tạo row mới
+                var newRow = gStoreDataSet.GiaoDichKho.NewGiaoDichKhoRow();
+                newRow.MaGD = int.Parse(txtMaGD.Text);
+                newRow.LoaiGD = loaiGD;
+                newRow.NgayGD = ngayGD;
+                if (maNcc.HasValue) newRow.MaNCC = maNcc.Value; else newRow.SetMaNCCNull();
+                newRow.MaNhanVien = maNV;
+
+                gStoreDataSet.GiaoDichKho.AddGiaoDichKhoRow(newRow);
+                giaoDichBindingSource.EndEdit();
+                giaoDichKhoTableAdapter.Update(gStoreDataSet.GiaoDichKho);
+
+                // Đồng bộ & focus dòng vừa thêm (theo MaGD)
+                int id = newRow.MaGD;
+                RefreshTransactions(false);
+                var rows = gStoreDataSet.GiaoDichKho.Select($"MaGD = {id}");
+                if (rows.Length > 0)
+                {
+                    int pos = gStoreDataSet.GiaoDichKho.Rows.IndexOf(rows[0]);
+                    if (pos >= 0) giaoDichBindingSource.Position = pos;
+                }
+
+                MessageBox.Show("Đã thêm giao dịch kho.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Không thể thêm giao dịch.\n" + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                SetTransactionMode(EditMode.None);
+            }
         }
 
         private void btnXoa_Click(object sender, EventArgs e)
         {
-            if (giaoDichBindingSource.Current is DataRowView view && view.Row is GStoreDataSet.GiaoDichKhoRow row && row.RowState != DataRowState.Deleted)
+            CommitUI();
+
+            var view = giaoDichBindingSource.Current as DataRowView;
+            if (view == null)
+            {
+                MessageBox.Show("Vui lòng chọn giao dịch cần xóa.", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            var row = view.Row as GStoreDataSet.GiaoDichKhoRow;
+            if (row == null || row.RowState == DataRowState.Deleted)
+            {
+                MessageBox.Show("Vui lòng chọn giao dịch cần xóa.", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            if (!AskConfirm("Bạn có chắc chắn muốn xóa giao dịch này?", MessageBoxIcon.Warning)) return;
+
+            int desiredPos = Math.Max(0, giaoDichBindingSource.Position - 1);
+
+            try
             {
                 view.Delete();
-                transactionPendingChanges = true;
-                transactionMode = EditMode.None;
-                transactionEditingId = null;
-                giaoDichBindingSource.ResetBindings(false);
+                giaoDichBindingSource.EndEdit();
+                giaoDichKhoTableAdapter.Update(gStoreDataSet.GiaoDichKho);
+
+                RefreshTransactions(false);
+                if (giaoDichBindingSource.Count > 0)
+                    giaoDichBindingSource.Position = Math.Min(desiredPos, giaoDichBindingSource.Count - 1);
+
+                MessageBox.Show("Đã xóa giao dịch.", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Vui lòng chọn giao dịch cần xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Không thể xóa giao dịch.\n" + ex.Message, "Lỗi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void btnSua_Click(object sender, EventArgs e)
         {
-            if (giaoDichBindingSource.Current is DataRowView view && view.Row is GStoreDataSet.GiaoDichKhoRow row && row.RowState != DataRowState.Deleted)
+            CommitUI();
+
+            var view = giaoDichBindingSource.Current as DataRowView;
+            if (view == null)
             {
-                transactionMode = EditMode.Edit;
-                transactionEditingId = row.MaGD;
-                PopulateTransactionInputs(row);
-            }
-            else
-            {
-                MessageBox.Show("Vui lòng chọn giao dịch cần sửa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-        }
-
-        private void btnLuu_Click(object sender, EventArgs e)
-        {
-            GStoreDataSet.GiaoDichKhoRow newRow = null;
-
-            if (transactionMode == EditMode.Add)
-            {
-                if (!TryGetTransactionValues(out string loaiGD, out DateTime ngayGD, out int? maNcc, out int maNhanVien))
-                {
-                    return;
-                }
-
-                newRow = gStoreDataSet.GiaoDichKho.NewGiaoDichKhoRow();
-                newRow.LoaiGD = loaiGD;
-                newRow.NgayGD = ngayGD;
-                if (maNcc.HasValue)
-                {
-                    newRow.MaNCC = maNcc.Value;
-                }
-                else
-                {
-                    newRow.SetMaNCCNull();
-                }
-
-                newRow.MaNhanVien = maNhanVien;
-                gStoreDataSet.GiaoDichKho.AddGiaoDichKhoRow(newRow);
-                transactionPendingChanges = true;
-            }
-            else if (transactionMode == EditMode.Edit)
-            {
-                if (!transactionEditingId.HasValue)
-                {
-                    MessageBox.Show("Không xác định được giao dịch cần sửa.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                if (!TryGetTransactionValues(out string loaiGD, out DateTime ngayGD, out int? maNcc, out int maNhanVien))
-                {
-                    return;
-                }
-
-                var existingRow = gStoreDataSet.GiaoDichKho.FindByMaGD(transactionEditingId.Value);
-                if (existingRow == null)
-                {
-                    MessageBox.Show("Không tìm thấy giao dịch để cập nhật.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                existingRow.LoaiGD = loaiGD;
-                existingRow.NgayGD = ngayGD;
-                if (maNcc.HasValue)
-                {
-                    existingRow.MaNCC = maNcc.Value;
-                }
-                else
-                {
-                    existingRow.SetMaNCCNull();
-                }
-
-                existingRow.MaNhanVien = maNhanVien;
-                transactionPendingChanges = true;
-            }
-
-            if (!transactionPendingChanges)
-            {
-                MessageBox.Show("Không có thay đổi để lưu.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Vui lòng chọn giao dịch cần sửa.", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
+            var row = view.Row as GStoreDataSet.GiaoDichKhoRow;
+            if (row == null || row.RowState == DataRowState.Deleted)
+            {
+                MessageBox.Show("Vui lòng chọn giao dịch cần sửa.", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            if (transactionMode != EditMode.Edit)
+            {
+                if (!AskConfirm("Bạn muốn sửa giao dịch này?")) return;
+
+                transactionEditingId = row.MaGD;
+                SetTransactionMode(EditMode.Edit);
+                PopulateTransactionInputs(row);
+                return;
+            }
+
+            if (!TryGetTransactionValues(out string loaiGD, out DateTime ngayGD, out int? maNcc, out int maNV))
+                return;
+
+            if (!AskConfirm("Xác nhận lưu thay đổi giao dịch?")) return;
+
             try
             {
+                row.LoaiGD = loaiGD;
+                row.NgayGD = ngayGD;
+                if (maNcc.HasValue) row.MaNCC = maNcc.Value; else row.SetMaNCCNull();
+                row.MaNhanVien = maNV;
+
                 giaoDichBindingSource.EndEdit();
-                int affected = giaoDichKhoTableAdapter.Update(gStoreDataSet.GiaoDichKho);
-                transactionPendingChanges = false;
-                transactionMode = EditMode.None;
-                transactionEditingId = null;
+                giaoDichKhoTableAdapter.Update(row); // không Fill
+                giaoDichBindingSource.ResetCurrentItem();
 
-                if (newRow != null)
-                {
-                    txtMaGD.Text = newRow.MaGD.ToString();
-                    suppressProductComboUpdate = true;
-                    txtMaGD1.Text = newRow.MaGD.ToString();
-                    suppressProductComboUpdate = false;
-                    UpdateProductComboBoxForTransaction(newRow.MaGD);
-                }
+                MessageBox.Show("Đã cập nhật giao dịch.", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                RefreshTransactions(false);
-                MessageBox.Show($"Đã lưu {affected} thay đổi giao dịch.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                UpdateProductComboBoxForTransaction(row.MaGD, GetSelectedProductId());
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lưu giao dịch thất bại.\nChi tiết: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Không thể cập nhật giao dịch.\n" + ex.Message, "Lỗi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                transactionEditingId = null;
+                SetTransactionMode(EditMode.None);
             }
         }
 
+     
+
         private void btnThemCT_Click(object sender, EventArgs e)
         {
-            detailMode = EditMode.Add;
-            detailEditingKey = null;
-            detailPendingChanges = false;
-            ClearDetailInputs();
+            CommitUI();
 
-            if (int.TryParse(txtMaGD.Text, out int maGd))
+            if (detailMode != EditMode.Add)
             {
-                suppressProductComboUpdate = true;
-                txtMaGD1.Text = maGd.ToString();
-                txtMaGD1.Text = maGd.ToString();
-                suppressProductComboUpdate = false;
-                UpdateProductComboBoxForTransaction(maGd);
-            }
-            else
-            {
-                UpdateProductComboBoxForTransaction(null);
+                if (!AskConfirm("Bạn muốn thêm chi tiết cho giao dịch?")) return;
+
+                SetDetailMode(EditMode.Add);
+                ClearDetailInputs();
+
+                // mặc định gán MaGD chi tiết theo MaGD header
+                if (int.TryParse(txtMaGD.Text, out int maGd))
+                {
+                    suppressProductComboUpdate = true;
+                    txtMaGD1.Text = maGd.ToString();
+                    suppressProductComboUpdate = false;
+                    UpdateProductComboBoxForTransaction(maGd);
+                }
+                else
+                {
+                    UpdateProductComboBoxForTransaction(null);
+                }
+                txtMaGD1.Focus();
+                return;
             }
 
-            txtMaGD1.Focus();
+            // Pha LƯU
+            if (!TryGetDetailValues(out int maGD, out int maSP, out int soLuong)) return;
+            if (!AskConfirm("Xác nhận lưu chi tiết giao dịch?")) return;
+
+            try
+            {
+                var newRow = gStoreDataSet.ChiTietGiaoDichKho.NewChiTietGiaoDichKhoRow();
+                newRow.MaGD = maGD;
+                newRow.MaSP = maSP;
+                newRow.SoLuong = soLuong;
+
+                gStoreDataSet.ChiTietGiaoDichKho.AddChiTietGiaoDichKhoRow(newRow);
+                chiTietGiaoDichKhoBindingSource.EndEdit();
+                chiTietGiaoDichKhoTableAdapter.Update(gStoreDataSet.ChiTietGiaoDichKho);
+
+                // Áp tồn kho từ thay đổi pending (ở DataSet hiện tại không còn pending, nhưng ta có thể tính incremental)
+                ApplyProductAdjustments(new List<(int MaSP, int Delta)> { (maSP, soLuong * InterpretTransactionSign(cbLoaiGD.Text)) });
+
+                RefreshDetails(false);
+                MessageBox.Show("Đã thêm chi tiết giao dịch.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Không thể thêm chi tiết.\n" + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                SetDetailMode(EditMode.None);
+            }
         }
 
         private void btnSuaCT_Click(object sender, EventArgs e)
         {
-            if (chiTietGiaoDichKhoBindingSource.Current is DataRowView view && view.Row is GStoreDataSet.ChiTietGiaoDichKhoRow row && row.RowState != DataRowState.Deleted)
+            CommitUI();
+
+            var view = chiTietGiaoDichKhoBindingSource.Current as DataRowView;
+            if (view == null)
             {
-                detailMode = EditMode.Edit;
-                detailEditingKey = (row.MaGD, row.MaSP);
-                PopulateDetailInputs(row);
-            }
-            else
-            {
-                MessageBox.Show("Vui lòng chọn chi tiết giao dịch cần sửa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-        }
-
-        private void btnXoaCT_Click(object sender, EventArgs e)
-        {
-            if (chiTietGiaoDichKhoBindingSource.Current is DataRowView view && view.Row is GStoreDataSet.ChiTietGiaoDichKhoRow row && row.RowState != DataRowState.Deleted)
-            {
-                view.Delete();
-                detailPendingChanges = true;
-                detailMode = EditMode.None;
-                detailEditingKey = null;
-                chiTietGiaoDichKhoBindingSource.ResetBindings(false);
-            }
-            else
-            {
-                MessageBox.Show("Vui lòng chọn chi tiết giao dịch cần xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-        }
-
-        private void btnLuuCT_Click(object sender, EventArgs e)
-        {
-          
-            if (detailMode != EditMode.None)
-            {
-                if (!TryGetDetailValues(out int maGd, out int maSp, out int soLuong))
-                {
-                    return;
-                }
-
-                if (detailMode == EditMode.Add)
-                {
-                    var existing = gStoreDataSet.ChiTietGiaoDichKho.FindByMaGDMaSP(maGd, maSp);
-                    if (existing != null && existing.RowState != DataRowState.Deleted)
-                    {
-                        MessageBox.Show("Chi tiết giao dịch đã tồn tại.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
-                    }
-
-                    var newRow = gStoreDataSet.ChiTietGiaoDichKho.NewChiTietGiaoDichKhoRow();
-                    newRow.MaGD = maGd;
-                    newRow.MaSP = maSp;
-                    newRow.SoLuong = soLuong;
-                    gStoreDataSet.ChiTietGiaoDichKho.AddChiTietGiaoDichKhoRow(newRow);
-                    detailPendingChanges = true;
-                   
-                }
-                else if (detailMode == EditMode.Edit)
-                {
-                    if (!detailEditingKey.HasValue)
-                    {
-                        MessageBox.Show("Không xác định được chi tiết cần sửa.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
-
-                    var row = gStoreDataSet.ChiTietGiaoDichKho.FindByMaGDMaSP(detailEditingKey.Value.MaGD, detailEditingKey.Value.MaSP);
-                    if (row == null)
-                    {
-                        MessageBox.Show("Không tìm thấy chi tiết giao dịch để cập nhật.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
-
-                    var duplicate = gStoreDataSet.ChiTietGiaoDichKho.FindByMaGDMaSP(maGd, maSp);
-                    if (duplicate != null && duplicate != row && duplicate.RowState != DataRowState.Deleted)
-                    {
-                        MessageBox.Show("Chi tiết giao dịch với mã này đã tồn tại.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
-                    }
-                    int originalMaSp = row.MaSP;
-                    int originalQuantity = row.SoLuong;
-                    row.MaGD = maGd;
-                    row.MaSP = maSp;
-                    row.SoLuong = soLuong;
-                    detailPendingChanges = true;
-                   
-                }
-            }
-
-            if (!detailPendingChanges)
-            {
-                MessageBox.Show("Không có thay đổi để lưu.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Vui lòng chọn chi tiết giao dịch cần sửa.", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
+            var row = view.Row as GStoreDataSet.ChiTietGiaoDichKhoRow;
+            if (row == null || row.RowState == DataRowState.Deleted)
+            {
+                MessageBox.Show("Vui lòng chọn chi tiết giao dịch cần sửa.", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            // Pha 1: vào chế độ sửa
+            if (detailMode != EditMode.Edit)
+            {
+                if (!AskConfirm("Bạn muốn sửa chi tiết giao dịch này?")) return;
+
+                detailEditingKey = (row.MaGD, row.MaSP);
+                SetDetailMode(EditMode.Edit);
+                PopulateDetailInputs(row);
+                return;
+            }
+
+            // Pha 2: LƯU
+            if (!TryGetDetailValues(out int newMaGD, out int newMaSP, out int newSoLuong)) return;
+            if (!AskConfirm("Xác nhận lưu thay đổi chi tiết giao dịch?")) return;
+
             try
             {
-                chiTietGiaoDichKhoBindingSource.EndEdit();
-                var productAdjustments = CalculateProductAdjustmentsFromPendingChanges();
-                int affected = chiTietGiaoDichKhoTableAdapter.Update(gStoreDataSet.ChiTietGiaoDichKho);
-                ApplyProductAdjustments(productAdjustments);
-                detailPendingChanges = false;
-                detailMode = EditMode.None;
-                detailEditingKey = null;
-                RefreshDetails(false);
-                MessageBox.Show($"Đã lưu {affected} thay đổi chi tiết giao dịch.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                // Giá trị cũ (để tính chênh lệch và thay thế nếu đổi khóa)
+                int oldMaGD = (int)row["MaGD", DataRowVersion.Original];
+                int oldMaSP = (int)row["MaSP", DataRowVersion.Original];
+                int oldSL = (int)row["SoLuong", DataRowVersion.Original];
+
+                bool keyChanged = (oldMaGD != newMaGD) || (oldMaSP != newMaSP);
+
+                // Tính sign cũ/mới theo loại GD
+                int oldSign = GetTransactionQuantitySign(oldMaGD, DataRowVersion.Original);
+                if (oldSign == 0) oldSign = InterpretTransactionSign(cbLoaiGD.Text);
+
+                int newSign = GetTransactionQuantitySign(newMaGD, DataRowVersion.Current);
+                if (newSign == 0) newSign = InterpretTransactionSign(cbLoaiGD.Text);
+
+                // Nếu có đổi khóa, cần thay thế hàng
+                if (keyChanged)
+                {
+                    // Tránh trùng khóa (MaGD, MaSP) mới
+                    if (DetailExists(newMaGD, newMaSP))
+                    {
+                        MessageBox.Show("Chi tiết với cặp (MaGD, MaSP) mới đã tồn tại. Vui lòng chọn khóa khác.",
+                            "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    // Điều chỉnh tồn kho: hoàn tác số cũ, áp số mới
+                    var deltas = new List<(int MaSP, int Delta)>
+            {
+                (oldMaSP, -oldSL * oldSign),
+                (newMaSP,  newSoLuong * newSign)
+            };
+                    ApplyProductAdjustments(deltas);
+
+                    // Thay thế hàng trong DataSet
+                    // 1) Xóa hàng cũ
+                    var oldView = chiTietGiaoDichKhoBindingSource.Current as DataRowView; // vẫn là view hiện tại
+                    oldView.Delete();
+
+                    // 2) Thêm hàng mới
+                    var newRow = gStoreDataSet.ChiTietGiaoDichKho.NewChiTietGiaoDichKhoRow();
+                    newRow.MaGD = newMaGD;
+                    newRow.MaSP = newMaSP;
+                    newRow.SoLuong = newSoLuong;
+                    gStoreDataSet.ChiTietGiaoDichKho.AddChiTietGiaoDichKhoRow(newRow);
+
+                    // Cập nhật DB
+                    chiTietGiaoDichKhoBindingSource.EndEdit();
+                    // (tuỳ cấu hình, có thể hữu ích)
+                    try { chiTietGiaoDichKhoTableAdapter.Adapter.AcceptChangesDuringUpdate = true; } catch { }
+                    chiTietGiaoDichKhoTableAdapter.Update(gStoreDataSet.ChiTietGiaoDichKho);
+
+                    // Làm mới lưới & giữ vị trí gần kề
+                    RefreshDetails(false);
+                }
+                else
+                {
+                    // Không đổi khóa -> cập nhật trực tiếp
+                    // Điều chỉnh tồn kho theo chênh lệch số lượng
+                    int deltaSL = newSoLuong - oldSL;
+                    if (deltaSL != 0)
+                    {
+                        ApplyProductAdjustments(new List<(int MaSP, int Delta)> { (newMaSP, deltaSL * newSign) });
+                    }
+
+                    // Cập nhật row
+                    row.SoLuong = newSoLuong;
+                    // (nếu muốn cho phép sửa MaGD/MaSP mà không đổi, gán lại để chắc chắn)
+                    row.MaGD = newMaGD;
+                    row.MaSP = newMaSP;
+
+                    chiTietGiaoDichKhoBindingSource.EndEdit();
+                    chiTietGiaoDichKhoTableAdapter.Update(row);   // không Fill để giữ vị trí
+                    chiTietGiaoDichKhoBindingSource.ResetCurrentItem();
+                }
+
+                MessageBox.Show("Đã cập nhật chi tiết giao dịch.", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lưu chi tiết giao dịch thất bại.\nChi tiết: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Không thể cập nhật chi tiết.\n" + ex.Message, "Lỗi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                detailEditingKey = null;
+                SetDetailMode(EditMode.None);
             }
         }
+
+        private bool DetailExists(int maGD, int maSP)
+        {
+            try
+            {
+                // Nếu DataTable có composite PK được cấu hình trong Typed DataSet:
+                var found = gStoreDataSet.ChiTietGiaoDichKho.FindByMaGDMaSP(maGD, maSP);
+                if (found != null && found.RowState != DataRowState.Deleted) return true;
+                return false;
+            }
+            catch
+            {
+                // Fallback LINQ nếu không có FindBy...
+                return gStoreDataSet.ChiTietGiaoDichKho.Any(r =>
+                    r.RowState != DataRowState.Deleted &&
+                    r.MaGD == maGD && r.MaSP == maSP);
+            }
+        }
+
+
+        private void btnXoaCT_Click(object sender, EventArgs e)
+        {
+            CommitUI();
+
+            var view = chiTietGiaoDichKhoBindingSource.Current as DataRowView;
+            if (view == null)
+            {
+                MessageBox.Show("Vui lòng chọn chi tiết giao dịch cần xóa.", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            var row = view.Row as GStoreDataSet.ChiTietGiaoDichKhoRow;
+            if (row == null || row.RowState == DataRowState.Deleted)
+            {
+                MessageBox.Show("Vui lòng chọn chi tiết giao dịch cần xóa.", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            if (!AskConfirm("Bạn có chắc chắn muốn xóa chi tiết này?", MessageBoxIcon.Warning)) return;
+
+            // Lưu vị trí mong muốn sau khi xóa (dịch về trước 1 dòng)
+
+            int desiredPos = Math.Max(0, chiTietGiaoDichKhoBindingSource.Position - 1);
+
+            try
+            {
+                // Lấy dữ liệu trước khi xóa để điều chỉnh tồn kho
+                int maGD = row.MaGD;
+                int maSP = row.MaSP;
+                int sl = row.SoLuong;
+                int sign = GetTransactionQuantitySign(maGD, DataRowVersion.Current);
+                if (sign == 0) sign = InterpretTransactionSign(cbLoaiGD.Text);
+
+                // Điều chỉnh tồn kho ngược lại lượng đã nhập/xuất
+                ApplyProductAdjustments(new List<(int MaSP, int Delta)> { (maSP, -sl * sign) });
+
+                // Xóa & cập nhật DB
+                view.Delete();
+                chiTietGiaoDichKhoBindingSource.EndEdit();
+                chiTietGiaoDichKhoTableAdapter.Update(gStoreDataSet.ChiTietGiaoDichKho);
+
+                // Refresh + khôi phục vị trí “gần kề”
+                RefreshDetails(false);
+                if (chiTietGiaoDichKhoBindingSource.Count > 0)
+                    chiTietGiaoDichKhoBindingSource.Position =
+                        Math.Min(desiredPos, chiTietGiaoDichKhoBindingSource.Count - 1);
+
+                MessageBox.Show("Đã xóa chi tiết giao dịch.", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Không thể xóa chi tiết.\n" + ex.Message, "Lỗi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+      
         private void ClearTransactionInputs()
         {
             txtMaGD.Clear();
@@ -890,12 +1102,15 @@ namespace LeLeStore
 
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
-            if (giaoDichBindingSource.Current is DataRowView view && view.Row is GStoreDataSet.GiaoDichKhoRow row && row.RowState != DataRowState.Deleted)
+            if (transactionMode == EditMode.Add || transactionMode == EditMode.Edit) return;
+
+            if (giaoDichBindingSource.Current is DataRowView view &&
+                view.Row is GStoreDataSet.GiaoDichKhoRow row &&
+                row.RowState != DataRowState.Deleted)
             {
                 PopulateTransactionInputs(row);
                 int? selectedProductId = GetSelectedProductId();
-                int? targetTransactionId = detailMode != EditMode.Add ? row.MaGD : GetCurrentDetailTransactionId();
-
+                int? targetTransactionId = (detailMode != EditMode.Add) ? row.MaGD : GetCurrentDetailTransactionId();
 
                 if (detailMode != EditMode.Add)
                 {
@@ -905,17 +1120,18 @@ namespace LeLeStore
                     targetTransactionId = row.MaGD;
                 }
 
-                if (!targetTransactionId.HasValue)
-                {
-                    targetTransactionId = row.MaGD;
-                }
+                if (!targetTransactionId.HasValue) targetTransactionId = row.MaGD;
                 UpdateProductComboBoxForTransaction(targetTransactionId, selectedProductId);
             }
         }
 
         private void dataGridView2_SelectionChanged(object sender, EventArgs e)
         {
-            if (chiTietGiaoDichKhoBindingSource.Current is DataRowView view && view.Row is GStoreDataSet.ChiTietGiaoDichKhoRow row && row.RowState != DataRowState.Deleted)
+            if (detailMode == EditMode.Add || detailMode == EditMode.Edit) return;
+
+            if (chiTietGiaoDichKhoBindingSource.Current is DataRowView view &&
+                view.Row is GStoreDataSet.ChiTietGiaoDichKhoRow row &&
+                row.RowState != DataRowState.Deleted)
             {
                 PopulateDetailInputs(row);
             }
@@ -928,6 +1144,143 @@ namespace LeLeStore
                 return;
             }
 
+            UpdateProductComboBoxForTransaction(GetCurrentDetailTransactionId(), GetSelectedProductId());
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+        // ======= CANCEL / RESTORE HELPERS =======
+        private void CancelTransactionPendingEdits()
+        {
+            try { Validate(); } catch { }
+            try { dataGridView1.CancelEdit(); } catch { }
+            try { giaoDichBindingSource.CancelEdit(); } catch { }
+            try { gStoreDataSet.GiaoDichKho.RejectChanges(); } catch { }
+        }
+
+        private void CancelDetailPendingEdits()
+        {
+            try { Validate(); } catch { }
+            try { dataGridView2.CancelEdit(); } catch { }
+            try { chiTietGiaoDichKhoBindingSource.CancelEdit(); } catch { }
+            try { gStoreDataSet.ChiTietGiaoDichKho.RejectChanges(); } catch { }
+        }
+
+        private void RestoreTransactionInputs(int? focusMaGD = null)
+        {
+            // Nếu có MaGD cần focus -> di chuyển con trỏ tới đúng dòng
+            if (focusMaGD.HasValue)
+            {
+                var rows = gStoreDataSet.GiaoDichKho.Select($"MaGD = {focusMaGD.Value}");
+                if (rows.Length > 0)
+                {
+                    int pos = gStoreDataSet.GiaoDichKho.Rows.IndexOf(rows[0]);
+                    if (pos >= 0) giaoDichBindingSource.Position = pos;
+                }
+            }
+
+            // Cập nhật khu nhập theo selection hiện tại
+            if (giaoDichBindingSource.Current is DataRowView v &&
+                v.Row is GStoreDataSet.GiaoDichKhoRow row &&
+                row.RowState != DataRowState.Deleted)
+            {
+                PopulateTransactionInputs(row);
+
+                // Giữ lựa chọn sản phẩm nếu có
+                int? selectedProductId = GetSelectedProductId();
+                int? targetTransactionId = (detailMode != EditMode.Add) ? row.MaGD : GetCurrentDetailTransactionId();
+                if (!targetTransactionId.HasValue) targetTransactionId = row.MaGD;
+                UpdateProductComboBoxForTransaction(targetTransactionId, selectedProductId);
+            }
+            else
+            {
+                ClearTransactionInputs();
+            }
+
+            try { giaoDichBindingSource.ResetCurrentItem(); } catch { }
+        }
+
+        private void RestoreDetailInputs((int MaGD, int MaSP)? focusKey = null)
+        {
+            if (focusKey.HasValue)
+            {
+                // Dò lại dòng detail theo khóa ghép
+                foreach (DataRowView rv in chiTietGiaoDichKhoBindingSource)
+                {
+                    var r = rv.Row as GStoreDataSet.ChiTietGiaoDichKhoRow;
+                    if (r != null && r.RowState != DataRowState.Deleted &&
+                        r.MaGD == focusKey.Value.MaGD && r.MaSP == focusKey.Value.MaSP)
+                    {
+                        chiTietGiaoDichKhoBindingSource.Position = chiTietGiaoDichKhoBindingSource.IndexOf(rv);
+                        break;
+                    }
+                }
+            }
+
+            if (chiTietGiaoDichKhoBindingSource.Current is DataRowView v &&
+                v.Row is GStoreDataSet.ChiTietGiaoDichKhoRow row &&
+                row.RowState != DataRowState.Deleted)
+            {
+                PopulateDetailInputs(row);
+            }
+            else
+            {
+                ClearDetailInputs();
+            }
+
+            try { chiTietGiaoDichKhoBindingSource.ResetCurrentItem(); } catch { }
+        }
+
+        private void btnHuy_Click(object sender, EventArgs e)
+        {
+            // Nếu đang không ở chế độ Add/Edit thì chỉ làm tươi lại inputs
+            if (transactionMode == EditMode.None)
+            {
+                RestoreTransactionInputs(transactionEditingId);
+                return;
+            }
+
+            if (!AskConfirm("Hủy các thay đổi giao dịch đang thực hiện?")) return;
+
+            // Rollback mọi chỉnh sửa chưa lưu của header
+            CancelTransactionPendingEdits();
+
+            // Trả UI về trạng thái bình thường
+            SetTransactionMode(EditMode.None);
+
+            // Khôi phục nhập liệu theo selection (ưu tiên quay về đúng giao dịch đang sửa dở)
+            RestoreTransactionInputs(transactionEditingId);
+
+            // Xóa dấu vết phiên sửa
+            transactionEditingId = null;
+        }
+
+        private void btnHuyCT_Click(object sender, EventArgs e)
+        {
+            // Nếu không ở chế độ Add/Edit detail thì chỉ làm tươi lại inputs
+            if (detailMode == EditMode.None)
+            {
+                RestoreDetailInputs(detailEditingKey);
+                return;
+            }
+
+            if (!AskConfirm("Hủy các thay đổi chi tiết giao dịch đang thực hiện?")) return;
+
+            // Rollback mọi chỉnh sửa chưa lưu của detail
+            CancelDetailPendingEdits();
+
+            // Trả UI về trạng thái bình thường
+            SetDetailMode(EditMode.None);
+
+            // Khôi phục nhập liệu (ưu tiên khóa đang sửa dở nếu còn tồn tại)
+            RestoreDetailInputs(detailEditingKey);
+
+            // Clear key đang sửa
+            detailEditingKey = null;
+
+            // Đồng bộ lại combobox sản phẩm theo MaGD hiện tại ở khu detail
             UpdateProductComboBoxForTransaction(GetCurrentDetailTransactionId(), GetSelectedProductId());
         }
     }
