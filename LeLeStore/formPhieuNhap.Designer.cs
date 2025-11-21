@@ -35,7 +35,6 @@
             this.cbLoaiGD = new System.Windows.Forms.ComboBox();
             this.txtMaNV = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.txtMaNCC = new System.Windows.Forms.TextBox();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -66,6 +65,7 @@
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.btnHuy = new ReaLTaiizor.Controls.Button();
             this.btnHuyCT = new ReaLTaiizor.Controls.Button();
+            this.cboMaNCC = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -98,10 +98,10 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.cboMaNCC);
             this.groupBox1.Controls.Add(this.cbLoaiGD);
             this.groupBox1.Controls.Add(this.txtMaNV);
             this.groupBox1.Controls.Add(this.label6);
-            this.groupBox1.Controls.Add(this.txtMaNCC);
             this.groupBox1.Controls.Add(this.dateTimePicker1);
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.label4);
@@ -141,14 +141,6 @@
             this.label6.Size = new System.Drawing.Size(147, 24);
             this.label6.TabIndex = 6;
             this.label6.Text = "Mã Nhân Viên:";
-            // 
-            // txtMaNCC
-            // 
-            this.txtMaNCC.Location = new System.Drawing.Point(697, 143);
-            this.txtMaNCC.Name = "txtMaNCC";
-            this.txtMaNCC.Size = new System.Drawing.Size(84, 30);
-            this.txtMaNCC.TabIndex = 4;
-            this.txtMaNCC.TextChanged += new System.EventHandler(this.txtMaNCC_TextChanged);
             // 
             // dateTimePicker1
             // 
@@ -523,6 +515,14 @@
             this.btnHuyCT.TextAlignment = System.Drawing.StringAlignment.Center;
             this.btnHuyCT.Click += new System.EventHandler(this.btnHuyCT_Click);
             // 
+            // cboMaNCC
+            // 
+            this.cboMaNCC.FormattingEnabled = true;
+            this.cboMaNCC.Location = new System.Drawing.Point(691, 147);
+            this.cboMaNCC.Name = "cboMaNCC";
+            this.cboMaNCC.Size = new System.Drawing.Size(189, 32);
+            this.cboMaNCC.TabIndex = 20;
+            // 
             // formPhieuNhap
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -568,7 +568,6 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox txtMaNV;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox txtMaNCC;
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
@@ -600,5 +599,6 @@
         private System.Windows.Forms.ComboBox cbMaSP;
         private ReaLTaiizor.Controls.Button btnHuy;
         private ReaLTaiizor.Controls.Button btnHuyCT;
+        private System.Windows.Forms.ComboBox cboMaNCC;
     }
 }

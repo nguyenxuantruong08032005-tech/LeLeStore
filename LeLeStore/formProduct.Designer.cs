@@ -489,7 +489,7 @@
             this.cboNCC.FormattingEnabled = true;
             this.cboNCC.Location = new System.Drawing.Point(767, 210);
             this.cboNCC.Name = "cboNCC";
-            this.cboNCC.Size = new System.Drawing.Size(216, 28);
+            this.cboNCC.Size = new System.Drawing.Size(226, 28);
             this.cboNCC.TabIndex = 55;
             // 
             // cboMDV
