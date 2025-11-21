@@ -16,6 +16,16 @@ namespace LeLeStore
         private readonly NhaCungCapTableAdapter nhaCungCapTableAdapter = new NhaCungCapTableAdapter();
         private readonly SanPhamTableAdapter sanPhamTableAdapter = new SanPhamTableAdapter();
         private readonly BindingSource giaoDichBindingSource = new BindingSource();
+
+        private class SupplierComboItem
+        {
+            public int MaNCC { get; set; }
+            public string Display { get; set; }
+            public override string ToString()
+            {
+                return string.IsNullOrWhiteSpace(Display) ? base.ToString() : Display;
+            }
+        }
         private class ProductComboItem
         {
             public int MaSP { get; set; }
@@ -46,7 +56,7 @@ namespace LeLeStore
             txtMaGD.ReadOnly = true;
             cbLoaiGD.Enabled = canEdit;
             dateTimePicker1.Enabled = canEdit;
-            txtMaNCC.ReadOnly = !canEdit;
+            cboMaNCC.Enabled = canEdit;
             txtMaNV.ReadOnly = !canEdit;
 
             btnThem.Enabled = (m != EditMode.Edit);
@@ -117,9 +127,12 @@ namespace LeLeStore
             cbMaSP.DropDownStyle = ComboBoxStyle.DropDownList;
             cbMaSP.DisplayMember = nameof(ProductComboItem.Display);
             cbMaSP.ValueMember = nameof(ProductComboItem.MaSP);
+            cboMaNCC.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboMaNCC.DisplayMember = nameof(SupplierComboItem.Display);
+            cboMaNCC.ValueMember = nameof(SupplierComboItem.MaNCC);
 
             txtMaGD1.TextChanged += txtMaGD1_TextChanged;
-            txtMaNCC.TextChanged += txtMaNCC_TextChanged;
+            cboMaNCC.SelectedIndexChanged += cboMaNCC_SelectedIndexChanged;
 
 
         }
@@ -146,6 +159,7 @@ namespace LeLeStore
             ExecuteSafely(() => giaoDichKhoTableAdapter.Fill(gStoreDataSet.GiaoDichKho), "Không thể tải dữ liệu giao dịch kho");
             ExecuteSafely(() => chiTietGiaoDichKhoTableAdapter.Fill(gStoreDataSet.ChiTietGiaoDichKho), "Không thể tải dữ liệu chi tiết giao dịch");
             EnsureLookupDataLoaded();
+            PopulateSupplierComboBox();
         }
 
         private void EnsureLookupDataLoaded()
@@ -175,10 +189,7 @@ namespace LeLeStore
             }
             if (!supplierId.HasValue)
             {
-                if (int.TryParse(txtMaNCC.Text.Trim(), out int parsedSupplierId))
-                {
-                    supplierId = parsedSupplierId;
-                }
+                supplierId = GetSelectedSupplierId();
             }
             var items = gStoreDataSet.SanPham
                 .Where(row => row.RowState != DataRowState.Deleted)
@@ -204,7 +215,53 @@ namespace LeLeStore
                 cbMaSP.SelectedIndex = 0;
             }
         }
+        private void PopulateSupplierComboBox(int? selectedSupplierId = null)
+        {
+            EnsureLookupDataLoaded();
 
+            var items = gStoreDataSet.NhaCungCap
+                .Where(row => row.RowState != DataRowState.Deleted)
+                .Select(row => new SupplierComboItem
+                {
+                    MaNCC = row.MaNCC,
+                    Display = $"{row.MaNCC} - {row.TenNCC}"
+                })
+                .OrderBy(item => item.MaNCC)
+                .ToList();
+
+            cboMaNCC.DataSource = null;
+            cboMaNCC.DataSource = items;
+            cboMaNCC.SelectedIndex = -1;
+
+            if (selectedSupplierId.HasValue && items.Any(item => item.MaNCC == selectedSupplierId.Value))
+            {
+                cboMaNCC.SelectedValue = selectedSupplierId.Value;
+            }
+            else if (items.Count == 1)
+            {
+                cboMaNCC.SelectedIndex = 0;
+            }
+        }
+
+        private int? GetSelectedSupplierId()
+        {
+            if (cboMaNCC.SelectedValue is int selectedValue)
+            {
+                return selectedValue;
+            }
+
+            if (cboMaNCC.SelectedItem is SupplierComboItem item)
+            {
+                return item.MaNCC;
+            }
+
+            if (!string.IsNullOrWhiteSpace(cboMaNCC.Text) && int.TryParse(cboMaNCC.Text.Trim(), out int parsedValue))
+            {
+                return parsedValue;
+            }
+
+            return null;
+        }
         private int? GetCurrentDetailTransactionId()
         {
             if (int.TryParse(txtMaGD1.Text.Trim(), out int maGd))
@@ -285,7 +342,7 @@ namespace LeLeStore
             var supplier = gStoreDataSet.NhaCungCap.FirstOrDefault(row => row.TenNCC.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0);
             if (supplier != null)
             {
-                txtMaNCC.Text = supplier.MaNCC.ToString();
+                PopulateSupplierComboBox(supplier.MaNCC);
                 hasResult = true;
             }
 
@@ -740,7 +797,7 @@ namespace LeLeStore
             txtMaGD.Clear();
             cbLoaiGD.SelectedIndex = -1;
             dateTimePicker1.Value = DateTime.Now;
-            txtMaNCC.Clear();
+            cboMaNCC.SelectedIndex = -1;
             txtMaNV.Clear();
             txtMaGD.Text = GenerateNextTransactionId().ToString();
             if (detailMode != EditMode.Add)
@@ -770,7 +827,7 @@ namespace LeLeStore
             EnsureLoaiGiaoDichItem(row.LoaiGD);
             cbLoaiGD.SelectedItem = row.LoaiGD;
             dateTimePicker1.Value = row.NgayGD;
-            txtMaNCC.Text = row.IsMaNCCNull() ? string.Empty : row.MaNCC.ToString();
+            PopulateSupplierComboBox(row.IsMaNCCNull() ? null : (int?)row.MaNCC);
             txtMaNV.Text = row.MaNhanVien.ToString();
         }
         private void EnsureLoaiGiaoDichItem(string loaiGiaoDich)
@@ -800,20 +857,7 @@ namespace LeLeStore
 
             ngayGD = dateTimePicker1.Value;
 
-            maNcc = null;
-            if (!string.IsNullOrWhiteSpace(txtMaNCC.Text))
-            {
-                if (int.TryParse(txtMaNCC.Text.Trim(), out int parsedMaNcc))
-                {
-                    maNcc = parsedMaNcc;
-                }
-                else
-                {
-                    MessageBox.Show("Mã nhà cung cấp không hợp lệ.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    maNhanVien = 0;
-                    return false;
-                }
-            }
+            maNcc = GetSelectedSupplierId();
 
             if (!int.TryParse(txtMaNV.Text.Trim(), out maNhanVien))
             {
@@ -1137,7 +1181,7 @@ namespace LeLeStore
             }
         }
 
-        private void txtMaNCC_TextChanged(object sender, EventArgs e)
+        private void cboMaNCC_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (suppressProductComboUpdate)
             {

@@ -175,7 +175,7 @@
             this.btnSearch.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnSearch.Size = new System.Drawing.Size(138, 47);
             this.btnSearch.TabIndex = 1;
-            this.btnSearch.Text = "       Tìm kiếm";
+            this.btnSearch.Text = "     Tìm kiếm";
             this.btnSearch.TextAlignment = System.Drawing.StringAlignment.Center;
             this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 

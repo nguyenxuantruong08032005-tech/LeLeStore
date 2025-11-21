@@ -111,7 +111,7 @@
             this.groupBox1.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
             this.groupBox1.Location = new System.Drawing.Point(23, 62);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(1311, 179);
+            this.groupBox1.Size = new System.Drawing.Size(1311, 192);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Giao Dịch";
@@ -197,7 +197,7 @@
             this.btnThem.Image = null;
             this.btnThem.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnThem.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnThem.Location = new System.Drawing.Point(299, 403);
+            this.btnThem.Location = new System.Drawing.Point(299, 416);
             this.btnThem.Name = "btnThem";
             this.btnThem.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnThem.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -210,7 +210,7 @@
             // dataGridView1
             // 
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(214, 247);
+            this.dataGridView1.Location = new System.Drawing.Point(214, 260);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 62;
             this.dataGridView1.RowTemplate.Height = 28;
@@ -230,7 +230,7 @@
             this.btnXoa.Image = null;
             this.btnXoa.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnXoa.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnXoa.Location = new System.Drawing.Point(492, 403);
+            this.btnXoa.Location = new System.Drawing.Point(492, 416);
             this.btnXoa.Name = "btnXoa";
             this.btnXoa.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnXoa.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -251,7 +251,7 @@
             this.btnSua.Image = null;
             this.btnSua.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnSua.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnSua.Location = new System.Drawing.Point(670, 403);
+            this.btnSua.Location = new System.Drawing.Point(670, 416);
             this.btnSua.Name = "btnSua";
             this.btnSua.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnSua.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -484,7 +484,7 @@
             this.btnHuy.Image = null;
             this.btnHuy.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnHuy.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnHuy.Location = new System.Drawing.Point(851, 403);
+            this.btnHuy.Location = new System.Drawing.Point(851, 416);
             this.btnHuy.Name = "btnHuy";
             this.btnHuy.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnHuy.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -520,7 +520,7 @@
             this.cboMaNCC.FormattingEnabled = true;
             this.cboMaNCC.Location = new System.Drawing.Point(691, 147);
             this.cboMaNCC.Name = "cboMaNCC";
-            this.cboMaNCC.Size = new System.Drawing.Size(189, 32);
+            this.cboMaNCC.Size = new System.Drawing.Size(330, 32);
             this.cboMaNCC.TabIndex = 20;
             // 
             // formPhieuNhap
