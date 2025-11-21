@@ -46,7 +46,6 @@
             this.sanPhamTableAdapter = new LeLeStore.GStoreDataSetTableAdapters.SanPhamTableAdapter();
             this.txtHSD = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.txtMLoai = new System.Windows.Forms.TextBox();
             this.txtDG = new System.Windows.Forms.TextBox();
             this.txtTenSP = new System.Windows.Forms.TextBox();
             this.txtMaSP = new System.Windows.Forms.TextBox();
@@ -56,9 +55,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
-            this.txtMDV = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
-            this.txtNCC = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.txtMaNV = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
@@ -71,6 +68,9 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.btnHuy = new ReaLTaiizor.Controls.Button();
+            this.cboMLoai = new System.Windows.Forms.ComboBox();
+            this.cboNCC = new System.Windows.Forms.ComboBox();
+            this.cboMDV = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sanPhamBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gStoreDataSet)).BeginInit();
@@ -228,13 +228,6 @@
             this.label6.TabIndex = 35;
             this.label6.Text = "Hạn Sử Dụng:";
             // 
-            // txtMLoai
-            // 
-            this.txtMLoai.Location = new System.Drawing.Point(542, 206);
-            this.txtMLoai.Name = "txtMLoai";
-            this.txtMLoai.Size = new System.Drawing.Size(214, 26);
-            this.txtMLoai.TabIndex = 34;
-            // 
             // txtDG
             // 
             this.txtDG.Location = new System.Drawing.Point(300, 129);
@@ -319,35 +312,21 @@
             this.label7.TabIndex = 38;
             this.label7.Text = "Mã Loại:";
             // 
-            // txtMDV
-            // 
-            this.txtMDV.Location = new System.Drawing.Point(819, 129);
-            this.txtMDV.Name = "txtMDV";
-            this.txtMDV.Size = new System.Drawing.Size(164, 26);
-            this.txtMDV.TabIndex = 40;
-            // 
             // label8
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.label8.Location = new System.Drawing.Point(815, 102);
+            this.label8.Location = new System.Drawing.Point(763, 102);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(115, 24);
             this.label8.TabIndex = 39;
             this.label8.Text = "Mã Đơn Vị:";
             // 
-            // txtNCC
-            // 
-            this.txtNCC.Location = new System.Drawing.Point(819, 206);
-            this.txtNCC.Name = "txtNCC";
-            this.txtNCC.Size = new System.Drawing.Size(164, 26);
-            this.txtNCC.TabIndex = 41;
-            // 
             // label9
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.label9.Location = new System.Drawing.Point(815, 178);
+            this.label9.Location = new System.Drawing.Point(763, 180);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(187, 24);
             this.label9.TabIndex = 42;
@@ -497,11 +476,38 @@
             this.btnHuy.TextAlignment = System.Drawing.StringAlignment.Center;
             this.btnHuy.Click += new System.EventHandler(this.btnHuy_Click);
             // 
+            // cboMLoai
+            // 
+            this.cboMLoai.FormattingEnabled = true;
+            this.cboMLoai.Location = new System.Drawing.Point(542, 210);
+            this.cboMLoai.Name = "cboMLoai";
+            this.cboMLoai.Size = new System.Drawing.Size(155, 28);
+            this.cboMLoai.TabIndex = 54;
+            // 
+            // cboNCC
+            // 
+            this.cboNCC.FormattingEnabled = true;
+            this.cboNCC.Location = new System.Drawing.Point(767, 210);
+            this.cboNCC.Name = "cboNCC";
+            this.cboNCC.Size = new System.Drawing.Size(216, 28);
+            this.cboNCC.TabIndex = 55;
+            // 
+            // cboMDV
+            // 
+            this.cboMDV.FormattingEnabled = true;
+            this.cboMDV.Location = new System.Drawing.Point(767, 130);
+            this.cboMDV.Name = "cboMDV";
+            this.cboMDV.Size = new System.Drawing.Size(226, 28);
+            this.cboMDV.TabIndex = 56;
+            // 
             // formProduct
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1346, 737);
+            this.Controls.Add(this.cboMDV);
+            this.Controls.Add(this.cboNCC);
+            this.Controls.Add(this.cboMLoai);
             this.Controls.Add(this.btnHuy);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.btnChonAnh);
@@ -513,14 +519,11 @@
             this.Controls.Add(this.txtMaNV);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.label9);
-            this.Controls.Add(this.txtNCC);
-            this.Controls.Add(this.txtMDV);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.numericUpDown1);
             this.Controls.Add(this.txtHSD);
             this.Controls.Add(this.label6);
-            this.Controls.Add(this.txtMLoai);
             this.Controls.Add(this.txtDG);
             this.Controls.Add(this.txtTenSP);
             this.Controls.Add(this.txtMaSP);
@@ -553,7 +556,6 @@
         private GStoreDataSetTableAdapters.SanPhamTableAdapter sanPhamTableAdapter;
         private System.Windows.Forms.TextBox txtHSD;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox txtMLoai;
         private System.Windows.Forms.TextBox txtDG;
         private System.Windows.Forms.TextBox txtTenSP;
         private System.Windows.Forms.TextBox txtMaSP;
@@ -563,9 +565,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.NumericUpDown numericUpDown1;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox txtMDV;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.TextBox txtNCC;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox txtMaNV;
         private System.Windows.Forms.Label label10;
@@ -588,5 +588,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn maNCCDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn maNhanVienDataGridViewTextBoxColumn;
         private ReaLTaiizor.Controls.Button btnHuy;
+        private System.Windows.Forms.ComboBox cboMLoai;
+        private System.Windows.Forms.ComboBox cboNCC;
+        private System.Windows.Forms.ComboBox cboMDV;
     }
 }
