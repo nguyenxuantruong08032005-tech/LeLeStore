@@ -20,7 +20,9 @@ namespace LeLeStore
             Edit,
             Delete
         }
-
+        private readonly GStoreDataSetTableAdapters.LoaiSPTableAdapter _loaiSpTableAdapter = new GStoreDataSetTableAdapters.LoaiSPTableAdapter();
+        private readonly GStoreDataSetTableAdapters.NhaCungCapTableAdapter _nhaCungCapTableAdapter = new GStoreDataSetTableAdapters.NhaCungCapTableAdapter();
+        private readonly GStoreDataSetTableAdapters.DonViTinhTableAdapter _donViTinhTableAdapter = new GStoreDataSetTableAdapters.DonViTinhTableAdapter();
         private readonly Dictionary<string, Image> _imageCache = new Dictionary<string, Image>(StringComparer.OrdinalIgnoreCase);
         private ProductOperation _currentOperation = ProductOperation.None;
 
@@ -31,13 +33,10 @@ namespace LeLeStore
 
         private void formProduct_Load(object sender, EventArgs e)
         {
+            LoadComboBoxData();
             // TODO: This line of code loads data into the 'gStoreDataSet.SanPham' table. You can move, or remove it, as needed.
             this.sanPhamTableAdapter.Fill(this.gStoreDataSet.SanPham);
-            // số lượng
-          
-
-           
-
+            PopulateInputsFromSelection();
         }
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
@@ -58,9 +57,9 @@ namespace LeLeStore
             txtDG.ReadOnly = !canEdit;
             numericUpDown1.Enabled = canEdit;
             txtHSD.ReadOnly = !canEdit;
-            txtMLoai.ReadOnly = !canEdit;
-            txtMDV.ReadOnly = !canEdit;
-            txtNCC.ReadOnly = !canEdit;
+            cboMLoai.Enabled = canEdit;
+            cboMDV.Enabled = canEdit;
+            cboNCC.Enabled = canEdit;
             txtMaNV.ReadOnly = !canEdit;
             txtHinhAnh.ReadOnly = !canEdit;
             btnChonAnh.Enabled = canEdit;
@@ -71,9 +70,9 @@ namespace LeLeStore
                 txtDG.ReadOnly = true;
                 numericUpDown1.Enabled = false;
                 txtHSD.ReadOnly = true;
-                txtMLoai.ReadOnly = true;
-                txtMDV.ReadOnly = true;
-                txtNCC.ReadOnly = true;
+                cboMLoai.Enabled = false;
+                cboMDV.Enabled = false;
+                cboNCC.Enabled = false;
                 txtMaNV.ReadOnly = true;
                 txtHinhAnh.ReadOnly = true;
                 btnChonAnh.Enabled = false;
@@ -124,9 +123,9 @@ namespace LeLeStore
             int clampedQuantity = Math.Min(Math.Max(row.SoLuong, minQuantity), maxQuantity);
             numericUpDown1.Value = clampedQuantity;
             txtHSD.Text = row.IsHanSuDungNull() ? string.Empty : row.HanSuDung.ToString("yyyy-MM-dd");
-            txtMLoai.Text = row.MaLoai.ToString();
-            txtMDV.Text = row.MaDVT.ToString();
-            txtNCC.Text = row.IsMaNCCNull() ? string.Empty : row.MaNCC.ToString();
+            SetComboSelectedValue(cboMLoai, row.MaLoai);
+            SetComboSelectedValue(cboMDV, row.MaDVT);
+            SetComboSelectedValue(cboNCC, row.IsMaNCCNull() ? (int?)null : row.MaNCC);
             txtMaNV.Text = row.IsMaNhanVienNull() ? string.Empty : row.MaNhanVien.ToString();
             txtHinhAnh.Text = row.IsHinhAnhNull() ? string.Empty : row.HinhAnh;
             UpdateImagePreview();
@@ -139,13 +138,46 @@ namespace LeLeStore
             txtDG.Text = string.Empty;
             numericUpDown1.Value = numericUpDown1.Minimum;
             txtHSD.Text = string.Empty;
-            txtMLoai.Text = string.Empty;
-            txtMDV.Text = string.Empty;
-            txtNCC.Text = string.Empty;
+            ResetComboBoxSelection(cboMLoai, false);
+            ResetComboBoxSelection(cboMDV, false);
+            ResetComboBoxSelection(cboNCC, true);
             txtMaNV.Text = string.Empty;
             txtHinhAnh.Text = string.Empty;
             UpdateImagePreview();
         }
+
+        private void SetComboSelectedValue(ComboBox comboBox, int? value)
+        {
+            if (comboBox.DataSource == null)
+            {
+                return;
+            }
+
+            if (value.HasValue)
+            {
+                comboBox.SelectedValue = value.Value;
+                if (comboBox.SelectedIndex < 0)
+                {
+                    ResetComboBoxSelection(comboBox, comboBox == cboNCC);
+                }
+            }
+            else
+            {
+                ResetComboBoxSelection(comboBox, comboBox == cboNCC);
+            }
+        }
+
+        private void ResetComboBoxSelection(ComboBox comboBox, bool hasOptionalPlaceholder)
+        {
+            if (comboBox.DataSource == null)
+            {
+                comboBox.SelectedIndex = -1;
+                return;
+            }
+
+            comboBox.SelectedIndex = hasOptionalPlaceholder ? 0 : -1;
+        }
+
 
         private bool TryValidateInputs(
             out string tenSp,
@@ -196,32 +228,31 @@ namespace LeLeStore
                 }
             }
 
-            if (!int.TryParse(txtMLoai.Text.Trim(), out maLoai))
+            if (cboMLoai.SelectedValue is int selectedMaLoai)
             {
-                MessageBox.Show("Mã loại không hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtMLoai.Focus();
+                maLoai = selectedMaLoai;
+            }
+            else
+            {
+                MessageBox.Show("Vui lòng chọn mã loại hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                cboMLoai.Focus();
                 return false;
             }
 
-            if (!int.TryParse(txtMDV.Text.Trim(), out maDvt))
+            if (cboMDV.SelectedValue is int selectedMaDvt)
             {
-                MessageBox.Show("Mã đơn vị tính không hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtMDV.Focus();
+                maDvt = selectedMaDvt;
+            }
+            else
+            {
+                MessageBox.Show("Vui lòng chọn mã đơn vị tính hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                cboMDV.Focus();
                 return false;
             }
 
-            if (!string.IsNullOrWhiteSpace(txtNCC.Text))
+            if (cboNCC.SelectedValue is int selectedNcc)
             {
-                if (int.TryParse(txtNCC.Text.Trim(), out int parsedNcc))
-                {
-                    maNcc = parsedNcc;
-                }
-                else
-                {
-                    MessageBox.Show("Mã nhà cung cấp không hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    txtNCC.Focus();
-                    return false;
-                }
+                maNcc = selectedNcc;
             }
 
             if (!string.IsNullOrWhiteSpace(txtMaNV.Text))
@@ -250,6 +281,54 @@ namespace LeLeStore
             }
 
             return true;
+        }
+
+        private void LoadComboBoxData()
+        {
+            try
+            {
+                gStoreDataSet.LoaiSP.Clear();
+                _loaiSpTableAdapter.Fill(gStoreDataSet.LoaiSP);
+
+                gStoreDataSet.DonViTinh.Clear();
+                _donViTinhTableAdapter.Fill(gStoreDataSet.DonViTinh);
+
+                gStoreDataSet.NhaCungCap.Clear();
+                _nhaCungCapTableAdapter.Fill(gStoreDataSet.NhaCungCap);
+
+                var categoryItems = gStoreDataSet.LoaiSP
+                    .Select(loai => new KeyValuePair<int, string>(loai.MaLoai, $"{loai.MaLoai} - {loai.TenLoai}"))
+                    .ToList();
+
+                var unitItems = gStoreDataSet.DonViTinh
+                    .Select(unit => new KeyValuePair<int, string>(unit.MaDVT, $"{unit.MaDVT} - {unit.TenDVT}"))
+                    .ToList();
+
+                var supplierItems = new List<KeyValuePair<int?, string>>
+                {
+                    new KeyValuePair<int?, string>(null, "-- Không chọn nhà cung cấp --")
+                };
+
+                supplierItems.AddRange(
+                    gStoreDataSet.NhaCungCap.Select(ncc => new KeyValuePair<int?, string>(ncc.MaNCC, $"{ncc.MaNCC} - {ncc.TenNCC}")));
+
+                ConfigureComboBox(cboMLoai, categoryItems);
+                ConfigureComboBox(cboMDV, unitItems);
+                ConfigureComboBox(cboNCC, supplierItems);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Không thể tải dữ liệu danh mục.\n{ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void ConfigureComboBox<T>(ComboBox comboBox, IList<KeyValuePair<T, string>> items)
+        {
+            comboBox.DisplayMember = "Value";
+            comboBox.ValueMember = "Key";
+            comboBox.DataSource = items;
+            comboBox.SelectedIndex = items.Count > 0 ? 0 : -1;
+            comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
         }
         private void SaveNewProduct()
         {
