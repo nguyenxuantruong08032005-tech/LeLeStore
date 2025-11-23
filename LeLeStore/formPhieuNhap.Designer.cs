@@ -32,8 +32,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.cboMaNCC = new System.Windows.Forms.ComboBox();
             this.cbLoaiGD = new System.Windows.Forms.ComboBox();
-            this.txtMaNV = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.label5 = new System.Windows.Forms.Label();
@@ -65,7 +65,7 @@
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.btnHuy = new ReaLTaiizor.Controls.Button();
             this.btnHuyCT = new ReaLTaiizor.Controls.Button();
-            this.cboMaNCC = new System.Windows.Forms.ComboBox();
+            this.cboMaNV = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -98,9 +98,9 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.cboMaNV);
             this.groupBox1.Controls.Add(this.cboMaNCC);
             this.groupBox1.Controls.Add(this.cbLoaiGD);
-            this.groupBox1.Controls.Add(this.txtMaNV);
             this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.dateTimePicker1);
             this.groupBox1.Controls.Add(this.label5);
@@ -117,6 +117,14 @@
             this.groupBox1.Text = "Giao Dịch";
             this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
             // 
+            // cboMaNCC
+            // 
+            this.cboMaNCC.FormattingEnabled = true;
+            this.cboMaNCC.Location = new System.Drawing.Point(691, 147);
+            this.cboMaNCC.Name = "cboMaNCC";
+            this.cboMaNCC.Size = new System.Drawing.Size(330, 32);
+            this.cboMaNCC.TabIndex = 20;
+            // 
             // cbLoaiGD
             // 
             this.cbLoaiGD.FormattingEnabled = true;
@@ -124,13 +132,6 @@
             this.cbLoaiGD.Name = "cbLoaiGD";
             this.cbLoaiGD.Size = new System.Drawing.Size(166, 32);
             this.cbLoaiGD.TabIndex = 19;
-            // 
-            // txtMaNV
-            // 
-            this.txtMaNV.Location = new System.Drawing.Point(856, 77);
-            this.txtMaNV.Name = "txtMaNV";
-            this.txtMaNV.Size = new System.Drawing.Size(85, 30);
-            this.txtMaNV.TabIndex = 7;
             // 
             // label6
             // 
@@ -515,13 +516,13 @@
             this.btnHuyCT.TextAlignment = System.Drawing.StringAlignment.Center;
             this.btnHuyCT.Click += new System.EventHandler(this.btnHuyCT_Click);
             // 
-            // cboMaNCC
+            // cboMaNV
             // 
-            this.cboMaNCC.FormattingEnabled = true;
-            this.cboMaNCC.Location = new System.Drawing.Point(691, 147);
-            this.cboMaNCC.Name = "cboMaNCC";
-            this.cboMaNCC.Size = new System.Drawing.Size(330, 32);
-            this.cboMaNCC.TabIndex = 20;
+            this.cboMaNV.FormattingEnabled = true;
+            this.cboMaNV.Location = new System.Drawing.Point(856, 85);
+            this.cboMaNV.Name = "cboMaNV";
+            this.cboMaNV.Size = new System.Drawing.Size(133, 32);
+            this.cboMaNV.TabIndex = 21;
             // 
             // formPhieuNhap
             // 
@@ -566,7 +567,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.TextBox txtMaNV;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
         private System.Windows.Forms.Label label5;
@@ -600,5 +600,6 @@
         private ReaLTaiizor.Controls.Button btnHuy;
         private ReaLTaiizor.Controls.Button btnHuyCT;
         private System.Windows.Forms.ComboBox cboMaNCC;
+        private System.Windows.Forms.ComboBox cboMaNV;
     }
 }

@@ -12,9 +12,12 @@ namespace LeLeStore
 {
     public partial class formPhieuNhap : Form
     {
+        private readonly string _username;
         private readonly GiaoDichKhoTableAdapter giaoDichKhoTableAdapter = new GiaoDichKhoTableAdapter();
         private readonly NhaCungCapTableAdapter nhaCungCapTableAdapter = new NhaCungCapTableAdapter();
         private readonly SanPhamTableAdapter sanPhamTableAdapter = new SanPhamTableAdapter();
+        private readonly NhanVienTableAdapter nhanVienTableAdapter = new NhanVienTableAdapter();
+        private readonly NguoiDungTableAdapter nguoiDungTableAdapter = new NguoiDungTableAdapter();
         private readonly BindingSource giaoDichBindingSource = new BindingSource();
 
         private class SupplierComboItem
@@ -57,7 +60,7 @@ namespace LeLeStore
             cbLoaiGD.Enabled = canEdit;
             dateTimePicker1.Enabled = canEdit;
             cboMaNCC.Enabled = canEdit;
-            txtMaNV.ReadOnly = !canEdit;
+            cboMaNV.Enabled = canEdit;
 
             btnThem.Enabled = (m != EditMode.Edit);
             btnSua.Enabled = (m != EditMode.Add);
@@ -100,8 +103,9 @@ namespace LeLeStore
         private int? transactionEditingId;
         private (int MaGD, int MaSP)? detailEditingKey;
         private bool suppressProductComboUpdate;
-        public formPhieuNhap()
+        public formPhieuNhap(string username = "")
         {
+            _username = username ?? string.Empty;
             InitializeComponent();
 
             giaoDichBindingSource.DataSource = gStoreDataSet;
@@ -130,11 +134,26 @@ namespace LeLeStore
             cboMaNCC.DropDownStyle = ComboBoxStyle.DropDownList;
             cboMaNCC.DisplayMember = nameof(SupplierComboItem.Display);
             cboMaNCC.ValueMember = nameof(SupplierComboItem.MaNCC);
+            cboMaNV.DropDownStyle = ComboBoxStyle.DropDownList;
+
 
             txtMaGD1.TextChanged += txtMaGD1_TextChanged;
             cboMaNCC.SelectedIndexChanged += cboMaNCC_SelectedIndexChanged;
 
 
+        }
+
+        private void EnsureEmployeeDataLoaded()
+        {
+            if (gStoreDataSet.NguoiDung.Count == 0)
+            {
+                ExecuteSafely(() => nguoiDungTableAdapter.Fill(gStoreDataSet.NguoiDung), "Không thể tải dữ liệu người dùng");
+            }
+
+            if (gStoreDataSet.NhanVien.Count == 0)
+            {
+                ExecuteSafely(() => nhanVienTableAdapter.Fill(gStoreDataSet.NhanVien), "Không thể tải dữ liệu nhân viên");
+            }
         }
 
         private void groupBox1_Enter(object sender, EventArgs e)
@@ -159,9 +178,55 @@ namespace LeLeStore
             ExecuteSafely(() => giaoDichKhoTableAdapter.Fill(gStoreDataSet.GiaoDichKho), "Không thể tải dữ liệu giao dịch kho");
             ExecuteSafely(() => chiTietGiaoDichKhoTableAdapter.Fill(gStoreDataSet.ChiTietGiaoDichKho), "Không thể tải dữ liệu chi tiết giao dịch");
             EnsureLookupDataLoaded();
+            EnsureEmployeeDataLoaded();
             PopulateSupplierComboBox();
+            PopulateEmployeeComboBox();
         }
+        private void PopulateEmployeeComboBox(int? selectedEmployeeId = null)
+        {
+            EnsureEmployeeDataLoaded();
 
+            var employees = new List<KeyValuePair<int, string>>();
+
+            if (!string.IsNullOrWhiteSpace(_username))
+            {
+                var userRow = gStoreDataSet.NguoiDung
+                    .FirstOrDefault(row => !row.IsNull(gStoreDataSet.NguoiDung.TenDangNhapColumn)
+                                          && string.Equals(row.TenDangNhap, _username, StringComparison.OrdinalIgnoreCase));
+
+                if (userRow != null)
+                {
+                    employees = gStoreDataSet.NhanVien
+                        .Where(row => row.RowState != DataRowState.Deleted && !row.IsMaNguoiDungNull() && row.MaNguoiDung == userRow.MaNguoiDung)
+                        .Select(row => new KeyValuePair<int, string>(row.MaNhanVien, $"{row.MaNhanVien} - {row.HoTen}"))
+                        .OrderBy(item => item.Key)
+                        .ToList();
+                }
+            }
+
+            if (employees.Count == 0)
+            {
+                employees = gStoreDataSet.NhanVien
+                    .Where(row => row.RowState != DataRowState.Deleted)
+                    .Select(row => new KeyValuePair<int, string>(row.MaNhanVien, $"{row.MaNhanVien} - {row.HoTen}"))
+                    .OrderBy(item => item.Key)
+                    .ToList();
+            }
+
+            cboMaNV.DisplayMember = "Value";
+            cboMaNV.ValueMember = "Key";
+            cboMaNV.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboMaNV.DataSource = employees;
+
+            if (selectedEmployeeId.HasValue && employees.Any(emp => emp.Key == selectedEmployeeId.Value))
+            {
+                cboMaNV.SelectedValue = selectedEmployeeId.Value;
+            }
+            else
+            {
+                cboMaNV.SelectedIndex = employees.Count > 0 ? 0 : -1;
+            }
+        }
         private void EnsureLookupDataLoaded()
         {
             if (gStoreDataSet.NhaCungCap.Count == 0)
@@ -271,6 +336,26 @@ namespace LeLeStore
 
             return null;
         }
+        private int? GetSelectedEmployeeId()
+        {
+            if (cboMaNV.SelectedValue is int selectedValue)
+            {
+                return selectedValue;
+            }
+
+            if (cboMaNV.SelectedItem is KeyValuePair<int, string> item)
+            {
+                return item.Key;
+            }
+
+            if (!string.IsNullOrWhiteSpace(cboMaNV.Text) && int.TryParse(cboMaNV.Text.Trim(), out int parsedValue))
+            {
+                return parsedValue;
+            }
+
+            return null;
+        }
+
 
         private int? GetSelectedProductId()
         {
@@ -798,7 +883,7 @@ namespace LeLeStore
             cbLoaiGD.SelectedIndex = -1;
             dateTimePicker1.Value = DateTime.Now;
             cboMaNCC.SelectedIndex = -1;
-            txtMaNV.Clear();
+            cboMaNV.SelectedIndex = cboMaNV.Items.Count > 0 ? 0 : -1;
             txtMaGD.Text = GenerateNextTransactionId().ToString();
             if (detailMode != EditMode.Add)
             {
@@ -828,7 +913,7 @@ namespace LeLeStore
             cbLoaiGD.SelectedItem = row.LoaiGD;
             dateTimePicker1.Value = row.NgayGD;
             PopulateSupplierComboBox(row.IsMaNCCNull() ? null : (int?)row.MaNCC);
-            txtMaNV.Text = row.MaNhanVien.ToString();
+            PopulateEmployeeComboBox(row.MaNhanVien);
         }
         private void EnsureLoaiGiaoDichItem(string loaiGiaoDich)
         {
@@ -859,12 +944,13 @@ namespace LeLeStore
 
             maNcc = GetSelectedSupplierId();
 
-            if (!int.TryParse(txtMaNV.Text.Trim(), out maNhanVien))
+            var selectedEmployeeId = GetSelectedEmployeeId();
+            if (!selectedEmployeeId.HasValue)
             {
-                MessageBox.Show("Mã nhân viên không hợp lệ.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Vui lòng chọn mã nhân viên hợp lệ.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
-
+            maNhanVien = selectedEmployeeId.Value;
             return true;
         }
 
