@@ -99,7 +99,7 @@ namespace LeLeStore
 
             txtSdtNCC.Text = row.IsNull("SoDienThoai") ? string.Empty : row.SoDienThoai;
             txtDiaChiNCC.Text = row.IsNull("DiaChi") ? string.Empty : row.DiaChi;
-            SetEmployeeSelection(row.IsMaNhanVienNull() ? (int?)null : row.MaNhanVien);
+            SetEmployeeSelection(row.IsNull("MaNhanVien") ? (int?)null : row.MaNhanVien);
         }
 
         private void ClearInputFields()
