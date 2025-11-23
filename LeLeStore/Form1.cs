@@ -15,7 +15,7 @@ namespace LeLeStore
         private readonly UserRole _role;
         private readonly string _username;
         formDashBoard dashBoard;
-        formPoint point;
+      
         formUpdateClient updateclient;
         formUser user;
         formProduct product;
@@ -24,8 +24,7 @@ namespace LeLeStore
         formEmployeeSalary salary;
         formPayMent payment;
         formPhieuNhap nhap;
-        formPhieuXuat xuat;
-        formTonKho tonkho;
+        
         private readonly Dictionary<Button, string> _sidebarButtonTexts = new Dictionary<Button, string>();
         public Form1() : this(UserRole.QuanLy, string.Empty)
         {
@@ -297,25 +296,8 @@ namespace LeLeStore
         }
      
 
-        private void sbmenu2_Click(object sender, EventArgs e)
-        {OpenChildForm(new formPoint());
-            if (point == null)
-            {
-                point = new formPoint();
-                point.FormClosed += Point_FormClosed;
-                point.MdiParent = this;
-                point.Dock = DockStyle.Fill;
-                point.Show();
-            }
-            else
-            {
-                point.Activate();
-            }
-        }
-        private void Point_FormClosed(object sender, EventArgs e)
-        {
-            point = null;
-        }
+       
+       
 
         private void button4_Click(object sender, EventArgs e)
         {
@@ -403,24 +385,7 @@ namespace LeLeStore
             menuTransition2.Start();
         }
 
-        private void ptnTonKho_Click(object sender, EventArgs e)
-        {
-            if (tonkho == null)
-            {
-                tonkho = new formTonKho();
-                tonkho.FormClosed += TonKho_FormClosed;
-                tonkho.MdiParent = this;
-                tonkho.Show();
-            }
-            else
-            {
-                tonkho.Activate();
-            }
-        }
-        private void TonKho_FormClosed(object sender, EventArgs e)
-        {
-            tonkho = null;
-        }
+        
 
         private void btnPN_Click(object sender, EventArgs e)
         {
@@ -431,24 +396,8 @@ namespace LeLeStore
             nhap = null;
         }
 
-        private void btnPX_Click(object sender, EventArgs e)
-        {
-            if (xuat == null)
-            {
-                xuat = new formPhieuXuat();
-                xuat.FormClosed += PhieuXuat_FormClosed;
-                xuat.MdiParent = this;
-                xuat.Show();
-            }
-            else
-            {
-                xuat.Activate();
-            }
-        }
-        private void PhieuXuat_FormClosed(object sender, EventArgs e)
-        {
-            xuat = null;
-        }
+       
+       
 
         private void pnlMain_Paint(object sender, PaintEventArgs e)
         {

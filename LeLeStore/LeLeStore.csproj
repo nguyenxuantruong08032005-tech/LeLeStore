@@ -164,18 +164,6 @@
     <Compile Include="formPhieuNhap.Designer.cs">
       <DependentUpon>formPhieuNhap.cs</DependentUpon>
     </Compile>
-    <Compile Include="formPhieuXuat.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="formPhieuXuat.Designer.cs">
-      <DependentUpon>formPhieuXuat.cs</DependentUpon>
-    </Compile>
-    <Compile Include="formPoint.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="formPoint.Designer.cs">
-      <DependentUpon>formPoint.cs</DependentUpon>
-    </Compile>
     <Compile Include="formProduct.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -199,12 +187,6 @@
     </Compile>
     <Compile Include="formTichDIem.Designer.cs">
       <DependentUpon>formTichDIem.cs</DependentUpon>
-    </Compile>
-    <Compile Include="formTonKho.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="formTonKho.Designer.cs">
-      <DependentUpon>formTonKho.cs</DependentUpon>
     </Compile>
     <Compile Include="formUpdateClient.cs">
       <SubType>Form</SubType>
@@ -259,12 +241,6 @@
     <EmbeddedResource Include="formPhieuNhap.resx">
       <DependentUpon>formPhieuNhap.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="formPhieuXuat.resx">
-      <DependentUpon>formPhieuXuat.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="formPoint.resx">
-      <DependentUpon>formPoint.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="formProduct.resx">
       <DependentUpon>formProduct.cs</DependentUpon>
     </EmbeddedResource>
@@ -276,9 +252,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="formTichDIem.resx">
       <DependentUpon>formTichDIem.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="formTonKho.resx">
-      <DependentUpon>formTonKho.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="formUpdateClient.resx">
       <DependentUpon>formUpdateClient.cs</DependentUpon>

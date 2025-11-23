@@ -40,7 +40,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.txtDC = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.txtMaND = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.maNhanVienDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -56,6 +55,7 @@
             this.btnXoa = new ReaLTaiizor.Controls.Button();
             this.btnThem = new ReaLTaiizor.Controls.Button();
             this.btnHuy = new ReaLTaiizor.Controls.Button();
+            this.cbMaNgDung = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nhanVienBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gStoreDataSet)).BeginInit();
@@ -155,13 +155,6 @@
             this.label6.Size = new System.Drawing.Size(84, 24);
             this.label6.TabIndex = 18;
             this.label6.Text = "Địa Chỉ:";
-            // 
-            // txtMaND
-            // 
-            this.txtMaND.Location = new System.Drawing.Point(895, 202);
-            this.txtMaND.Name = "txtMaND";
-            this.txtMaND.Size = new System.Drawing.Size(225, 26);
-            this.txtMaND.TabIndex = 21;
             // 
             // label7
             // 
@@ -340,17 +333,25 @@
             this.btnHuy.TextAlignment = System.Drawing.StringAlignment.Center;
             this.btnHuy.Click += new System.EventHandler(this.btnHuy_Click);
             // 
+            // cbMaNgDung
+            // 
+            this.cbMaNgDung.FormattingEnabled = true;
+            this.cbMaNgDung.Location = new System.Drawing.Point(904, 202);
+            this.cbMaNgDung.Name = "cbMaNgDung";
+            this.cbMaNgDung.Size = new System.Drawing.Size(121, 28);
+            this.cbMaNgDung.TabIndex = 28;
+            // 
             // formStaff
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(1383, 724);
+            this.Controls.Add(this.cbMaNgDung);
             this.Controls.Add(this.btnHuy);
             this.Controls.Add(this.btnThem);
             this.Controls.Add(this.btnXoa);
             this.Controls.Add(this.btnSua);
             this.Controls.Add(this.dataGridView1);
-            this.Controls.Add(this.txtMaND);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.txtDC);
             this.Controls.Add(this.label6);
@@ -388,7 +389,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtDC;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox txtMaND;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.DataGridView dataGridView1;
         private GStoreDataSet gStoreDataSet;
@@ -404,5 +404,6 @@
         private ReaLTaiizor.Controls.Button btnXoa;
         private ReaLTaiizor.Controls.Button btnThem;
         private ReaLTaiizor.Controls.Button btnHuy;
+        private System.Windows.Forms.ComboBox cbMaNgDung;
     }
 }
