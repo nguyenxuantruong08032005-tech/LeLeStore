@@ -281,8 +281,8 @@ namespace LeLeStore
 
         private void btnUpdateClient_Click(object sender, EventArgs e)
         {
-            OpenChildForm(new formUpdateClient());
-          
+            OpenChildForm(new formUpdateClient(_username));
+
         }
         private void UpdateClient_FormClosed(object sender, EventArgs e)
         {
@@ -318,8 +318,8 @@ namespace LeLeStore
 
         private void btnSupplier_Click(object sender, EventArgs e)
         {
-            OpenChildForm(new formSupplier());
-           
+            OpenChildForm(new formSupplier(_username));
+
         }
         private void Supplier_FormClosed(object sender, EventArgs e)
         {

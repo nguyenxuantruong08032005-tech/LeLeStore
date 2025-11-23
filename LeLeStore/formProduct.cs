@@ -22,12 +22,16 @@ namespace LeLeStore
         }
         private readonly GStoreDataSetTableAdapters.LoaiSPTableAdapter _loaiSpTableAdapter = new GStoreDataSetTableAdapters.LoaiSPTableAdapter();
         private readonly GStoreDataSetTableAdapters.NhaCungCapTableAdapter _nhaCungCapTableAdapter = new GStoreDataSetTableAdapters.NhaCungCapTableAdapter();
+        private readonly string _username;
+        private readonly GStoreDataSetTableAdapters.NhanVienTableAdapter _nhanVienTableAdapter = new GStoreDataSetTableAdapters.NhanVienTableAdapter();
+        private readonly GStoreDataSetTableAdapters.NguoiDungTableAdapter _nguoiDungTableAdapter = new GStoreDataSetTableAdapters.NguoiDungTableAdapter();
         private readonly GStoreDataSetTableAdapters.DonViTinhTableAdapter _donViTinhTableAdapter = new GStoreDataSetTableAdapters.DonViTinhTableAdapter();
         private readonly Dictionary<string, Image> _imageCache = new Dictionary<string, Image>(StringComparer.OrdinalIgnoreCase);
         private ProductOperation _currentOperation = ProductOperation.None;
 
-        public formProduct()
+        public formProduct(string username = "")
         {
+            _username = username ?? string.Empty;
             InitializeComponent();
         }
 
@@ -60,7 +64,7 @@ namespace LeLeStore
             cboMLoai.Enabled = canEdit;
             cboMDV.Enabled = canEdit;
             cboNCC.Enabled = canEdit;
-            txtMaNV.ReadOnly = !canEdit;
+            cboMaNV.Enabled = canEdit;
             txtHinhAnh.ReadOnly = !canEdit;
             btnChonAnh.Enabled = canEdit;
 
@@ -73,7 +77,7 @@ namespace LeLeStore
                 cboMLoai.Enabled = false;
                 cboMDV.Enabled = false;
                 cboNCC.Enabled = false;
-                txtMaNV.ReadOnly = true;
+                cboMaNV.Enabled = false;
                 txtHinhAnh.ReadOnly = true;
                 btnChonAnh.Enabled = false;
             }
@@ -126,7 +130,7 @@ namespace LeLeStore
             SetComboSelectedValue(cboMLoai, row.MaLoai);
             SetComboSelectedValue(cboMDV, row.MaDVT);
             SetComboSelectedValue(cboNCC, row.IsMaNCCNull() ? (int?)null : row.MaNCC);
-            txtMaNV.Text = row.IsMaNhanVienNull() ? string.Empty : row.MaNhanVien.ToString();
+            SetEmployeeSelection(row.IsMaNhanVienNull() ? (int?)null : row.MaNhanVien);
             txtHinhAnh.Text = row.IsHinhAnhNull() ? string.Empty : row.HinhAnh;
             UpdateImagePreview();
         }
@@ -141,11 +145,31 @@ namespace LeLeStore
             ResetComboBoxSelection(cboMLoai, false);
             ResetComboBoxSelection(cboMDV, false);
             ResetComboBoxSelection(cboNCC, true);
-            txtMaNV.Text = string.Empty;
+            SetEmployeeSelection(null);
             txtHinhAnh.Text = string.Empty;
             UpdateImagePreview();
         }
+        private void SetEmployeeSelection(int? maNhanVien)
+        {
+            if (cboMaNV.DataSource == null)
+            {
+                cboMaNV.SelectedIndex = -1;
+                return;
+            }
 
+            if (maNhanVien.HasValue)
+            {
+                cboMaNV.SelectedValue = maNhanVien.Value;
+                if (cboMaNV.SelectedIndex < 0)
+                {
+                    cboMaNV.SelectedIndex = cboMaNV.Items.Count > 0 ? 0 : -1;
+                }
+            }
+            else
+            {
+                cboMaNV.SelectedIndex = cboMaNV.Items.Count > 0 ? 0 : -1;
+            }
+        }
         private void SetComboSelectedValue(ComboBox comboBox, int? value)
         {
             if (comboBox.DataSource == null)
@@ -255,18 +279,15 @@ namespace LeLeStore
                 maNcc = selectedNcc;
             }
 
-            if (!string.IsNullOrWhiteSpace(txtMaNV.Text))
+            if (cboMaNV.SelectedValue is int selectedNhanVien)
             {
-                if (int.TryParse(txtMaNV.Text.Trim(), out int parsedNhanVien))
-                {
-                    maNhanVien = parsedNhanVien;
-                }
-                else
-                {
-                    MessageBox.Show("Mã nhân viên không hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    txtMaNV.Focus();
-                    return false;
-                }
+                maNhanVien = selectedNhanVien;
+            }
+            else
+            {
+                MessageBox.Show("Vui lòng chọn mã nhân viên hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                cboMaNV.Focus();
+                return false;
             }
 
             if (!string.IsNullOrWhiteSpace(hinhAnhPath))
@@ -296,6 +317,13 @@ namespace LeLeStore
                 gStoreDataSet.NhaCungCap.Clear();
                 _nhaCungCapTableAdapter.Fill(gStoreDataSet.NhaCungCap);
 
+                gStoreDataSet.NguoiDung.Clear();
+                _nguoiDungTableAdapter.Fill(gStoreDataSet.NguoiDung);
+
+                gStoreDataSet.NhanVien.Clear();
+                _nhanVienTableAdapter.Fill(gStoreDataSet.NhanVien);
+
+
                 var categoryItems = gStoreDataSet.LoaiSP
                     .Select(loai => new KeyValuePair<int, string>(loai.MaLoai, $"{loai.MaLoai} - {loai.TenLoai}"))
                     .ToList();
@@ -315,13 +343,39 @@ namespace LeLeStore
                 ConfigureComboBox(cboMLoai, categoryItems);
                 ConfigureComboBox(cboMDV, unitItems);
                 ConfigureComboBox(cboNCC, supplierItems);
+                ConfigureEmployeeComboBox();
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Không thể tải dữ liệu danh mục.\n{ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        private void ConfigureEmployeeComboBox()
+        {
+            var employees = new List<KeyValuePair<int, string>>();
 
+            if (!string.IsNullOrWhiteSpace(_username))
+            {
+                var userRow = gStoreDataSet.NguoiDung
+                    .FirstOrDefault(row => !row.IsNull(gStoreDataSet.NguoiDung.TenDangNhapColumn)
+                                          && string.Equals(row.TenDangNhap, _username, StringComparison.OrdinalIgnoreCase));
+
+                if (userRow != null)
+                {
+                    employees = gStoreDataSet.NhanVien
+                        .Where(row => !row.IsMaNguoiDungNull() && row.MaNguoiDung == userRow.MaNguoiDung)
+                        .Select(row => new KeyValuePair<int, string>(row.MaNhanVien, $"{row.MaNhanVien} - {row.HoTen}"))
+                        .OrderBy(item => item.Key)
+                        .ToList();
+                }
+            }
+
+            cboMaNV.DisplayMember = "Value";
+            cboMaNV.ValueMember = "Key";
+            cboMaNV.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboMaNV.DataSource = employees;
+            cboMaNV.SelectedIndex = employees.Count > 0 ? 0 : -1;
+        }
         private void ConfigureComboBox<T>(ComboBox comboBox, IList<KeyValuePair<T, string>> items)
         {
             comboBox.DisplayMember = "Value";

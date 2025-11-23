@@ -19,13 +19,17 @@ namespace LeLeStore
             Edit,
             Delete
         }
-
+        private readonly string _username;
+        private readonly GStoreDataSetTableAdapters.NhanVienTableAdapter _nhanVienTableAdapter = new GStoreDataSetTableAdapters.NhanVienTableAdapter();
+        private readonly GStoreDataSetTableAdapters.NguoiDungTableAdapter _nguoiDungTableAdapter = new GStoreDataSetTableAdapters.NguoiDungTableAdapter();
         private SupplierOperation _currentOperation = SupplierOperation.None;
-        public formSupplier()
+        public formSupplier(string username = "")
         {
+            _username = username ?? string.Empty;
             InitializeComponent();
             SetOperation(SupplierOperation.None);
             PopulateInputsFromSelection();
+            LoadEmployeeOptions();
         }
 
         private void formSupplier_Load(object sender, EventArgs e)
@@ -45,14 +49,14 @@ namespace LeLeStore
             txtTenNCC.ReadOnly = !canEditFields;
             txtSdtNCC.ReadOnly = !canEditFields;
             txtDiaChiNCC.ReadOnly = !canEditFields;
-            txtManv.ReadOnly = !canEditFields;
+            cboMaNV.Enabled = canEditFields;
 
             if (isDelete)
             {
                 txtTenNCC.ReadOnly = true;
                 txtSdtNCC.ReadOnly = true;
                 txtDiaChiNCC.ReadOnly = true;
-                txtManv.ReadOnly = true;
+                cboMaNV.Enabled = false;
             }
             // 👉 Hủy chỉ bật khi đang Add/Edit/Delete (khác None)
             btnHuy.Enabled = (operation != SupplierOperation.None);
@@ -95,7 +99,7 @@ namespace LeLeStore
 
             txtSdtNCC.Text = row.IsNull("SoDienThoai") ? string.Empty : row.SoDienThoai;
             txtDiaChiNCC.Text = row.IsNull("DiaChi") ? string.Empty : row.DiaChi;
-            txtManv.Text = row.MaNhanVien.ToString();
+            SetEmployeeSelection(row.IsMaNhanVienNull() ? (int?)null : row.MaNhanVien);
         }
 
         private void ClearInputFields()
@@ -104,7 +108,7 @@ namespace LeLeStore
             txtTenNCC.Text = string.Empty;
             txtSdtNCC.Text = string.Empty;
             txtDiaChiNCC.Text = string.Empty;
-            txtManv.Text = string.Empty;
+            SetEmployeeSelection(null);
         }
 
         private GStoreDataSet.NhaCungCapRow GetCurrentSupplierRow()
@@ -131,10 +135,14 @@ namespace LeLeStore
                 return false;
             }
 
-            if (!int.TryParse(txtManv.Text.Trim(), out maNhanVien))
+            if (cboMaNV.SelectedValue is int selectedEmployee)
             {
-                MessageBox.Show("Mã nhân viên phải là số.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtManv.Focus();
+                maNhanVien = selectedEmployee;
+            }
+            else
+            {
+                MessageBox.Show("Vui lòng chọn mã nhân viên hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                cboMaNV.Focus();
                 return false;
             }
 
@@ -402,6 +410,77 @@ namespace LeLeStore
 
             // Làm tươi khu nhập theo selection hiện tại
             ReloadInputs();
+        }
+
+        private void LoadEmployeeOptions()
+        {
+            try
+            {
+                gStoreDataSet.NguoiDung.Clear();
+                gStoreDataSet.NhanVien.Clear();
+
+                _nguoiDungTableAdapter.ClearBeforeFill = true;
+                _nguoiDungTableAdapter.Fill(gStoreDataSet.NguoiDung);
+
+                _nhanVienTableAdapter.ClearBeforeFill = true;
+                _nhanVienTableAdapter.Fill(gStoreDataSet.NhanVien);
+
+                var employees = new List<KeyValuePair<int, string>>();
+
+                if (!string.IsNullOrWhiteSpace(_username))
+                {
+                    var userRow = gStoreDataSet.NguoiDung
+                        .FirstOrDefault(row => !row.IsNull(gStoreDataSet.NguoiDung.TenDangNhapColumn)
+                                              && string.Equals(row.TenDangNhap, _username, StringComparison.OrdinalIgnoreCase));
+
+                    if (userRow != null)
+                    {
+                        employees = gStoreDataSet.NhanVien
+                            .Where(row => !row.IsMaNguoiDungNull() && row.MaNguoiDung == userRow.MaNguoiDung)
+                            .Select(row => new KeyValuePair<int, string>(row.MaNhanVien, $"{row.MaNhanVien} - {row.HoTen}"))
+                            .OrderBy(item => item.Key)
+                            .ToList();
+                    }
+                }
+
+                ConfigureEmployeeCombo(employees);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Không thể tải danh sách nhân viên.\n{ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ConfigureEmployeeCombo(new List<KeyValuePair<int, string>>());
+            }
+        }
+
+        private void ConfigureEmployeeCombo(IList<KeyValuePair<int, string>> employees)
+        {
+            cboMaNV.DisplayMember = "Value";
+            cboMaNV.ValueMember = "Key";
+            cboMaNV.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboMaNV.DataSource = employees;
+            cboMaNV.SelectedIndex = employees.Count > 0 ? 0 : -1;
+        }
+
+        private void SetEmployeeSelection(int? maNhanVien)
+        {
+            if (cboMaNV.DataSource == null)
+            {
+                cboMaNV.SelectedIndex = -1;
+                return;
+            }
+
+            if (maNhanVien.HasValue)
+            {
+                cboMaNV.SelectedValue = maNhanVien.Value;
+                if (cboMaNV.SelectedIndex < 0)
+                {
+                    cboMaNV.SelectedIndex = cboMaNV.Items.Count > 0 ? 0 : -1;
+                }
+            }
+            else
+            {
+                cboMaNV.SelectedIndex = cboMaNV.Items.Count > 0 ? 0 : -1;
+            }
         }
     }
 }

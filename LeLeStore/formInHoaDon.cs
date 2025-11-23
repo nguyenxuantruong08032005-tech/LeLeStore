@@ -28,6 +28,8 @@ namespace LeLeStore
         private readonly CultureInfo _currencyCulture = CultureInfo.GetCultureInfo("vi-VN");
         private readonly GStoreDataSet _dataSet = new GStoreDataSet();
         private readonly GStoreDataSetTableAdapters.KhachHangTableAdapter _khachHangTableAdapter = new GStoreDataSetTableAdapters.KhachHangTableAdapter();
+        private readonly GStoreDataSetTableAdapters.NhanVienTableAdapter _nhanVienTableAdapter = new GStoreDataSetTableAdapters.NhanVienTableAdapter();
+        private readonly GStoreDataSetTableAdapters.NguoiDungTableAdapter _nguoiDungTableAdapter = new GStoreDataSetTableAdapters.NguoiDungTableAdapter();
         private int? _persistedInvoiceId;
         private bool _isSaved;
         private int? _suggestedInvoiceNumber;
@@ -37,7 +39,8 @@ namespace LeLeStore
         private int? _selectedCustomerId;
         private static readonly string[] PaymentMethodOptions = { "Tiền mặt", "Chuyển Khoản", "Card" };
         private string _selectedPaymentMethod = string.Empty;
-       
+        private readonly string _username;
+
         // ==== Cấu hình tài khoản nhận chuyển khoản (đổi theo của bạn) ====
         private const string BankBin = "970418";          // Ví dụ: 970436 = Vietcombank (đổi đúng BIN ngân hàng)
         private const string AccountNo = "8810239241";      // Số tài khoản nhận
@@ -62,6 +65,7 @@ namespace LeLeStore
         public formInHoaDon(InvoiceSnapshot invoiceSnapshot)
         {
             _invoiceSnapshot = invoiceSnapshot ?? throw new ArgumentNullException(nameof(invoiceSnapshot));
+            _username = invoiceSnapshot.EmployeeUsername ?? string.Empty;
             InitializeComponent();
            
 
@@ -80,13 +84,78 @@ namespace LeLeStore
             dataGridView1.DataSource = _invoiceLines;
             ApplyPaymentMethodSelection(cbPhuongThucTT.SelectedItem as string ?? string.Empty);
             textBox1.ReadOnly = true;
-            txtMaNv.ReadOnly = false;
+            cboMaNV.DropDownStyle = ComboBoxStyle.DropDownList;
             dateTimePicker1.Enabled = false;
 
           
             InitializeCustomerFeatures();
         }
-        
+        private void LoadEmployeeOptions()
+        {
+            try
+            {
+                _dataSet.NguoiDung.Clear();
+                _dataSet.NhanVien.Clear();
+
+                _nguoiDungTableAdapter.ClearBeforeFill = true;
+                _nguoiDungTableAdapter.Fill(_dataSet.NguoiDung);
+
+                _nhanVienTableAdapter.ClearBeforeFill = true;
+                _nhanVienTableAdapter.Fill(_dataSet.NhanVien);
+
+                var employees = new List<KeyValuePair<int, string>>();
+
+                if (!string.IsNullOrWhiteSpace(_username))
+                {
+                    var userRow = _dataSet.NguoiDung
+                        .FirstOrDefault(row => !row.IsNull(_dataSet.NguoiDung.TenDangNhapColumn)
+                                              && string.Equals(row.TenDangNhap, _username, StringComparison.OrdinalIgnoreCase));
+
+                    if (userRow != null)
+                    {
+                        employees = _dataSet.NhanVien
+                            .Where(row => !row.IsMaNguoiDungNull() && row.MaNguoiDung == userRow.MaNguoiDung)
+                            .Select(row => new KeyValuePair<int, string>(row.MaNhanVien, $"{row.MaNhanVien} - {row.HoTen}"))
+                            .OrderBy(item => item.Key)
+                            .ToList();
+                    }
+                }
+
+                cboMaNV.DisplayMember = "Value";
+                cboMaNV.ValueMember = "Key";
+                cboMaNV.DropDownStyle = ComboBoxStyle.DropDownList;
+                cboMaNV.DataSource = employees;
+                cboMaNV.SelectedIndex = employees.Count > 0 ? 0 : -1;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Không thể tải danh sách nhân viên.\n{ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                cboMaNV.DataSource = new List<KeyValuePair<int, string>>();
+                cboMaNV.SelectedIndex = -1;
+            }
+        }
+
+        private void SetEmployeeSelection(int? maNhanVien)
+        {
+            if (cboMaNV.DataSource == null)
+            {
+                cboMaNV.SelectedIndex = -1;
+                return;
+            }
+
+            if (maNhanVien.HasValue)
+            {
+                cboMaNV.SelectedValue = maNhanVien.Value;
+                if (cboMaNV.SelectedIndex < 0)
+                {
+                    cboMaNV.SelectedIndex = cboMaNV.Items.Count > 0 ? 0 : -1;
+                }
+            }
+            else
+            {
+                cboMaNV.SelectedIndex = cboMaNV.Items.Count > 0 ? 0 : -1;
+            }
+        }
 
 
         // Xây URL ảnh VietQR
@@ -162,6 +231,7 @@ namespace LeLeStore
 
         private void formInHoaDon_Load(object sender, EventArgs e)
         {
+            LoadEmployeeOptions();
             PopulateInvoiceMetadata();
             UpdateTotalsDisplay();
             TryReloadCustomerData();
@@ -271,7 +341,7 @@ namespace LeLeStore
 
             if (_invoiceSnapshot.EmployeeId.HasValue)
             {
-                txtMaNv.Text = _invoiceSnapshot.EmployeeId.Value.ToString();
+                SetEmployeeSelection(_invoiceSnapshot.EmployeeId.Value);
             }
 
             _suggestedInvoiceNumber = GetNextInvoiceNumber();
@@ -368,15 +438,14 @@ namespace LeLeStore
                 return;
             }
 
-            if (!int.TryParse(txtMaNv.Text.Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out var employeeId) || employeeId <= 0)
+            if (!(cboMaNV.SelectedValue is int employeeId) || employeeId <= 0)
             {
                 MessageBox.Show(
-                    "Mã nhân viên không hợp lệ.",
+                    "Vui lòng chọn mã nhân viên hợp lệ.",
                     "Cảnh báo",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
-                txtMaNv.Focus();
-                txtMaNv.SelectAll();
+                cboMaNV.Focus();
                 return;
             }
 
@@ -587,7 +656,7 @@ namespace LeLeStore
                     graphics.DrawString(ToPdfText($"Ngay lap: {dateTimePicker1.Value:dd/MM/yyyy HH:mm}"), labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
                     cursorY += infoLineHeight;
 
-                    graphics.DrawString(ToPdfText($"Ma nhan vien: {txtMaNv.Text.Trim()}"), labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
+                    graphics.DrawString(ToPdfText($"Ma nhan vien: {cboMaNV.Text}"), labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
                     cursorY += infoLineHeight * 1.5;
 
                     var paymentMethod = ToPdfText(GetSelectedPaymentMethodForDisplay());
