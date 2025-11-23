@@ -70,7 +70,7 @@
             this.cboMLoai = new System.Windows.Forms.ComboBox();
             this.cboNCC = new System.Windows.Forms.ComboBox();
             this.cboMDV = new System.Windows.Forms.ComboBox();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.cboMaNV = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sanPhamBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gStoreDataSet)).BeginInit();
@@ -493,20 +493,20 @@
             this.cboMDV.Size = new System.Drawing.Size(226, 28);
             this.cboMDV.TabIndex = 56;
             // 
-            // comboBox1
+            // cboMaNV
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(1044, 148);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(198, 28);
-            this.comboBox1.TabIndex = 57;
+            this.cboMaNV.FormattingEnabled = true;
+            this.cboMaNV.Location = new System.Drawing.Point(1044, 148);
+            this.cboMaNV.Name = "cboMaNV";
+            this.cboMaNV.Size = new System.Drawing.Size(198, 28);
+            this.cboMaNV.TabIndex = 57;
             // 
             // formProduct
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1434, 737);
-            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.cboMaNV);
             this.Controls.Add(this.cboMDV);
             this.Controls.Add(this.cboNCC);
             this.Controls.Add(this.cboMLoai);
@@ -591,6 +591,6 @@
         private System.Windows.Forms.ComboBox cboMLoai;
         private System.Windows.Forms.ComboBox cboNCC;
         private System.Windows.Forms.ComboBox cboMDV;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox cboMaNV;
     }
 }

@@ -54,7 +54,7 @@
             this.lblTotalPayable = new System.Windows.Forms.Label();
             this.btnLuu = new ReaLTaiizor.Controls.Button();
             this.panelGrid = new ReaLTaiizor.Controls.Panel();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.cboMaNV = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
@@ -135,7 +135,7 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.White;
-            this.panel1.Controls.Add(this.comboBox1);
+            this.panel1.Controls.Add(this.cboMaNV);
             this.panel1.Controls.Add(this.cbPhuongThucTT);
             this.panel1.Controls.Add(this.label7);
             this.panel1.Controls.Add(this.btnChietKhau);
@@ -395,13 +395,13 @@
             this.panelGrid.SmoothingType = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             this.panelGrid.TabIndex = 11;
             // 
-            // comboBox1
+            // cboMaNV
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(449, 93);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(249, 28);
-            this.comboBox1.TabIndex = 15;
+            this.cboMaNV.FormattingEnabled = true;
+            this.cboMaNV.Location = new System.Drawing.Point(449, 93);
+            this.cboMaNV.Name = "cboMaNV";
+            this.cboMaNV.Size = new System.Drawing.Size(249, 28);
+            this.cboMaNV.TabIndex = 15;
             // 
             // formInHoaDon
             // 
@@ -454,6 +454,6 @@
         private System.Windows.Forms.ComboBox cbPhuongThucTT;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.PictureBox picQR;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox cboMaNV;
     }
 }
