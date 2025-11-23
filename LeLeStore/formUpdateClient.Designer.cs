@@ -50,12 +50,12 @@
             this.label5 = new System.Windows.Forms.Label();
             this.txtDiem = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.txtMaNVKH = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.btnThem = new ReaLTaiizor.Controls.Button();
             this.btnXoa = new ReaLTaiizor.Controls.Button();
             this.btnSua = new ReaLTaiizor.Controls.Button();
             this.btnHuy = new ReaLTaiizor.Controls.Button();
+            this.cboMaNV = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.khachHangBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gStoreDataSet)).BeginInit();
@@ -239,13 +239,6 @@
             this.label6.TabIndex = 31;
             this.label6.Text = "Điểm Tích Lũy:";
             // 
-            // txtMaNVKH
-            // 
-            this.txtMaNVKH.Location = new System.Drawing.Point(862, 223);
-            this.txtMaNVKH.Name = "txtMaNVKH";
-            this.txtMaNVKH.Size = new System.Drawing.Size(229, 26);
-            this.txtMaNVKH.TabIndex = 34;
-            // 
             // label7
             // 
             this.label7.AutoSize = true;
@@ -340,16 +333,24 @@
             this.btnHuy.TextAlignment = System.Drawing.StringAlignment.Center;
             this.btnHuy.Click += new System.EventHandler(this.btnHuy_Click);
             // 
+            // cboMaNV
+            // 
+            this.cboMaNV.FormattingEnabled = true;
+            this.cboMaNV.Location = new System.Drawing.Point(862, 223);
+            this.cboMaNV.Name = "cboMaNV";
+            this.cboMaNV.Size = new System.Drawing.Size(229, 28);
+            this.cboMaNV.TabIndex = 40;
+            // 
             // formUpdateClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1342, 780);
+            this.Controls.Add(this.cboMaNV);
             this.Controls.Add(this.btnHuy);
             this.Controls.Add(this.btnThem);
             this.Controls.Add(this.btnXoa);
             this.Controls.Add(this.btnSua);
-            this.Controls.Add(this.txtMaNVKH);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.txtDiem);
             this.Controls.Add(this.label6);
@@ -398,11 +399,11 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox txtDiem;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox txtMaNVKH;
         private System.Windows.Forms.Label label7;
         private ReaLTaiizor.Controls.Button btnThem;
         private ReaLTaiizor.Controls.Button btnXoa;
         private ReaLTaiizor.Controls.Button btnSua;
         private ReaLTaiizor.Controls.Button btnHuy;
+        private System.Windows.Forms.ComboBox cboMaNV;
     }
 }

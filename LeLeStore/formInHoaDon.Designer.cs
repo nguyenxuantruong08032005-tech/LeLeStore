@@ -32,11 +32,9 @@
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.txtMaNv = new System.Windows.Forms.TextBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.btnInHoaDon = new ReaLTaiizor.Controls.Button();
             this.panel1 = new ReaLTaiizor.Controls.Panel();
-            this.picQR = new System.Windows.Forms.PictureBox();
             this.cbPhuongThucTT = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
             this.btnChietKhau = new ReaLTaiizor.Controls.Button();
@@ -49,16 +47,18 @@
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.picQR = new System.Windows.Forms.PictureBox();
             this.panel2 = new ReaLTaiizor.Controls.Panel();
             this.lblSubtotal = new System.Windows.Forms.Label();
             this.lblDiscount = new System.Windows.Forms.Label();
             this.lblTotalPayable = new System.Windows.Forms.Label();
             this.btnLuu = new ReaLTaiizor.Controls.Button();
             this.panelGrid = new ReaLTaiizor.Controls.Panel();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picQR)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picQR)).BeginInit();
             this.panel2.SuspendLayout();
             this.panelGrid.SuspendLayout();
             this.SuspendLayout();
@@ -94,19 +94,12 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.label3.Location = new System.Drawing.Point(456, 71);
+            this.label3.Location = new System.Drawing.Point(445, 69);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(140, 24);
+            this.label3.Size = new System.Drawing.Size(147, 24);
             this.label3.TabIndex = 3;
-            this.label3.Text = "Mã Nhân Viên";
+            this.label3.Text = "Mã Nhân Viên:";
             this.label3.Click += new System.EventHandler(this.label3_Click);
-            // 
-            // txtMaNv
-            // 
-            this.txtMaNv.Location = new System.Drawing.Point(449, 98);
-            this.txtMaNv.Name = "txtMaNv";
-            this.txtMaNv.Size = new System.Drawing.Size(173, 26);
-            this.txtMaNv.TabIndex = 4;
             // 
             // dataGridView1
             // 
@@ -142,6 +135,7 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.White;
+            this.panel1.Controls.Add(this.comboBox1);
             this.panel1.Controls.Add(this.cbPhuongThucTT);
             this.panel1.Controls.Add(this.label7);
             this.panel1.Controls.Add(this.btnChietKhau);
@@ -155,7 +149,6 @@
             this.panel1.Controls.Add(this.textBox1);
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.txtMaNv);
             this.panel1.Controls.Add(this.dateTimePicker1);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.label3);
@@ -169,15 +162,6 @@
             this.panel1.TabIndex = 7;
             this.panel1.Text = "panel1";
             this.panel1.Click += new System.EventHandler(this.panel1_Click);
-            // 
-            // picQR
-            // 
-            this.picQR.Location = new System.Drawing.Point(513, 6);
-            this.picQR.Name = "picQR";
-            this.picQR.Size = new System.Drawing.Size(228, 202);
-            this.picQR.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.picQR.TabIndex = 15;
-            this.picQR.TabStop = false;
             // 
             // cbPhuongThucTT
             // 
@@ -319,6 +303,15 @@
             this.label4.TabIndex = 5;
             this.label4.Text = "Mã Hóa Đơn:";
             // 
+            // picQR
+            // 
+            this.picQR.Location = new System.Drawing.Point(513, 6);
+            this.picQR.Name = "picQR";
+            this.picQR.Size = new System.Drawing.Size(228, 202);
+            this.picQR.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picQR.TabIndex = 15;
+            this.picQR.TabStop = false;
+            // 
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.White;
@@ -402,6 +395,14 @@
             this.panelGrid.SmoothingType = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             this.panelGrid.TabIndex = 11;
             // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(449, 93);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(249, 28);
+            this.comboBox1.TabIndex = 15;
+            // 
             // formInHoaDon
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -416,8 +417,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picQR)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picQR)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.panelGrid.ResumeLayout(false);
@@ -431,7 +432,6 @@
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox txtMaNv;
         private System.Windows.Forms.DataGridView dataGridView1;
         private ReaLTaiizor.Controls.Button btnInHoaDon;
         private ReaLTaiizor.Controls.Panel panel1;
@@ -454,5 +454,6 @@
         private System.Windows.Forms.ComboBox cbPhuongThucTT;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.PictureBox picQR;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }

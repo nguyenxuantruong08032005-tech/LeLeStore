@@ -338,7 +338,7 @@
             this.cbMaNgDung.FormattingEnabled = true;
             this.cbMaNgDung.Location = new System.Drawing.Point(904, 202);
             this.cbMaNgDung.Name = "cbMaNgDung";
-            this.cbMaNgDung.Size = new System.Drawing.Size(121, 28);
+            this.cbMaNgDung.Size = new System.Drawing.Size(216, 28);
             this.cbMaNgDung.TabIndex = 28;
             // 
             // formStaff

@@ -39,7 +39,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.txtManv = new System.Windows.Forms.TextBox();
             this.btnThem = new ReaLTaiizor.Controls.Button();
             this.btnXoa = new ReaLTaiizor.Controls.Button();
             this.btnSua = new ReaLTaiizor.Controls.Button();
@@ -53,6 +52,7 @@
             this.gStoreDataSet = new LeLeStore.GStoreDataSet();
             this.nhaCungCapTableAdapter = new LeLeStore.GStoreDataSetTableAdapters.NhaCungCapTableAdapter();
             this.btnHuy = new ReaLTaiizor.Controls.Button();
+            this.cboMaNV = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nhaCungCapBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gStoreDataSet)).BeginInit();
@@ -145,13 +145,6 @@
             this.label6.Size = new System.Drawing.Size(147, 24);
             this.label6.TabIndex = 25;
             this.label6.Text = "Mã Nhân Viên:";
-            // 
-            // txtManv
-            // 
-            this.txtManv.Location = new System.Drawing.Point(936, 168);
-            this.txtManv.Name = "txtManv";
-            this.txtManv.Size = new System.Drawing.Size(164, 26);
-            this.txtManv.TabIndex = 26;
             // 
             // btnThem
             // 
@@ -311,17 +304,25 @@
             this.btnHuy.TextAlignment = System.Drawing.StringAlignment.Center;
             this.btnHuy.Click += new System.EventHandler(this.btnHuy_Click);
             // 
+            // cboMaNV
+            // 
+            this.cboMaNV.FormattingEnabled = true;
+            this.cboMaNV.Location = new System.Drawing.Point(936, 171);
+            this.cboMaNV.Name = "cboMaNV";
+            this.cboMaNV.Size = new System.Drawing.Size(295, 28);
+            this.cboMaNV.TabIndex = 33;
+            // 
             // formSupplier
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1486, 779);
+            this.Controls.Add(this.cboMaNV);
             this.Controls.Add(this.btnHuy);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.btnThem);
             this.Controls.Add(this.btnXoa);
             this.Controls.Add(this.btnSua);
-            this.Controls.Add(this.txtManv);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.txtDiaChiNCC);
             this.Controls.Add(this.txtSdtNCC);
@@ -356,7 +357,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox txtManv;
         private ReaLTaiizor.Controls.Button btnThem;
       
         private ReaLTaiizor.Controls.Button btnXoa;
@@ -371,5 +371,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn diaChiDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn maNhanVienDataGridViewTextBoxColumn;
         private ReaLTaiizor.Controls.Button btnHuy;
+        private System.Windows.Forms.ComboBox cboMaNV;
     }
 }

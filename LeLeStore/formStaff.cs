@@ -15,6 +15,9 @@ namespace LeLeStore
         private enum OperationMode { None, Add, Edit, Delete }
         private OperationMode mode = OperationMode.None;
 
+        private readonly GStoreDataSetTableAdapters.NguoiDungTableAdapter nguoiDungTableAdapter
+           = new GStoreDataSetTableAdapters.NguoiDungTableAdapter();
+
 
         private GStoreDataSet.NhanVienRow currentRow;
         private void SetMode(OperationMode m)
@@ -89,7 +92,8 @@ namespace LeLeStore
             dataGridView1.SelectionChanged += dataGridView1_SelectionChanged;
             txtMaNV.ReadOnly = true;
             SetTextBoxesReadOnly(false);
-           
+
+            cbMaNgDung.DropDownStyle = ComboBoxStyle.DropDownList;
         }
 
         private void formStaff_Load(object sender, EventArgs e)
@@ -98,10 +102,38 @@ namespace LeLeStore
             this.nhanVienTableAdapter.Fill(this.gStoreDataSet.NhanVien);
             LoadRowFromCurrentSelection();
 
+            LoadNguoiDungCombo();
         }
         // ===================== HELPER =====================
-     
-        
+
+        private void LoadNguoiDungCombo()
+        {
+            int? previousSelection = cbMaNgDung.SelectedValue is int value ? value : (int?)null;
+
+            nguoiDungTableAdapter.Fill(gStoreDataSet.NguoiDung);
+
+            var users = gStoreDataSet.NguoiDung
+                .Select(row => new
+                {
+                    MaNguoiDung = row.MaNguoiDung,
+                    DisplayText = $"{row.MaNguoiDung} - {row.VaiTro}"
+                })
+                .OrderBy(item => item.MaNguoiDung)
+                .ToList();
+
+            cbMaNgDung.DataSource = users;
+            cbMaNgDung.DisplayMember = "DisplayText";
+            cbMaNgDung.ValueMember = "MaNguoiDung";
+
+            if (previousSelection.HasValue && users.Any(u => u.MaNguoiDung == previousSelection.Value))
+            {
+                cbMaNgDung.SelectedValue = previousSelection.Value;
+            }
+            else
+            {
+                cbMaNgDung.SelectedIndex = -1;
+            }
+        }
 
         private void ShowSuccess(string message)
         {
@@ -261,7 +293,7 @@ namespace LeLeStore
             txtCV.Text = row.IsChucVuNull() ? string.Empty : row.ChucVu;
             txtSDT.Text = row.IsSoDienThoaiNull() ? string.Empty : row.SoDienThoai;
             txtDC.Text = row.IsDiaChiNull() ? string.Empty : row.DiaChi;
-            txtMaND.Text = row.IsMaNguoiDungNull() ? string.Empty : row.MaNguoiDung.ToString();
+            SetNguoiDungSelection(row.IsMaNguoiDungNull() ? (int?)null : row.MaNguoiDung);
         }
 
         private void ClearTextBoxes()
@@ -271,7 +303,24 @@ namespace LeLeStore
             txtCV.Text = string.Empty;
             txtSDT.Text = string.Empty;
             txtDC.Text = string.Empty;
-            txtMaND.Text = string.Empty;
+            cbMaNgDung.SelectedIndex = -1;
+        }
+
+        private void SetNguoiDungSelection(int? maNguoiDung)
+        {
+            if (maNguoiDung.HasValue)
+            {
+                cbMaNgDung.SelectedValue = maNguoiDung.Value;
+
+                if (cbMaNgDung.SelectedIndex == -1)
+                {
+                    cbMaNgDung.SelectedIndex = -1;
+                }
+            }
+            else
+            {
+                cbMaNgDung.SelectedIndex = -1;
+            }
         }
         private void SetTextBoxesReadOnly(bool readOnly)
         {
@@ -279,7 +328,7 @@ namespace LeLeStore
             txtCV.ReadOnly = readOnly;
             txtSDT.ReadOnly = readOnly;
             txtDC.ReadOnly = readOnly;
-            txtMaND.ReadOnly = readOnly;
+            cbMaNgDung.Enabled = !readOnly;
         }
 
         private bool DeleteNhanVien()
@@ -343,6 +392,7 @@ namespace LeLeStore
         }
         private void ReloadData(int? selectId)
         {
+            LoadNguoiDungCombo();
             nhanVienTableAdapter.Fill(gStoreDataSet.NhanVien);
 
             if (selectId.HasValue)
@@ -416,14 +466,13 @@ namespace LeLeStore
 
         private bool TryParseMaNguoiDung(out int maNguoiDung)
         {
-            string value = txtMaND.Text.Trim();
-            if (int.TryParse(value, out int parsed))
+            if (cbMaNgDung.SelectedValue is int selectedId)
             {
-                maNguoiDung = parsed;
+                maNguoiDung = selectedId;
                 return true;
             }
 
-            MessageBox.Show("Mã người dùng phải là số.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show("Vui lòng chọn Mã người dùng hợp lệ từ danh sách.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             maNguoiDung = 0;
             return false;
         }

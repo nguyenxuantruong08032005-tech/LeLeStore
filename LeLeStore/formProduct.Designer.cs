@@ -57,7 +57,6 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.txtMaNV = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.btnThem = new ReaLTaiizor.Controls.Button();
             this.btnXoa = new ReaLTaiizor.Controls.Button();
@@ -71,6 +70,7 @@
             this.cboMLoai = new System.Windows.Forms.ComboBox();
             this.cboNCC = new System.Windows.Forms.ComboBox();
             this.cboMDV = new System.Windows.Forms.ComboBox();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sanPhamBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gStoreDataSet)).BeginInit();
@@ -332,18 +332,11 @@
             this.label9.TabIndex = 42;
             this.label9.Text = "Mã Nhà Cung Cấp:";
             // 
-            // txtMaNV
-            // 
-            this.txtMaNV.Location = new System.Drawing.Point(1028, 142);
-            this.txtMaNV.Name = "txtMaNV";
-            this.txtMaNV.Size = new System.Drawing.Size(164, 26);
-            this.txtMaNV.TabIndex = 44;
-            // 
             // label10
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.label10.Location = new System.Drawing.Point(1024, 115);
+            this.label10.Location = new System.Drawing.Point(1035, 117);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(147, 24);
             this.label10.TabIndex = 43;
@@ -416,7 +409,7 @@
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.label11.Location = new System.Drawing.Point(1024, 183);
+            this.label11.Location = new System.Drawing.Point(1035, 185);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(102, 24);
             this.label11.TabIndex = 49;
@@ -424,15 +417,15 @@
             // 
             // txtHinhAnh
             // 
-            this.txtHinhAnh.Location = new System.Drawing.Point(1028, 210);
+            this.txtHinhAnh.Location = new System.Drawing.Point(1039, 212);
             this.txtHinhAnh.Name = "txtHinhAnh";
-            this.txtHinhAnh.Size = new System.Drawing.Size(164, 26);
+            this.txtHinhAnh.Size = new System.Drawing.Size(203, 26);
             this.txtHinhAnh.TabIndex = 50;
             this.txtHinhAnh.TextChanged += new System.EventHandler(this.txtHinhAnh_TextChanged);
             // 
             // btnChonAnh
             // 
-            this.btnChonAnh.Location = new System.Drawing.Point(1211, 240);
+            this.btnChonAnh.Location = new System.Drawing.Point(1269, 235);
             this.btnChonAnh.Name = "btnChonAnh";
             this.btnChonAnh.Size = new System.Drawing.Size(111, 36);
             this.btnChonAnh.TabIndex = 51;
@@ -443,7 +436,7 @@
             // pictureBox1
             // 
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox1.Location = new System.Drawing.Point(1211, 115);
+            this.pictureBox1.Location = new System.Drawing.Point(1269, 110);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(102, 114);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -500,11 +493,20 @@
             this.cboMDV.Size = new System.Drawing.Size(226, 28);
             this.cboMDV.TabIndex = 56;
             // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(1044, 148);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(198, 28);
+            this.comboBox1.TabIndex = 57;
+            // 
             // formProduct
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1346, 737);
+            this.ClientSize = new System.Drawing.Size(1434, 737);
+            this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.cboMDV);
             this.Controls.Add(this.cboNCC);
             this.Controls.Add(this.cboMLoai);
@@ -516,7 +518,6 @@
             this.Controls.Add(this.btnThem);
             this.Controls.Add(this.btnXoa);
             this.Controls.Add(this.btnSua);
-            this.Controls.Add(this.txtMaNV);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label8);
@@ -567,7 +568,6 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.TextBox txtMaNV;
         private System.Windows.Forms.Label label10;
         private ReaLTaiizor.Controls.Button btnThem;
         private ReaLTaiizor.Controls.Button btnXoa;
@@ -591,5 +591,6 @@
         private System.Windows.Forms.ComboBox cboMLoai;
         private System.Windows.Forms.ComboBox cboNCC;
         private System.Windows.Forms.ComboBox cboMDV;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }
