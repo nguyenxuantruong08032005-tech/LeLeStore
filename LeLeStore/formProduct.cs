@@ -369,6 +369,14 @@ namespace LeLeStore
                         .ToList();
                 }
             }
+            if (employees.Count == 0)
+            {
+                employees = gStoreDataSet.NhanVien
+                    .Where(row => !row.IsNull("MaNhanVien"))
+                    .Select(row => new KeyValuePair<int, string>(row.MaNhanVien, $"{row.MaNhanVien} - {row.HoTen}"))
+                    .OrderBy(item => item.Key)
+                    .ToList();
+            }
 
             cboMaNV.DisplayMember = "Value";
             cboMaNV.ValueMember = "Key";

@@ -116,9 +116,18 @@ namespace LeLeStore
                         employees = _dataSet.NhanVien
                             .Where(row => !row.IsMaNguoiDungNull() && row.MaNguoiDung == userRow.MaNguoiDung)
                             .Select(row => new KeyValuePair<int, string>(row.MaNhanVien, $"{row.MaNhanVien} - {row.HoTen}"))
-                            .OrderBy(item => item.Key)
-                            .ToList();
+                           .OrderBy(item => item.Key)
+                        .ToList();
                     }
+                }
+
+                if (employees.Count == 0)
+                {
+                    employees = _dataSet.NhanVien
+                        .Where(row => !row.IsNull("MaNhanVien"))
+                        .Select(row => new KeyValuePair<int, string>(row.MaNhanVien, $"{row.MaNhanVien} - {row.HoTen}"))
+                        .OrderBy(item => item.Key)
+                        .ToList();
                 }
 
                 cboMaNV.DisplayMember = "Value";
