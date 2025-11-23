@@ -521,7 +521,7 @@
             this.cboMaNV.FormattingEnabled = true;
             this.cboMaNV.Location = new System.Drawing.Point(856, 85);
             this.cboMaNV.Name = "cboMaNV";
-            this.cboMaNV.Size = new System.Drawing.Size(133, 32);
+            this.cboMaNV.Size = new System.Drawing.Size(306, 32);
             this.cboMaNV.TabIndex = 21;
             // 
             // formPhieuNhap

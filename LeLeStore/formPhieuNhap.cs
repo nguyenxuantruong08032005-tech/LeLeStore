@@ -948,6 +948,7 @@ namespace LeLeStore
             if (!selectedEmployeeId.HasValue)
             {
                 MessageBox.Show("Vui lòng chọn mã nhân viên hợp lệ.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                maNhanVien = 0;
                 return false;
             }
             maNhanVien = selectedEmployeeId.Value;
