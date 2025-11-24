@@ -194,6 +194,7 @@
             this.txtSDTKH.Name = "txtSDTKH";
             this.txtSDTKH.Size = new System.Drawing.Size(229, 26);
             this.txtSDTKH.TabIndex = 28;
+            this.txtSDTKH.Validating += new System.ComponentModel.CancelEventHandler(this.txtSDTKH_Validating);
             // 
             // label4
             // 

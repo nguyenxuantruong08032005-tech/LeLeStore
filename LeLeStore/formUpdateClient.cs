@@ -180,6 +180,11 @@ namespace LeLeStore
                 return false;
             }
 
+            if (!TryValidatePhoneNumber(currentClientId: null, showMessage: true, out soDienThoai))
+            {
+                return false;
+            }
+
             if (cboMaNV.SelectedValue is int selectedEmployee)
             {
                 maNhanVien = selectedEmployee;
@@ -194,7 +199,7 @@ namespace LeLeStore
             return true;
         }
 
-        private bool TryValidateInputsForEdit(out string hoTen, out string soDienThoai, out string diaChi, out int maNhanVien)
+        private bool TryValidateInputsForEdit(int maKhachHang, out string hoTen, out string soDienThoai, out string diaChi, out int maNhanVien)
         {
             hoTen = txtTenKH.Text.Trim();
             soDienThoai = txtSDTKH.Text.Trim();
@@ -205,6 +210,10 @@ namespace LeLeStore
             {
                 MessageBox.Show("Tên khách hàng không được để trống.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtTenKH.Focus();
+                return false;
+            }
+            if (!TryValidatePhoneNumber(maKhachHang, showMessage: true, out soDienThoai))
+            {
                 return false;
             }
 
@@ -373,7 +382,7 @@ namespace LeLeStore
                 return;
             }
 
-            if (!TryValidateInputsForEdit(out string hoTen, out string soDienThoai, out string diaChi, out int maNhanVien))
+            if (!TryValidateInputsForEdit(maKhachHang, out string hoTen, out string soDienThoai, out string diaChi, out int maNhanVien))
                 return;
 
             if (!AskConfirm("Xác nhận lưu thay đổi thông tin khách hàng?")) return;
@@ -444,7 +453,59 @@ namespace LeLeStore
             }
         }
 
-        
+        private bool TryValidatePhoneNumber(int? currentClientId, bool showMessage, out string sanitizedNumber)
+        {
+            sanitizedNumber = txtSDTKH.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(sanitizedNumber))
+            {
+                if (showMessage)
+                    MessageBox.Show("Vui lòng nhập số điện thoại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtSDTKH.Focus();
+                return false;
+            }
+
+            if (!sanitizedNumber.All(char.IsDigit))
+            {
+                if (showMessage)
+                    MessageBox.Show("Số điện thoại chỉ được chứa số.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtSDTKH.Focus();
+                return false;
+            }
+
+            if (sanitizedNumber.Length < 10)
+            {
+                if (showMessage)
+                    MessageBox.Show("Số điện thoại phải đủ 10 số.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtSDTKH.Focus();
+                return false;
+            }
+
+            if (sanitizedNumber.Length > 10)
+            {
+                if (showMessage)
+                    MessageBox.Show("Số điện thoại không được vượt quá 10 số.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtSDTKH.Focus();
+                return false;
+            }
+
+            bool isDuplicate = gStoreDataSet.KhachHang.Any(row =>
+                !row.IsSoDienThoaiNull() &&
+                string.Equals(row.SoDienThoai, sanitizedNumber, StringComparison.Ordinal) &&
+                (!currentClientId.HasValue || row.MaKhachHang != currentClientId.Value));
+
+            if (isDuplicate)
+            {
+                if (showMessage)
+                    MessageBox.Show("Số điện thoại đã tồn tại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtSDTKH.Focus();
+                return false;
+            }
+
+            return true;
+        }
+
+
 
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
@@ -483,6 +544,20 @@ namespace LeLeStore
 
             // Khôi phục dữ liệu + đưa con trỏ về đúng bản ghi (nếu còn)
             RefreshDataAndRestoreByKey(focusKey);
+        }
+
+        private void txtSDTKH_Validating(object sender, CancelEventArgs e)
+        {
+            int? currentClientId = null;
+            if (int.TryParse(txtMaKH.Text, out int parsedId))
+            {
+                currentClientId = parsedId;
+            }
+
+            if (!TryValidatePhoneNumber(currentClientId, showMessage: true, out _))
+            {
+                e.Cancel = true;
+            }
         }
     }
 }
