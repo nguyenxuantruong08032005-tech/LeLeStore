@@ -94,6 +94,20 @@ namespace LeLeStore
             SetTextBoxesReadOnly(false);
 
             cbMaNgDung.DropDownStyle = ComboBoxStyle.DropDownList;
+            InitializeChucVuCombo();
+            txtSDT.Validating += TxtSDT_Validating;
+        }
+
+        private void InitializeChucVuCombo()
+        {
+            cboChucVu.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboChucVu.Items.Clear();
+            cboChucVu.Items.AddRange(new object[]
+            {
+                "Nhân viên bán hàng",
+                "Quản lý cửa hàng",
+                "Nhân viên kho"
+            });
         }
 
         private void formStaff_Load(object sender, EventArgs e)
@@ -135,6 +149,30 @@ namespace LeLeStore
             }
         }
 
+        private string GetSelectedChucVu()
+        {
+            return cboChucVu.SelectedItem as string ?? cboChucVu.Text;
+        }
+
+        private void SetSelectedChucVu(string chucVu)
+        {
+            if (string.IsNullOrWhiteSpace(chucVu))
+            {
+                cboChucVu.SelectedIndex = -1;
+                return;
+            }
+
+            int index = cboChucVu.Items.IndexOf(chucVu);
+            if (index >= 0)
+            {
+                cboChucVu.SelectedIndex = index;
+            }
+            else
+            {
+                cboChucVu.Items.Add(chucVu);
+                cboChucVu.SelectedItem = chucVu;
+            }
+        }
         private void ShowSuccess(string message)
         {
             MessageBox.Show(message, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -169,7 +207,7 @@ namespace LeLeStore
             if (!AskConfirm("Xác nhận lưu nhân viên mới?")) return;
 
             string hoTen = NormalizeRequiredText(txtTenNV.Text);
-            string chucVu = NormalizeOptionalText(txtCV.Text);
+            string chucVu = GetSelectedChucVu();
             string soDienThoai = NormalizeOptionalText(txtSDT.Text);
             string diaChi = NormalizeOptionalText(txtDC.Text);
 
@@ -217,7 +255,7 @@ namespace LeLeStore
             if (!AskConfirm("Xác nhận lưu thay đổi thông tin nhân viên?")) return;
 
             string hoTen = NormalizeRequiredText(txtTenNV.Text);
-            string chucVu = NormalizeOptionalText(txtCV.Text);
+            string chucVu = GetSelectedChucVu();
             string soDienThoai = NormalizeOptionalText(txtSDT.Text);
             string diaChi = NormalizeOptionalText(txtDC.Text);
 
@@ -290,7 +328,7 @@ namespace LeLeStore
         {
 
             txtTenNV.Text = row.HoTen;
-            txtCV.Text = row.IsChucVuNull() ? string.Empty : row.ChucVu;
+            SetSelectedChucVu(row.IsChucVuNull() ? string.Empty : row.ChucVu);
             txtSDT.Text = row.IsSoDienThoaiNull() ? string.Empty : row.SoDienThoai;
             txtDC.Text = row.IsDiaChiNull() ? string.Empty : row.DiaChi;
             SetNguoiDungSelection(row.IsMaNguoiDungNull() ? (int?)null : row.MaNguoiDung);
@@ -300,7 +338,7 @@ namespace LeLeStore
         {
             txtMaNV.Text = string.Empty;
             txtTenNV.Text = string.Empty;
-            txtCV.Text = string.Empty;
+            cboChucVu.SelectedIndex = -1;
             txtSDT.Text = string.Empty;
             txtDC.Text = string.Empty;
             cbMaNgDung.SelectedIndex = -1;
@@ -325,11 +363,98 @@ namespace LeLeStore
         private void SetTextBoxesReadOnly(bool readOnly)
         {
             txtTenNV.ReadOnly = readOnly;
-            txtCV.ReadOnly = readOnly;
+            
             txtSDT.ReadOnly = readOnly;
             txtDC.ReadOnly = readOnly;
             cbMaNgDung.Enabled = !readOnly;
+            cboChucVu.Enabled = !readOnly;
         }
+
+        private bool ValidatePhoneNumber()
+        {
+            string soDienThoai = NormalizeOptionalText(txtSDT.Text);
+
+            if (!IsValidPhoneFormat(soDienThoai, out string message))
+            {
+                MessageBox.Show(message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            if (!IsPhoneNumberUnique(soDienThoai, GetCurrentEditingId()))
+            {
+                MessageBox.Show("Số điện thoại đã tồn tại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool IsValidPhoneFormat(string soDienThoai, out string message)
+        {
+            if (string.IsNullOrWhiteSpace(soDienThoai))
+            {
+                message = "Số điện thoại phải đủ 10 số.";
+                return false;
+            }
+
+            if (!soDienThoai.All(char.IsDigit))
+            {
+                message = "Số điện thoại chỉ được chứa chữ số.";
+                return false;
+            }
+
+            if (soDienThoai.Length < 10)
+            {
+                message = "Số điện thoại phải đủ 10 số.";
+                return false;
+            }
+
+            if (soDienThoai.Length > 10)
+            {
+                message = "Số điện thoại chỉ được phép 10 số.";
+                return false;
+            }
+
+            message = string.Empty;
+            return true;
+        }
+
+        private bool IsPhoneNumberUnique(string soDienThoai, int? currentId)
+        {
+            return !gStoreDataSet.NhanVien.Any(row =>
+                !row.IsSoDienThoaiNull() &&
+                row.SoDienThoai == soDienThoai &&
+                (!currentId.HasValue || row.MaNhanVien != currentId.Value));
+        }
+
+        private int? GetCurrentEditingId()
+        {
+            if (mode == OperationMode.Edit && currentRow != null && currentRow.RowState != DataRowState.Added)
+            {
+                return currentRow.MaNhanVien;
+            }
+
+            if (int.TryParse(txtMaNV.Text, out int id))
+            {
+                return id;
+            }
+
+            return null;
+        }
+
+        private void TxtSDT_Validating(object sender, CancelEventArgs e)
+        {
+            if (mode == OperationMode.None)
+            {
+                return;
+            }
+
+            if (!ValidatePhoneNumber())
+            {
+                e.Cancel = true;
+            }
+        }
+
 
         private bool DeleteNhanVien()
         {
@@ -449,15 +574,15 @@ namespace LeLeStore
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(txtCV.Text))
+            if (cboChucVu.SelectedIndex < 0)
             {
                 MessageBox.Show("Không được để trống Chức vụ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(txtSDT.Text))
+            if (!ValidatePhoneNumber())
             {
-                MessageBox.Show("Không được để trống Số điện thoại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+               
                 return false;
             }
 

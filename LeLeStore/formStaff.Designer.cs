@@ -55,7 +55,7 @@
             this.btnThem = new ReaLTaiizor.Controls.Button();
             this.btnHuy = new ReaLTaiizor.Controls.Button();
             this.cbMaNgDung = new System.Windows.Forms.ComboBox();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.cboChucVu = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nhanVienBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gStoreDataSet)).BeginInit();
@@ -334,20 +334,20 @@
             this.cbMaNgDung.Size = new System.Drawing.Size(216, 28);
             this.cbMaNgDung.TabIndex = 28;
             // 
-            // comboBox1
+            // cboChucVu
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(584, 144);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(225, 28);
-            this.comboBox1.TabIndex = 29;
+            this.cboChucVu.FormattingEnabled = true;
+            this.cboChucVu.Location = new System.Drawing.Point(584, 144);
+            this.cboChucVu.Name = "cboChucVu";
+            this.cboChucVu.Size = new System.Drawing.Size(225, 28);
+            this.cboChucVu.TabIndex = 29;
             // 
             // formStaff
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(1383, 724);
-            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.cboChucVu);
             this.Controls.Add(this.cbMaNgDung);
             this.Controls.Add(this.btnHuy);
             this.Controls.Add(this.btnThem);
@@ -405,6 +405,6 @@
         private ReaLTaiizor.Controls.Button btnThem;
         private ReaLTaiizor.Controls.Button btnHuy;
         private System.Windows.Forms.ComboBox cbMaNgDung;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox cboChucVu;
     }
 }

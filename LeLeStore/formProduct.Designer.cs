@@ -44,7 +44,6 @@
             this.sanPhamBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gStoreDataSet = new LeLeStore.GStoreDataSet();
             this.sanPhamTableAdapter = new LeLeStore.GStoreDataSetTableAdapters.SanPhamTableAdapter();
-            this.txtHSD = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.txtDG = new System.Windows.Forms.TextBox();
             this.txtTenSP = new System.Windows.Forms.TextBox();
@@ -71,6 +70,7 @@
             this.cboNCC = new System.Windows.Forms.ComboBox();
             this.cboMDV = new System.Windows.Forms.ComboBox();
             this.cboMaNV = new System.Windows.Forms.ComboBox();
+            this.dtHSD = new System.Windows.Forms.DateTimePicker();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sanPhamBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gStoreDataSet)).BeginInit();
@@ -211,18 +211,11 @@
             // 
             this.sanPhamTableAdapter.ClearBeforeFill = true;
             // 
-            // txtHSD
-            // 
-            this.txtHSD.Location = new System.Drawing.Point(542, 129);
-            this.txtHSD.Name = "txtHSD";
-            this.txtHSD.Size = new System.Drawing.Size(164, 26);
-            this.txtHSD.TabIndex = 36;
-            // 
             // label6
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.label6.Location = new System.Drawing.Point(538, 102);
+            this.label6.Location = new System.Drawing.Point(484, 99);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(143, 24);
             this.label6.TabIndex = 35;
@@ -232,7 +225,7 @@
             // 
             this.txtDG.Location = new System.Drawing.Point(300, 129);
             this.txtDG.Name = "txtDG";
-            this.txtDG.Size = new System.Drawing.Size(197, 26);
+            this.txtDG.Size = new System.Drawing.Size(120, 26);
             this.txtDG.TabIndex = 33;
             // 
             // txtTenSP
@@ -306,7 +299,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.label7.Location = new System.Drawing.Point(538, 179);
+            this.label7.Location = new System.Drawing.Point(484, 176);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(91, 24);
             this.label7.TabIndex = 38;
@@ -316,7 +309,7 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.label8.Location = new System.Drawing.Point(763, 102);
+            this.label8.Location = new System.Drawing.Point(799, 114);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(115, 24);
             this.label8.TabIndex = 39;
@@ -326,7 +319,7 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.label9.Location = new System.Drawing.Point(763, 180);
+            this.label9.Location = new System.Drawing.Point(799, 173);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(187, 24);
             this.label9.TabIndex = 42;
@@ -336,7 +329,7 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.label10.Location = new System.Drawing.Point(1035, 117);
+            this.label10.Location = new System.Drawing.Point(1079, 117);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(147, 24);
             this.label10.TabIndex = 43;
@@ -409,7 +402,7 @@
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
-            this.label11.Location = new System.Drawing.Point(1035, 185);
+            this.label11.Location = new System.Drawing.Point(1084, 185);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(102, 24);
             this.label11.TabIndex = 49;
@@ -417,7 +410,7 @@
             // 
             // txtHinhAnh
             // 
-            this.txtHinhAnh.Location = new System.Drawing.Point(1039, 212);
+            this.txtHinhAnh.Location = new System.Drawing.Point(1088, 212);
             this.txtHinhAnh.Name = "txtHinhAnh";
             this.txtHinhAnh.Size = new System.Drawing.Size(203, 26);
             this.txtHinhAnh.TabIndex = 50;
@@ -425,7 +418,7 @@
             // 
             // btnChonAnh
             // 
-            this.btnChonAnh.Location = new System.Drawing.Point(1269, 235);
+            this.btnChonAnh.Location = new System.Drawing.Point(1321, 241);
             this.btnChonAnh.Name = "btnChonAnh";
             this.btnChonAnh.Size = new System.Drawing.Size(111, 36);
             this.btnChonAnh.TabIndex = 51;
@@ -436,7 +429,7 @@
             // pictureBox1
             // 
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox1.Location = new System.Drawing.Point(1269, 110);
+            this.pictureBox1.Location = new System.Drawing.Point(1321, 115);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(102, 114);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -472,7 +465,7 @@
             // cboMLoai
             // 
             this.cboMLoai.FormattingEnabled = true;
-            this.cboMLoai.Location = new System.Drawing.Point(542, 210);
+            this.cboMLoai.Location = new System.Drawing.Point(488, 207);
             this.cboMLoai.Name = "cboMLoai";
             this.cboMLoai.Size = new System.Drawing.Size(155, 28);
             this.cboMLoai.TabIndex = 54;
@@ -480,7 +473,7 @@
             // cboNCC
             // 
             this.cboNCC.FormattingEnabled = true;
-            this.cboNCC.Location = new System.Drawing.Point(767, 210);
+            this.cboNCC.Location = new System.Drawing.Point(803, 206);
             this.cboNCC.Name = "cboNCC";
             this.cboNCC.Size = new System.Drawing.Size(226, 28);
             this.cboNCC.TabIndex = 55;
@@ -488,24 +481,32 @@
             // cboMDV
             // 
             this.cboMDV.FormattingEnabled = true;
-            this.cboMDV.Location = new System.Drawing.Point(767, 130);
+            this.cboMDV.Location = new System.Drawing.Point(803, 142);
             this.cboMDV.Name = "cboMDV";
-            this.cboMDV.Size = new System.Drawing.Size(226, 28);
+            this.cboMDV.Size = new System.Drawing.Size(147, 28);
             this.cboMDV.TabIndex = 56;
             // 
             // cboMaNV
             // 
             this.cboMaNV.FormattingEnabled = true;
-            this.cboMaNV.Location = new System.Drawing.Point(1044, 148);
+            this.cboMaNV.Location = new System.Drawing.Point(1088, 148);
             this.cboMaNV.Name = "cboMaNV";
             this.cboMaNV.Size = new System.Drawing.Size(198, 28);
             this.cboMaNV.TabIndex = 57;
+            // 
+            // dtHSD
+            // 
+            this.dtHSD.Location = new System.Drawing.Point(488, 129);
+            this.dtHSD.Name = "dtHSD";
+            this.dtHSD.Size = new System.Drawing.Size(275, 26);
+            this.dtHSD.TabIndex = 58;
             // 
             // formProduct
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1434, 737);
+            this.ClientSize = new System.Drawing.Size(1499, 737);
+            this.Controls.Add(this.dtHSD);
             this.Controls.Add(this.cboMaNV);
             this.Controls.Add(this.cboMDV);
             this.Controls.Add(this.cboNCC);
@@ -523,7 +524,6 @@
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.numericUpDown1);
-            this.Controls.Add(this.txtHSD);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.txtDG);
             this.Controls.Add(this.txtTenSP);
@@ -555,7 +555,6 @@
         private GStoreDataSet gStoreDataSet;
         private System.Windows.Forms.BindingSource sanPhamBindingSource;
         private GStoreDataSetTableAdapters.SanPhamTableAdapter sanPhamTableAdapter;
-        private System.Windows.Forms.TextBox txtHSD;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox txtDG;
         private System.Windows.Forms.TextBox txtTenSP;
@@ -592,5 +591,6 @@
         private System.Windows.Forms.ComboBox cboNCC;
         private System.Windows.Forms.ComboBox cboMDV;
         private System.Windows.Forms.ComboBox cboMaNV;
+        private System.Windows.Forms.DateTimePicker dtHSD;
     }
 }
