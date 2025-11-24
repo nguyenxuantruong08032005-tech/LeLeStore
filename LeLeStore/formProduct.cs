@@ -60,7 +60,7 @@ namespace LeLeStore
             txtTenSP.ReadOnly = !canEdit;
             txtDG.ReadOnly = !canEdit;
             numericUpDown1.Enabled = canEdit;
-            txtHSD.ReadOnly = !canEdit;
+            dtHSD.Enabled = canEdit;
             cboMLoai.Enabled = canEdit;
             cboMDV.Enabled = canEdit;
             cboNCC.Enabled = canEdit;
@@ -73,7 +73,7 @@ namespace LeLeStore
                 txtTenSP.ReadOnly = true;
                 txtDG.ReadOnly = true;
                 numericUpDown1.Enabled = false;
-                txtHSD.ReadOnly = true;
+                dtHSD.Enabled = false;
                 cboMLoai.Enabled = false;
                 cboMDV.Enabled = false;
                 cboNCC.Enabled = false;
@@ -126,7 +126,16 @@ namespace LeLeStore
             int maxQuantity = (int)numericUpDown1.Maximum;
             int clampedQuantity = Math.Min(Math.Max(row.SoLuong, minQuantity), maxQuantity);
             numericUpDown1.Value = clampedQuantity;
-            txtHSD.Text = row.IsHanSuDungNull() ? string.Empty : row.HanSuDung.ToString("yyyy-MM-dd");
+            if (row.IsHanSuDungNull())
+            {
+                dtHSD.Checked = false;
+                dtHSD.Value = DateTime.Today;
+            }
+            else
+            {
+                dtHSD.Checked = true;
+                dtHSD.Value = row.HanSuDung;
+            }
             SetComboSelectedValue(cboMLoai, row.MaLoai);
             SetComboSelectedValue(cboMDV, row.MaDVT);
             SetComboSelectedValue(cboNCC, row.IsMaNCCNull() ? (int?)null : row.MaNCC);
@@ -141,7 +150,8 @@ namespace LeLeStore
             txtTenSP.Text = string.Empty;
             txtDG.Text = string.Empty;
             numericUpDown1.Value = numericUpDown1.Minimum;
-            txtHSD.Text = string.Empty;
+            dtHSD.Value = DateTime.Today;
+            dtHSD.Checked = false;
             ResetComboBoxSelection(cboMLoai, false);
             ResetComboBoxSelection(cboMDV, false);
             ResetComboBoxSelection(cboNCC, true);
@@ -238,18 +248,9 @@ namespace LeLeStore
                 return false;
             }
 
-            if (!string.IsNullOrWhiteSpace(txtHSD.Text))
+            if (dtHSD.Checked)
             {
-                if (DateTime.TryParse(txtHSD.Text.Trim(), out DateTime parsedDate))
-                {
-                    hanSuDung = parsedDate;
-                }
-                else
-                {
-                    MessageBox.Show("Hạn sử dụng không hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    txtHSD.Focus();
-                    return false;
-                }
+                hanSuDung = dtHSD.Value.Date;
             }
 
             if (cboMLoai.SelectedValue is int selectedMaLoai)
@@ -304,6 +305,16 @@ namespace LeLeStore
             return true;
         }
 
+        private bool IsDuplicateProductName(string productName, int? currentProductId = null)
+        {
+            string name = (productName ?? "").Trim();
+
+            return gStoreDataSet.SanPham.AsEnumerable().Any(r =>
+                r.RowState != DataRowState.Deleted &&
+                string.Equals((r.Field<string>("TenSP") ?? "").Trim(), name, StringComparison.OrdinalIgnoreCase) &&
+                (!currentProductId.HasValue || r.Field<int>("MaSP") != currentProductId.Value)
+            );
+        }
         private void LoadComboBoxData()
         {
             try
@@ -399,6 +410,13 @@ namespace LeLeStore
                 return;
             }
 
+            if (IsDuplicateProductName(tenSp))
+            {
+                MessageBox.Show("Tên sản phẩm đã tồn tại. Vui lòng chọn tên khác.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtTenSP.Focus();
+                return;
+            }
+
             try
             {
                 sanPhamTableAdapter.Insert(
@@ -437,6 +455,14 @@ namespace LeLeStore
             {
                 return;
             }
+
+            if (IsDuplicateProductName(tenSp, maSp))
+            {
+                MessageBox.Show("Tên sản phẩm đã tồn tại. Vui lòng chọn tên khác.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtTenSP.Focus();
+                return;
+            }
+
 
             var row = gStoreDataSet.SanPham.FindByMaSP(maSp);
             if (row == null)

@@ -496,8 +496,11 @@
             // 
             // dtHSD
             // 
+            this.dtHSD.CustomFormat = "yyyy-MM-dd";
+            this.dtHSD.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dtHSD.Location = new System.Drawing.Point(488, 129);
             this.dtHSD.Name = "dtHSD";
+            this.dtHSD.ShowCheckBox = true;
             this.dtHSD.Size = new System.Drawing.Size(275, 26);
             this.dtHSD.TabIndex = 58;
             // 
