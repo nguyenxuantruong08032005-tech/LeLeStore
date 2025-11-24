@@ -1053,7 +1053,7 @@ namespace LeLeStore
                 return false;
             }
 
-            if (norm == "Xuat" && !maNcc.HasValue)
+            if (norm == "XUAT" && !maNcc.HasValue)
             {
                 MessageBox.Show("Giao dịch XUẤT bắt buộc phải chọn Mã nhà cung cấp.",
                                 "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -1539,13 +1539,9 @@ namespace LeLeStore
         private void cboMaNCC_SelectedIndexChanged_1(object sender, EventArgs e)
         {
             var norm = (cbLoaiGD.SelectedItem as string ?? cbLoaiGD.Text ?? "").Trim().ToUpperInvariant();
-            bool requireNcc = norm == "NHAP";
+            bool requireNcc = norm == "NHAP" || norm == "XUAT";
             cboMaNCC.Enabled = true;
-            if (!requireNcc)
-            {
-                // XUAT: không cần NCC -> xóa chọn để tránh nhầm
-                if (cboMaNCC.SelectedIndex != -1) cboMaNCC.SelectedIndex = -1;
-            }
+           
 
             // Cập nhật lại danh sách sản phẩm theo NCC hiện tại (nếu có)
             UpdateProductComboBoxForTransaction(GetCurrentDetailTransactionId(), GetSelectedProductId());
