@@ -119,6 +119,7 @@
             this.txtTenDN.Name = "txtTenDN";
             this.txtTenDN.Size = new System.Drawing.Size(315, 26);
             this.txtTenDN.TabIndex = 6;
+            this.txtTenDN.Leave += new System.EventHandler(this.txtTenDN_Leave);
             // 
             // txtMK
             // 
@@ -126,6 +127,7 @@
             this.txtMK.Name = "txtMK";
             this.txtMK.Size = new System.Drawing.Size(268, 26);
             this.txtMK.TabIndex = 7;
+            this.txtMK.Leave += new System.EventHandler(this.txtMK_Leave);
             // 
             // btnSua
             // 
@@ -282,6 +284,7 @@
             this.cboVaiTro.Name = "cboVaiTro";
             this.cboVaiTro.Size = new System.Drawing.Size(250, 28);
             this.cboVaiTro.TabIndex = 22;
+            this.cboVaiTro.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             // 
             // formUser
             // 

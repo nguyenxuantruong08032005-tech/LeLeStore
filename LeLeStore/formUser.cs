@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Data.SqlClient;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace LeLeStore
@@ -33,7 +34,7 @@ namespace LeLeStore
             txtMaDung.ReadOnly = true;
             txtTenDN.ReadOnly = !canEdit;
             txtMK.ReadOnly = !canEdit;
-            txtVaiTro.ReadOnly = !canEdit;
+            cboVaiTro.Enabled = canEdit;
 
             UpdateButtonsForState();
 
@@ -63,7 +64,7 @@ namespace LeLeStore
                 txtMaDung.Text = rv["MaNguoiDung"]?.ToString();
                 txtTenDN.Text = rv["TenDangNhap"]?.ToString();
                 txtMK.Text = rv["MatKhau"]?.ToString();
-                txtVaiTro.Text = rv["VaiTro"]?.ToString();
+                cboVaiTro.SelectedItem = rv["VaiTro"]?.ToString();
             }
             else
             {
@@ -110,6 +111,7 @@ namespace LeLeStore
             // TODO: This line of code loads data into the 'gStoreDataSet.NguoiDung' table. You can move, or remove it, as needed.
             this.nguoiDungTableAdapter.Fill(this.gStoreDataSet.NguoiDung);
             this.ControlBox = false;
+            LoadRolesToComboBox();
             InitializeBindings();
             SetOperation(UserOperation.None);   // <— thêm dòng này
         }
@@ -121,13 +123,139 @@ namespace LeLeStore
             txtMaDung.DataBindings.Clear();
             txtTenDN.DataBindings.Clear();
             txtMK.DataBindings.Clear();
-            txtVaiTro.DataBindings.Clear();
+            cboVaiTro.DataBindings.Clear();
 
             txtMaDung.DataBindings.Add("Text", nguoiDungBindingSource, "MaNguoiDung", true, DataSourceUpdateMode.Never);
             txtTenDN.DataBindings.Add("Text", nguoiDungBindingSource, "TenDangNhap", true, DataSourceUpdateMode.Never);
             txtMK.DataBindings.Add("Text", nguoiDungBindingSource, "MatKhau", true, DataSourceUpdateMode.Never);
-            txtVaiTro.DataBindings.Add("Text", nguoiDungBindingSource, "VaiTro", true, DataSourceUpdateMode.Never);
+            cboVaiTro.DataBindings.Add("SelectedItem", nguoiDungBindingSource, "VaiTro", true, DataSourceUpdateMode.Never);
         }
+        private void LoadRolesToComboBox()
+        {
+            try
+            {
+                var roles = FetchRolesFromDatabase();
+
+                var requiredRoles = new[] { "BAN_HANG", "QUAN_LY", "KHO" };
+                foreach (var role in requiredRoles)
+                {
+                    if (!roles.Contains(role))
+                    {
+                        roles.Add(role);
+                    }
+                }
+
+                cboVaiTro.DataSource = roles;
+                cboVaiTro.SelectedIndex = roles.Count > 0 ? 0 : -1;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Không thể tải danh sách vai trò. Lỗi: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private List<string> FetchRolesFromDatabase()
+        {
+            var roles = new List<string>();
+
+            using (var connection = new SqlConnection(nguoiDungTableAdapter.Connection.ConnectionString))
+            using (var command = new SqlCommand("SELECT DISTINCT VaiTro FROM NguoiDung", connection))
+            {
+                connection.Open();
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        if (!reader.IsDBNull(0))
+                        {
+                            var role = reader.GetString(0);
+                            if (!roles.Contains(role))
+                            {
+                                roles.Add(role);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return roles;
+        }
+
+        private bool IsUsernameDuplicate(string username, int? currentUserId = null)
+        {
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                return false;
+            }
+
+            return gStoreDataSet.NguoiDung
+                .Where(r => r.RowState != DataRowState.Deleted)
+                .Any(r => string.Equals(r.TenDangNhap, username, StringComparison.OrdinalIgnoreCase)
+                    && (!currentUserId.HasValue || r.MaNguoiDung != currentUserId.Value));
+        }
+
+        private int? GetCurrentUserId()
+        {
+            if (int.TryParse(txtMaDung.Text, out var id))
+            {
+                return id;
+            }
+
+            return null;
+        }
+
+        private bool ValidateUsernameUniqueness()
+        {
+            var username = txtTenDN.Text.Trim();
+            var duplicate = IsUsernameDuplicate(username, GetCurrentUserId());
+
+            if (duplicate)
+            {
+                MessageBox.Show("Tên đăng nhập đã tồn tại. Vui lòng chọn tên khác.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtTenDN.Focus();
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool ValidatePasswordLength()
+        {
+            var password = txtMK.Text ?? string.Empty;
+
+            if (password.Length < 5)
+            {
+                MessageBox.Show("Mật khẩu phải có ít nhất 5 ký tự.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtMK.Focus();
+                return false;
+            }
+
+            if (password.Length > 20)
+            {
+                MessageBox.Show("Mật khẩu không được vượt quá 20 ký tự.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtMK.Focus();
+                return false;
+            }
+
+            return true;
+        }
+
+        private void txtTenDN_Leave(object sender, EventArgs e)
+        {
+            if (_currentOperation == UserOperation.Add)
+            {
+                ValidateUsernameUniqueness();
+            }
+        }
+
+        private void txtMK_Leave(object sender, EventArgs e)
+        {
+            if (_currentOperation == UserOperation.Add || _currentOperation == UserOperation.Edit)
+            {
+                ValidatePasswordLength();
+            }
+        }
+
         private void btnXoa_Click(object sender, EventArgs e)
         {
             if (nguoiDungBindingSource.Current is DataRowView currentRow)
@@ -167,7 +295,7 @@ namespace LeLeStore
                     txtMaDung.Text = currentRow["MaNguoiDung"].ToString();
                     txtTenDN.Text = currentRow["TenDangNhap"].ToString();
                     txtMK.Text = currentRow["MatKhau"].ToString();
-                    txtVaiTro.Text = currentRow["VaiTro"].ToString();
+                    cboVaiTro.SelectedItem = currentRow["VaiTro"].ToString();
                 }
                 return;
             }
@@ -183,10 +311,14 @@ namespace LeLeStore
 
             if (string.IsNullOrWhiteSpace(txtTenDN.Text) ||
                 string.IsNullOrWhiteSpace(txtMK.Text) ||
-                string.IsNullOrWhiteSpace(txtVaiTro.Text))
+               cboVaiTro.SelectedItem == null)
             {
                 MessageBox.Show("Vui lòng nhập đầy đủ thông tin trước khi cập nhật.", "Thông báo",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            if (!ValidatePasswordLength() || !ValidateUsernameUniqueness())
+            {
                 return;
             }
 
@@ -197,7 +329,7 @@ namespace LeLeStore
                 selectedRow.BeginEdit();
                 selectedRow["TenDangNhap"] = txtTenDN.Text.Trim();
                 selectedRow["MatKhau"] = txtMK.Text;
-                selectedRow["VaiTro"] = txtVaiTro.Text.Trim();
+                selectedRow["VaiTro"] = cboVaiTro.SelectedItem.ToString();
                 selectedRow.EndEdit();
 
                 nguoiDungBindingSource.EndEdit();
@@ -225,7 +357,7 @@ namespace LeLeStore
             txtMaDung.Clear();
             txtTenDN.Clear();
             txtMK.Clear();
-            txtVaiTro.Clear();
+            cboVaiTro.SelectedIndex = -1;
         }
 
         private void btnThem_Click(object sender, EventArgs e)
@@ -245,10 +377,14 @@ namespace LeLeStore
             // Đang ở chế độ Thêm -> lưu
             if (string.IsNullOrWhiteSpace(txtTenDN.Text) ||
                 string.IsNullOrWhiteSpace(txtMK.Text) ||
-                string.IsNullOrWhiteSpace(txtVaiTro.Text))
+                cboVaiTro.SelectedItem == null)
             {
                 MessageBox.Show("Vui lòng nhập đầy đủ thông tin người dùng mới.", "Thông báo",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            if (!ValidatePasswordLength() || !ValidateUsernameUniqueness())
+            {
                 return;
             }
 
@@ -259,7 +395,7 @@ namespace LeLeStore
                 var newRow = gStoreDataSet.NguoiDung.NewNguoiDungRow();
                 newRow.TenDangNhap = txtTenDN.Text.Trim();
                 newRow.MatKhau = txtMK.Text;
-                newRow.VaiTro = txtVaiTro.Text.Trim();
+                newRow.VaiTro = cboVaiTro.SelectedItem.ToString();
                 gStoreDataSet.NguoiDung.AddNguoiDungRow(newRow);
 
                 nguoiDungBindingSource.EndEdit();

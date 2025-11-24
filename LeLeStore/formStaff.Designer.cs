@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             this.txtSDT = new System.Windows.Forms.TextBox();
-            this.txtCV = new System.Windows.Forms.TextBox();
             this.txtTenNV = new System.Windows.Forms.TextBox();
             this.txtMaNV = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -56,6 +55,7 @@
             this.btnThem = new ReaLTaiizor.Controls.Button();
             this.btnHuy = new ReaLTaiizor.Controls.Button();
             this.cbMaNgDung = new System.Windows.Forms.ComboBox();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nhanVienBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gStoreDataSet)).BeginInit();
@@ -67,13 +67,6 @@
             this.txtSDT.Name = "txtSDT";
             this.txtSDT.Size = new System.Drawing.Size(225, 26);
             this.txtSDT.TabIndex = 16;
-            // 
-            // txtCV
-            // 
-            this.txtCV.Location = new System.Drawing.Point(584, 137);
-            this.txtCV.Name = "txtCV";
-            this.txtCV.Size = new System.Drawing.Size(197, 26);
-            this.txtCV.TabIndex = 15;
             // 
             // txtTenNV
             // 
@@ -341,11 +334,20 @@
             this.cbMaNgDung.Size = new System.Drawing.Size(216, 28);
             this.cbMaNgDung.TabIndex = 28;
             // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(584, 144);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(225, 28);
+            this.comboBox1.TabIndex = 29;
+            // 
             // formStaff
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(1383, 724);
+            this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.cbMaNgDung);
             this.Controls.Add(this.btnHuy);
             this.Controls.Add(this.btnThem);
@@ -357,7 +359,6 @@
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtSDT);
-            this.Controls.Add(this.txtCV);
             this.Controls.Add(this.txtTenNV);
             this.Controls.Add(this.txtMaNV);
             this.Controls.Add(this.label5);
@@ -379,7 +380,6 @@
 
         #endregion
         private System.Windows.Forms.TextBox txtSDT;
-        private System.Windows.Forms.TextBox txtCV;
         private System.Windows.Forms.TextBox txtTenNV;
         private System.Windows.Forms.TextBox txtMaNV;
         private System.Windows.Forms.Label label5;
@@ -405,5 +405,6 @@
         private ReaLTaiizor.Controls.Button btnThem;
         private ReaLTaiizor.Controls.Button btnHuy;
         private System.Windows.Forms.ComboBox cbMaNgDung;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }
