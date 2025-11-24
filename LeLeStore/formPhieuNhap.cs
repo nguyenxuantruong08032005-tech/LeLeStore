@@ -109,6 +109,8 @@ namespace LeLeStore
             _username = username ?? string.Empty;
             InitializeComponent();
 
+            cbLoaiGD.SelectedIndexChanged += cboMaNCC_SelectedIndexChanged_1;
+
             giaoDichBindingSource.DataSource = gStoreDataSet;
             giaoDichBindingSource.DataMember = gStoreDataSet.GiaoDichKho.TableName;
             dataGridView1.AutoGenerateColumns = true;
@@ -1041,6 +1043,29 @@ namespace LeLeStore
                 maNhanVien = 0;
                 return false;
             }
+            // 🔒 NHẬP bắt buộc có NCC
+            var norm = loaiGD.Trim().ToUpperInvariant();
+            if (norm == "NHAP" && !maNcc.HasValue)
+            {
+                MessageBox.Show("Giao dịch NHẬP bắt buộc phải chọn Mã nhà cung cấp.",
+                                "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                maNhanVien = 0;
+                return false;
+            }
+
+            if (norm == "Xuat" && !maNcc.HasValue)
+            {
+                MessageBox.Show("Giao dịch XUẤT bắt buộc phải chọn Mã nhà cung cấp.",
+                                "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                maNhanVien = 0;
+                return false;
+            }
+            if (!selectedEmployeeId.HasValue)
+            {
+                MessageBox.Show("Vui lòng chọn mã nhân viên hợp lệ.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                maNhanVien = 0;
+                return false;
+            }
             maNhanVien = selectedEmployeeId.Value;
             return true;
         }
@@ -1381,7 +1406,7 @@ namespace LeLeStore
         // ======= CANCEL / RESTORE HELPERS =======
         private void CancelTransactionPendingEdits()
         {
-            try { Validate(); } catch { }
+            
             try { dataGridView1.CancelEdit(); } catch { }
             try { giaoDichBindingSource.CancelEdit(); } catch { }
             try { gStoreDataSet.GiaoDichKho.RejectChanges(); } catch { }
@@ -1389,7 +1414,7 @@ namespace LeLeStore
 
         private void CancelDetailPendingEdits()
         {
-            try { Validate(); } catch { }
+            
             try { dataGridView2.CancelEdit(); } catch { }
             try { chiTietGiaoDichKhoBindingSource.CancelEdit(); } catch { }
             try { gStoreDataSet.ChiTietGiaoDichKho.RejectChanges(); } catch { }
@@ -1508,6 +1533,21 @@ namespace LeLeStore
             detailEditingKey = null;
 
             // Đồng bộ lại combobox sản phẩm theo MaGD hiện tại ở khu detail
+            UpdateProductComboBoxForTransaction(GetCurrentDetailTransactionId(), GetSelectedProductId());
+        }
+
+        private void cboMaNCC_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+            var norm = (cbLoaiGD.SelectedItem as string ?? cbLoaiGD.Text ?? "").Trim().ToUpperInvariant();
+            bool requireNcc = norm == "NHAP";
+            cboMaNCC.Enabled = true;
+            if (!requireNcc)
+            {
+                // XUAT: không cần NCC -> xóa chọn để tránh nhầm
+                if (cboMaNCC.SelectedIndex != -1) cboMaNCC.SelectedIndex = -1;
+            }
+
+            // Cập nhật lại danh sách sản phẩm theo NCC hiện tại (nếu có)
             UpdateProductComboBoxForTransaction(GetCurrentDetailTransactionId(), GetSelectedProductId());
         }
     }

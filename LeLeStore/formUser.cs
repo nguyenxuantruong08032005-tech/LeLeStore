@@ -43,7 +43,7 @@ namespace LeLeStore
         }
         private void CancelPendingUiEdits()
         {
-            try { this.Validate(); } catch { }
+           
             try { dataGridView1.CancelEdit(); } catch { }
             try { nguoiDungBindingSource.CancelEdit(); } catch { }
 

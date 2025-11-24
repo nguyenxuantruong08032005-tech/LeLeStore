@@ -49,6 +49,7 @@
             this.btnXoaCT = new ReaLTaiizor.Controls.Button();
             this.btnThemCT = new ReaLTaiizor.Controls.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.cboMaGD = new System.Windows.Forms.ComboBox();
             this.cbMaSP = new System.Windows.Forms.ComboBox();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.label8 = new System.Windows.Forms.Label();
@@ -65,7 +66,6 @@
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.btnHuy = new ReaLTaiizor.Controls.Button();
             this.btnHuyCT = new ReaLTaiizor.Controls.Button();
-            this.cboMaGD = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -132,6 +132,7 @@
             this.cboMaNCC.Name = "cboMaNCC";
             this.cboMaNCC.Size = new System.Drawing.Size(330, 32);
             this.cboMaNCC.TabIndex = 20;
+            this.cboMaNCC.SelectedIndexChanged += new System.EventHandler(this.cboMaNCC_SelectedIndexChanged_1);
             // 
             // cbLoaiGD
             // 
@@ -349,6 +350,14 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Chi Tiết Giao Dịch";
             // 
+            // cboMaGD
+            // 
+            this.cboMaGD.FormattingEnabled = true;
+            this.cboMaGD.Location = new System.Drawing.Point(304, 64);
+            this.cboMaGD.Name = "cboMaGD";
+            this.cboMaGD.Size = new System.Drawing.Size(121, 32);
+            this.cboMaGD.TabIndex = 7;
+            // 
             // cbMaSP
             // 
             this.cbMaSP.FormattingEnabled = true;
@@ -516,14 +525,6 @@
             this.btnHuyCT.Text = "Hủy";
             this.btnHuyCT.TextAlignment = System.Drawing.StringAlignment.Center;
             this.btnHuyCT.Click += new System.EventHandler(this.btnHuyCT_Click);
-            // 
-            // cboMaGD
-            // 
-            this.cboMaGD.FormattingEnabled = true;
-            this.cboMaGD.Location = new System.Drawing.Point(304, 64);
-            this.cboMaGD.Name = "cboMaGD";
-            this.cboMaGD.Size = new System.Drawing.Size(121, 32);
-            this.cboMaGD.TabIndex = 7;
             // 
             // formPhieuNhap
             // 
