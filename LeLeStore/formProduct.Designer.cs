@@ -227,6 +227,7 @@
             this.txtDG.Name = "txtDG";
             this.txtDG.Size = new System.Drawing.Size(120, 26);
             this.txtDG.TabIndex = 33;
+           
             // 
             // txtTenSP
             // 
@@ -234,6 +235,7 @@
             this.txtTenSP.Name = "txtTenSP";
             this.txtTenSP.Size = new System.Drawing.Size(229, 26);
             this.txtTenSP.TabIndex = 32;
+            this.txtTenSP.Validating += new System.ComponentModel.CancelEventHandler(this.txtTenSP_Validating);
             // 
             // txtMaSP
             // 

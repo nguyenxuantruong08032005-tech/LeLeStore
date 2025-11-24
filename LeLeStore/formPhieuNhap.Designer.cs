@@ -32,6 +32,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.cboMaNV = new System.Windows.Forms.ComboBox();
             this.cboMaNCC = new System.Windows.Forms.ComboBox();
             this.cbLoaiGD = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -52,7 +53,6 @@
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.label8 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
-            this.txtMaGD1 = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.maGDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -65,7 +65,7 @@
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.btnHuy = new ReaLTaiizor.Controls.Button();
             this.btnHuyCT = new ReaLTaiizor.Controls.Button();
-            this.cboMaNV = new System.Windows.Forms.ComboBox();
+            this.cboMaGD1 = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -116,6 +116,14 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Giao Dịch";
             this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
+            // 
+            // cboMaNV
+            // 
+            this.cboMaNV.FormattingEnabled = true;
+            this.cboMaNV.Location = new System.Drawing.Point(856, 85);
+            this.cboMaNV.Name = "cboMaNV";
+            this.cboMaNV.Size = new System.Drawing.Size(306, 32);
+            this.cboMaNV.TabIndex = 21;
             // 
             // cboMaNCC
             // 
@@ -327,11 +335,11 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.cboMaGD1);
             this.groupBox2.Controls.Add(this.cbMaSP);
             this.groupBox2.Controls.Add(this.numericUpDown1);
             this.groupBox2.Controls.Add(this.label8);
             this.groupBox2.Controls.Add(this.label10);
-            this.groupBox2.Controls.Add(this.txtMaGD1);
             this.groupBox2.Controls.Add(this.label11);
             this.groupBox2.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
             this.groupBox2.Location = new System.Drawing.Point(12, 466);
@@ -375,17 +383,10 @@
             this.label10.TabIndex = 3;
             this.label10.Text = "Mã Sản Phẩm:";
             // 
-            // txtMaGD1
-            // 
-            this.txtMaGD1.Location = new System.Drawing.Point(316, 60);
-            this.txtMaGD1.Name = "txtMaGD1";
-            this.txtMaGD1.Size = new System.Drawing.Size(70, 30);
-            this.txtMaGD1.TabIndex = 2;
-            // 
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(312, 37);
+            this.label11.Location = new System.Drawing.Point(300, 37);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(143, 24);
             this.label11.TabIndex = 1;
@@ -516,13 +517,13 @@
             this.btnHuyCT.TextAlignment = System.Drawing.StringAlignment.Center;
             this.btnHuyCT.Click += new System.EventHandler(this.btnHuyCT_Click);
             // 
-            // cboMaNV
+            // cboMaGD1
             // 
-            this.cboMaNV.FormattingEnabled = true;
-            this.cboMaNV.Location = new System.Drawing.Point(856, 85);
-            this.cboMaNV.Name = "cboMaNV";
-            this.cboMaNV.Size = new System.Drawing.Size(306, 32);
-            this.cboMaNV.TabIndex = 21;
+            this.cboMaGD1.FormattingEnabled = true;
+            this.cboMaGD1.Location = new System.Drawing.Point(304, 64);
+            this.cboMaGD1.Name = "cboMaGD1";
+            this.cboMaGD1.Size = new System.Drawing.Size(121, 32);
+            this.cboMaGD1.TabIndex = 7;
             // 
             // formPhieuNhap
             // 
@@ -584,7 +585,6 @@
         private System.Windows.Forms.NumericUpDown numericUpDown1;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.TextBox txtMaGD1;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.DataGridView dataGridView2;
         private GStoreDataSet gStoreDataSet;
@@ -601,5 +601,6 @@
         private ReaLTaiizor.Controls.Button btnHuyCT;
         private System.Windows.Forms.ComboBox cboMaNCC;
         private System.Windows.Forms.ComboBox cboMaNV;
+        private System.Windows.Forms.ComboBox cboMaGD1;
     }
 }

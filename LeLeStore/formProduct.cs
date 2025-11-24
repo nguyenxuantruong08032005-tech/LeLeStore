@@ -315,6 +315,33 @@ namespace LeLeStore
                 (!currentProductId.HasValue || r.Field<int>("MaSP") != currentProductId.Value)
             );
         }
+
+        private void txtTenSP_Validating(object sender, CancelEventArgs e)
+        {
+            if (_currentOperation != ProductOperation.Add && _currentOperation != ProductOperation.Edit)
+            {
+                return;
+            }
+
+            string tenSp = txtTenSP.Text.Trim();
+            if (string.IsNullOrWhiteSpace(tenSp))
+            {
+                return;
+            }
+
+            int? currentProductId = null;
+            if (_currentOperation == ProductOperation.Edit && int.TryParse(txtMaSP.Text, out int id))
+            {
+                currentProductId = id;
+            }
+
+            if (IsDuplicateProductName(tenSp, currentProductId))
+            {
+                MessageBox.Show("Sản phẩm đã tồn tại", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                e.Cancel = true;
+            }
+        }
+
         private void LoadComboBoxData()
         {
             try
