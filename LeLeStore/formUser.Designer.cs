@@ -37,7 +37,6 @@
             this.txtMaDung = new System.Windows.Forms.TextBox();
             this.txtTenDN = new System.Windows.Forms.TextBox();
             this.txtMK = new System.Windows.Forms.TextBox();
-            this.txtVaiTro = new System.Windows.Forms.TextBox();
             this.btnSua = new ReaLTaiizor.Controls.Button();
             this.btnXoa = new ReaLTaiizor.Controls.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
@@ -50,6 +49,7 @@
             this.nguoiDungTableAdapter = new LeLeStore.GStoreDataSetTableAdapters.NguoiDungTableAdapter();
             this.btnThem = new ReaLTaiizor.Controls.Button();
             this.btnHuy = new ReaLTaiizor.Controls.Button();
+            this.cboVaiTro = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nguoiDungBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gStoreDataSet)).BeginInit();
@@ -126,13 +126,6 @@
             this.txtMK.Name = "txtMK";
             this.txtMK.Size = new System.Drawing.Size(268, 26);
             this.txtMK.TabIndex = 7;
-            // 
-            // txtVaiTro
-            // 
-            this.txtVaiTro.Location = new System.Drawing.Point(61, 434);
-            this.txtVaiTro.Name = "txtVaiTro";
-            this.txtVaiTro.Size = new System.Drawing.Size(225, 26);
-            this.txtVaiTro.TabIndex = 8;
             // 
             // btnSua
             // 
@@ -282,18 +275,26 @@
             this.btnHuy.TextAlignment = System.Drawing.StringAlignment.Center;
             this.btnHuy.Click += new System.EventHandler(this.btnHuy_Click);
             // 
+            // cboVaiTro
+            // 
+            this.cboVaiTro.FormattingEnabled = true;
+            this.cboVaiTro.Location = new System.Drawing.Point(61, 436);
+            this.cboVaiTro.Name = "cboVaiTro";
+            this.cboVaiTro.Size = new System.Drawing.Size(250, 28);
+            this.cboVaiTro.TabIndex = 22;
+            // 
             // formUser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.ClientSize = new System.Drawing.Size(1390, 753);
+            this.Controls.Add(this.cboVaiTro);
             this.Controls.Add(this.btnHuy);
             this.Controls.Add(this.btnThem);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.btnXoa);
             this.Controls.Add(this.btnSua);
-            this.Controls.Add(this.txtVaiTro);
             this.Controls.Add(this.txtMK);
             this.Controls.Add(this.txtTenDN);
             this.Controls.Add(this.txtMaDung);
@@ -325,7 +326,6 @@
         private System.Windows.Forms.TextBox txtMaDung;
         private System.Windows.Forms.TextBox txtTenDN;
         private System.Windows.Forms.TextBox txtMK;
-        private System.Windows.Forms.TextBox txtVaiTro;
         private ReaLTaiizor.Controls.Button btnSua;
         private ReaLTaiizor.Controls.Button btnXoa;
         private System.Windows.Forms.DataGridView dataGridView1;
@@ -338,5 +338,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn vaiTroDataGridViewTextBoxColumn;
         private ReaLTaiizor.Controls.Button btnThem;
         private ReaLTaiizor.Controls.Button btnHuy;
+        private System.Windows.Forms.ComboBox cboVaiTro;
     }
 }
