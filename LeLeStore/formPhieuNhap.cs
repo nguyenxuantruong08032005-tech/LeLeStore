@@ -78,7 +78,7 @@ namespace LeLeStore
             detailMode = m;
 
             bool canEdit = (m == EditMode.Add || m == EditMode.Edit);
-            txtMaGD1.ReadOnly = !canEdit;
+            cboMaGD.Enabled = canEdit;
             cbMaSP.Enabled = canEdit;
             numericUpDown1.Enabled = canEdit;
 
@@ -103,6 +103,7 @@ namespace LeLeStore
         private int? transactionEditingId;
         private (int MaGD, int MaSP)? detailEditingKey;
         private bool suppressProductComboUpdate;
+        private bool suppressTransactionComboUpdate;
         public formPhieuNhap(string username = "")
         {
             _username = username ?? string.Empty;
@@ -137,7 +138,8 @@ namespace LeLeStore
             cboMaNV.DropDownStyle = ComboBoxStyle.DropDownList;
 
 
-            txtMaGD1.TextChanged += txtMaGD1_TextChanged;
+            cboMaGD.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboMaGD.SelectedIndexChanged += cboMaGD_SelectedIndexChanged;
             cboMaNCC.SelectedIndexChanged += cboMaNCC_SelectedIndexChanged;
 
 
@@ -179,6 +181,7 @@ namespace LeLeStore
             ExecuteSafely(() => chiTietGiaoDichKhoTableAdapter.Fill(gStoreDataSet.ChiTietGiaoDichKho), "Không thể tải dữ liệu chi tiết giao dịch");
             EnsureLookupDataLoaded();
             EnsureEmployeeDataLoaded();
+            PopulateTransactionComboBox();
             PopulateSupplierComboBox();
             PopulateEmployeeComboBox();
         }
@@ -227,6 +230,31 @@ namespace LeLeStore
                 cboMaNV.SelectedIndex = employees.Count > 0 ? 0 : -1;
             }
         }
+
+        private void PopulateTransactionComboBox(int? selectedTransactionId = null)
+        {
+            var transactionIds = gStoreDataSet.GiaoDichKho
+                .Where(row => row.RowState != DataRowState.Deleted)
+                .Select(row => row.MaGD)
+                .OrderBy(id => id)
+                .ToList();
+
+            suppressTransactionComboUpdate = true;
+            cboMaGD.DataSource = null;
+            cboMaGD.DataSource = transactionIds;
+
+            if (selectedTransactionId.HasValue && transactionIds.Contains(selectedTransactionId.Value))
+            {
+                cboMaGD.SelectedItem = selectedTransactionId.Value;
+            }
+            else
+            {
+                cboMaGD.SelectedIndex = transactionIds.Count > 0 ? 0 : -1;
+            }
+
+            suppressTransactionComboUpdate = false;
+        }
+
         private void EnsureLookupDataLoaded()
         {
             if (gStoreDataSet.NhaCungCap.Count == 0)
@@ -327,14 +355,23 @@ namespace LeLeStore
 
             return null;
         }
-        private int? GetCurrentDetailTransactionId()
+        private int? GetSelectedTransactionId()
         {
-            if (int.TryParse(txtMaGD1.Text.Trim(), out int maGd))
+            if (cboMaGD.SelectedValue is int selectedValue)
             {
-                return maGd;
+                return selectedValue;
+            }
+
+            if (int.TryParse(cboMaGD.Text.Trim(), out int parsedValue))
+            {
+                return parsedValue;
             }
 
             return null;
+        }
+        private int? GetCurrentDetailTransactionId()
+        {
+            return GetSelectedTransactionId();
         }
         private int? GetSelectedEmployeeId()
         {
@@ -385,9 +422,9 @@ namespace LeLeStore
             return cbMaSP.SelectedValue is int selected && selected == maSp;
         }
 
-        private void txtMaGD1_TextChanged(object sender, EventArgs e)
+        private void cboMaGD_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (suppressProductComboUpdate)
+            if (suppressTransactionComboUpdate)
             {
                 return;
             }
@@ -627,21 +664,60 @@ namespace LeLeStore
                 // mặc định gán MaGD chi tiết theo MaGD header
                 if (int.TryParse(txtMaGD.Text, out int maGd))
                 {
-                    suppressProductComboUpdate = true;
-                    txtMaGD1.Text = maGd.ToString();
-                    suppressProductComboUpdate = false;
+                    suppressTransactionComboUpdate = true;
+                    cboMaGD.SelectedItem = maGd;
+                    suppressTransactionComboUpdate = false;
                     UpdateProductComboBoxForTransaction(maGd);
                 }
                 else
                 {
                     UpdateProductComboBoxForTransaction(null);
                 }
-                txtMaGD1.Focus();
+                cboMaGD.Focus();
                 return;
             }
 
             // Pha LƯU
             if (!TryGetDetailValues(out int maGD, out int maSP, out int soLuong)) return;
+
+            if (DetailExists(maGD, maSP))  // đã có khóa (MaGD, MaSP)
+            {
+                // Hỏi cộng dồn
+                if (AskConfirm("Chi tiết (MaGD, MaSP) đã tồn tại. Bạn có muốn cộng dồn số lượng?", MessageBoxIcon.Question))
+                {
+                    // Lấy row hiện có và cộng dồn
+                    var row = gStoreDataSet.ChiTietGiaoDichKho.FindByMaGDMaSP(maGD, maSP);
+                    if (row == null || row.RowState == DataRowState.Deleted)
+                    {
+                        MessageBox.Show("Không tìm thấy chi tiết hiện có để cập nhật.", "Thông báo",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    // Điều chỉnh tồn kho theo loại giao dịch hiện chọn (NHAP/XUAT)
+                    int sign = InterpretTransactionSign(cbLoaiGD.Text); // +1 nhập, -1 xuất
+                    ApplyProductAdjustments(new List<(int MaSP, int Delta)> { (maSP, soLuong * sign) });
+
+                    // Cộng dồn số lượng và lưu
+                    row.SoLuong = row.SoLuong + soLuong;
+                    chiTietGiaoDichKhoBindingSource.EndEdit();
+                    chiTietGiaoDichKhoTableAdapter.Update(row);   // update 1 row
+                    chiTietGiaoDichKhoBindingSource.ResetCurrentItem();
+
+                    RefreshDetails(false);
+                    MessageBox.Show("Đã cộng dồn số lượng cho chi tiết giao dịch.", "Thông báo",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    SetDetailMode(EditMode.None);
+                    return;
+                }
+                else
+                {
+                    // Không cộng dồn thì thôi
+                    return;
+                }
+            }
+
+            // Chưa tồn tại -> thêm mới
             if (!AskConfirm("Xác nhận lưu chi tiết giao dịch?")) return;
 
             try
@@ -655,7 +731,7 @@ namespace LeLeStore
                 chiTietGiaoDichKhoBindingSource.EndEdit();
                 chiTietGiaoDichKhoTableAdapter.Update(gStoreDataSet.ChiTietGiaoDichKho);
 
-                // Áp tồn kho từ thay đổi pending (ở DataSet hiện tại không còn pending, nhưng ta có thể tính incremental)
+                // Điều chỉnh tồn kho theo loại GD
                 ApplyProductAdjustments(new List<(int MaSP, int Delta)> { (maSP, soLuong * InterpretTransactionSign(cbLoaiGD.Text)) });
 
                 RefreshDetails(false);
@@ -669,6 +745,7 @@ namespace LeLeStore
             {
                 SetDetailMode(EditMode.None);
             }
+
         }
 
         private void btnSuaCT_Click(object sender, EventArgs e)
@@ -887,17 +964,17 @@ namespace LeLeStore
             txtMaGD.Text = GenerateNextTransactionId().ToString();
             if (detailMode != EditMode.Add)
             {
-                suppressProductComboUpdate = true;
-                txtMaGD1.Text = txtMaGD.Text;
-                suppressProductComboUpdate = false;
-
-                if (int.TryParse(txtMaGD.Text, out int newTransactionId))
+                if (int.TryParse(txtMaGD.Text, out int newTransactionId) &&
+     cboMaGD.Items.Cast<object>().Any(item => Convert.ToInt32(item) == newTransactionId))
                 {
+                    suppressTransactionComboUpdate = true;
+                    cboMaGD.SelectedItem = newTransactionId;
+                    suppressTransactionComboUpdate = false;
                     UpdateProductComboBoxForTransaction(newTransactionId);
                 }
                 else
                 {
-                    UpdateProductComboBoxForTransaction(null);
+                    UpdateProductComboBoxForTransaction(GetCurrentDetailTransactionId());
                 }
             }
             else
@@ -959,9 +1036,9 @@ namespace LeLeStore
         {
             if (detailMode != EditMode.Add)
             {
-                suppressProductComboUpdate = true;
-                txtMaGD1.Clear();
-                suppressProductComboUpdate = false;
+                suppressTransactionComboUpdate = true;
+                cboMaGD.SelectedIndex = -1;
+                suppressTransactionComboUpdate = false;
             }
 
             UpdateProductComboBoxForTransaction(GetCurrentDetailTransactionId());
@@ -970,9 +1047,9 @@ namespace LeLeStore
         }
         private void PopulateDetailInputs(GStoreDataSet.ChiTietGiaoDichKhoRow row)
         {
-            suppressProductComboUpdate = true;
-            txtMaGD1.Text = row.MaGD.ToString();
-            suppressProductComboUpdate = false;
+            suppressTransactionComboUpdate = true;
+            cboMaGD.SelectedItem = row.MaGD;
+            suppressTransactionComboUpdate = false;
             UpdateProductComboBoxForTransaction(row.MaGD, row.MaSP);
             numericUpDown1.Value = ClampQuantity(row.SoLuong);
         }
@@ -994,13 +1071,17 @@ namespace LeLeStore
 
         private bool TryGetDetailValues(out int maGd, out int maSp, out int soLuong)
         {
-            if (!int.TryParse(txtMaGD1.Text.Trim(), out maGd))
+            var selectedTransactionId = GetSelectedTransactionId();
+            if (!selectedTransactionId.HasValue)
             {
                 MessageBox.Show("Mã giao dịch không hợp lệ.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 maSp = 0;
                 soLuong = 0;
+                maGd = 0;
                 return false;
             }
+            maGd = selectedTransactionId.Value;
+
 
             int? selectedProductId = GetSelectedProductId();
             if (!selectedProductId.HasValue)
@@ -1023,10 +1104,12 @@ namespace LeLeStore
 
         private void RefreshTransactions(bool showError)
         {
+            int? currentSelectedTransaction = GetSelectedTransactionId();
             try
             {
                 giaoDichKhoTableAdapter.Fill(gStoreDataSet.GiaoDichKho);
                 giaoDichBindingSource.ResetBindings(false);
+                PopulateTransactionComboBox(currentSelectedTransaction);
             }
             catch (Exception ex)
             {
@@ -1245,9 +1328,9 @@ namespace LeLeStore
 
                 if (detailMode != EditMode.Add)
                 {
-                    suppressProductComboUpdate = true;
-                    txtMaGD1.Text = row.MaGD.ToString();
-                    suppressProductComboUpdate = false;
+                    suppressTransactionComboUpdate = true;
+                    cboMaGD.SelectedItem = row.MaGD;
+                    suppressTransactionComboUpdate = false;
                     targetTransactionId = row.MaGD;
                 }
 

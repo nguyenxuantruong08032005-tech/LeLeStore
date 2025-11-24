@@ -65,7 +65,7 @@
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.btnHuy = new ReaLTaiizor.Controls.Button();
             this.btnHuyCT = new ReaLTaiizor.Controls.Button();
-            this.cboMaGD1 = new System.Windows.Forms.ComboBox();
+            this.cboMaGD = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -335,7 +335,7 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.cboMaGD1);
+            this.groupBox2.Controls.Add(this.cboMaGD);
             this.groupBox2.Controls.Add(this.cbMaSP);
             this.groupBox2.Controls.Add(this.numericUpDown1);
             this.groupBox2.Controls.Add(this.label8);
@@ -517,13 +517,13 @@
             this.btnHuyCT.TextAlignment = System.Drawing.StringAlignment.Center;
             this.btnHuyCT.Click += new System.EventHandler(this.btnHuyCT_Click);
             // 
-            // cboMaGD1
+            // cboMaGD
             // 
-            this.cboMaGD1.FormattingEnabled = true;
-            this.cboMaGD1.Location = new System.Drawing.Point(304, 64);
-            this.cboMaGD1.Name = "cboMaGD1";
-            this.cboMaGD1.Size = new System.Drawing.Size(121, 32);
-            this.cboMaGD1.TabIndex = 7;
+            this.cboMaGD.FormattingEnabled = true;
+            this.cboMaGD.Location = new System.Drawing.Point(304, 64);
+            this.cboMaGD.Name = "cboMaGD";
+            this.cboMaGD.Size = new System.Drawing.Size(121, 32);
+            this.cboMaGD.TabIndex = 7;
             // 
             // formPhieuNhap
             // 
@@ -601,6 +601,6 @@
         private ReaLTaiizor.Controls.Button btnHuyCT;
         private System.Windows.Forms.ComboBox cboMaNCC;
         private System.Windows.Forms.ComboBox cboMaNV;
-        private System.Windows.Forms.ComboBox cboMaGD1;
+        private System.Windows.Forms.ComboBox cboMaGD;
     }
 }
