@@ -23,10 +23,13 @@ namespace LeLeStore
         private readonly GStoreDataSetTableAdapters.NhanVienTableAdapter _nhanVienTableAdapter = new GStoreDataSetTableAdapters.NhanVienTableAdapter();
         private readonly GStoreDataSetTableAdapters.NguoiDungTableAdapter _nguoiDungTableAdapter = new GStoreDataSetTableAdapters.NguoiDungTableAdapter();
         private SupplierOperation _currentOperation = SupplierOperation.None;
+        private bool IsEditingOperation => _currentOperation == SupplierOperation.Add || _currentOperation == SupplierOperation.Edit;
         public formSupplier(string username = "")
         {
             _username = username ?? string.Empty;
             InitializeComponent();
+            btnHuy.CausesValidation = false;
+            
             SetOperation(SupplierOperation.None);
             PopulateInputsFromSelection();
             LoadEmployeeOptions();
@@ -135,6 +138,18 @@ namespace LeLeStore
                 return false;
             }
 
+            if (!ValidateSupplierPhoneNumber(showMessage: true, out soDienThoai))
+            {
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(diaChi))
+            {
+                MessageBox.Show("Địa chỉ nhà cung cấp không được để trống.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtDiaChiNCC.Focus();
+                return false;
+            }
+
             if (cboMaNV.SelectedValue is int selectedEmployee)
             {
                 maNhanVien = selectedEmployee;
@@ -148,9 +163,85 @@ namespace LeLeStore
 
             return true;
         }
+        private bool ValidateSupplierPhoneNumber(bool showMessage, out string sanitized)
+        {
+            sanitized = txtSdtNCC.Text.Trim();
 
-        
-        
+            if (string.IsNullOrWhiteSpace(sanitized))
+            {
+                if (showMessage)
+                    MessageBox.Show("Vui lòng nhập số điện thoại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtSdtNCC.Focus();
+                return false;
+            }
+
+            if (!sanitized.All(char.IsDigit))
+            {
+                if (showMessage)
+                    MessageBox.Show("Số điện thoại chỉ được chứa số.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtSdtNCC.Focus();
+                return false;
+            }
+
+            if (sanitized.Length < 10)
+            {
+                if (showMessage)
+                    MessageBox.Show("Số điện thoại phải đủ 10 số.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtSdtNCC.Focus();
+                return false;
+            }
+
+            if (sanitized.Length > 10)
+            {
+                if (showMessage)
+                    MessageBox.Show("Số điện thoại không được vượt quá 10 số.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtSdtNCC.Focus();
+                return false;
+            }
+            var phoneToCheck = sanitized;
+            int? currentSupplierId = GetCurrentSupplierId();
+            bool isDuplicate = gStoreDataSet.NhaCungCap.Any(row =>
+                !row.IsSoDienThoaiNull() &&
+                 string.Equals(row.SoDienThoai, phoneToCheck, StringComparison.Ordinal) &&
+                (!currentSupplierId.HasValue || row.MaNCC != currentSupplierId.Value));
+
+            if (isDuplicate)
+            {
+                if (showMessage)
+                    MessageBox.Show("Số điện thoại đã tồn tại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtSdtNCC.Focus();
+                return false;
+            }
+
+            return true;
+        }
+
+        private int? GetCurrentSupplierId()
+        {
+            if (int.TryParse(txtMaNCC.Text, out int maNcc))
+            {
+                return maNcc;
+            }
+
+            return null;
+        }
+
+        private void TxtTenNCC_Validating(object sender, CancelEventArgs e)
+        {
+            if (!IsEditingOperation)
+            {
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtTenNCC.Text.Trim()))
+            {
+                MessageBox.Show("Tên nhà cung cấp không được để trống.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                e.Cancel = true;
+            }
+        }
+
+
+
 
         private void RefreshData(int? focusKey = null)
         {
@@ -189,8 +280,8 @@ namespace LeLeStore
             {
                 nhaCungCapTableAdapter.Insert(
                     tenNcc,
-                    string.IsNullOrWhiteSpace(soDienThoai) ? null : soDienThoai,
-                    string.IsNullOrWhiteSpace(diaChi) ? null : diaChi,
+                    soDienThoai,
+                    diaChi,
                     maNhanVien
                 );
 
@@ -266,8 +357,8 @@ namespace LeLeStore
             try
             {
                 editRow.TenNCC = tenNcc;
-                if (string.IsNullOrWhiteSpace(soDienThoai)) editRow.SetSoDienThoaiNull(); else editRow.SoDienThoai = soDienThoai;
-                if (string.IsNullOrWhiteSpace(diaChi)) editRow.SetDiaChiNull(); else editRow.DiaChi = diaChi;
+                editRow.SoDienThoai = soDienThoai;
+                editRow.DiaChi = diaChi;
                 editRow.MaNhanVien = maNhanVien;
 
                 nhaCungCapBindingSource.EndEdit();
@@ -480,6 +571,33 @@ namespace LeLeStore
             else
             {
                 cboMaNV.SelectedIndex = cboMaNV.Items.Count > 0 ? 0 : -1;
+            }
+        }
+
+        private void txtTenNCC_Validating_1(object sender, CancelEventArgs e)
+        {
+            if (!IsEditingOperation)
+            {
+                return;
+            }
+
+            if (!ValidateSupplierPhoneNumber(showMessage: true, out _))
+            {
+                e.Cancel = true;
+            }
+        }
+
+        private void txtDiaChiNCC_Validating(object sender, CancelEventArgs e)
+        {
+            if (!IsEditingOperation)
+            {
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtDiaChiNCC.Text.Trim()))
+            {
+                MessageBox.Show("Địa chỉ nhà cung cấp không được để trống.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                e.Cancel = true;
             }
         }
     }

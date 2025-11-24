@@ -241,9 +241,16 @@ namespace LeLeStore
                 return false;
             }
 
-            if (!decimal.TryParse(txtDG.Text.Trim(), out donGia))
+            if (string.IsNullOrWhiteSpace(txtDG.Text))
             {
-                MessageBox.Show("Đơn giá không hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Đơn giá không được để trống.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtDG.Focus();
+                return false;
+            }
+
+            if (!decimal.TryParse(txtDG.Text.Trim(), out donGia) || donGia <= 0)
+            {
+                MessageBox.Show("Đơn giá không hợp lệ và phải lớn hơn 0.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtDG.Focus();
                 return false;
             }
@@ -251,6 +258,19 @@ namespace LeLeStore
             if (dtHSD.Checked)
             {
                 hanSuDung = dtHSD.Value.Date;
+                if (hanSuDung.Value < DateTime.Today)
+                {
+                    MessageBox.Show("Hạn sử dụng không được nhỏ hơn ngày hiện tại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    dtHSD.Focus();
+                    return false;
+                }
+            }
+
+            if (soLuong <= 0)
+            {
+                MessageBox.Show("Số lượng phải lớn hơn 0.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                numericUpDown1.Focus();
+                return false;
             }
 
             if (cboMLoai.SelectedValue is int selectedMaLoai)
@@ -278,6 +298,12 @@ namespace LeLeStore
             if (cboNCC.SelectedValue is int selectedNcc)
             {
                 maNcc = selectedNcc;
+            }
+            else
+            {
+                MessageBox.Show("Vui lòng chọn nhà cung cấp.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                cboNCC.Focus();
+                return false;
             }
 
             if (cboMaNV.SelectedValue is int selectedNhanVien)

@@ -768,6 +768,12 @@ namespace LeLeStore
                 return;
             }
 
+            if (row.SoLuong <= 0)
+            {
+                MessageBox.Show("Số lượng chi tiết phải lớn hơn 0 trước khi chỉnh sửa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             // Pha 1: vào chế độ sửa
             if (detailMode != EditMode.Edit)
             {
@@ -913,6 +919,13 @@ namespace LeLeStore
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
+
+            if (row.SoLuong <= 0)
+            {
+                MessageBox.Show("Số lượng chi tiết phải lớn hơn 0 trước khi xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
 
             if (!AskConfirm("Bạn có chắc chắn muốn xóa chi tiết này?", MessageBoxIcon.Warning)) return;
 

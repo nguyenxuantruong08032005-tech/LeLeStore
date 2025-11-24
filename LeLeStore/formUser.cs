@@ -239,6 +239,22 @@ namespace LeLeStore
 
             return true;
         }
+        private bool ValidatePasswordComposition()
+        {
+            var password = txtMK.Text ?? string.Empty;
+
+            bool hasLetter = password.Any(char.IsLetter);
+            bool hasDigit = password.Any(char.IsDigit);
+
+            if (!hasLetter || !hasDigit)
+            {
+                MessageBox.Show("Mật khẩu phải chứa cả chữ và số.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtMK.Focus();
+                return false;
+            }
+
+            return true;
+        }
 
         private void txtTenDN_Leave(object sender, EventArgs e)
         {
@@ -252,7 +268,10 @@ namespace LeLeStore
         {
             if (_currentOperation == UserOperation.Add || _currentOperation == UserOperation.Edit)
             {
-                ValidatePasswordLength();
+                if (ValidatePasswordLength())
+                {
+                    ValidatePasswordComposition();
+                }
             }
         }
 
@@ -317,7 +336,7 @@ namespace LeLeStore
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            if (!ValidatePasswordLength() || !ValidateUsernameUniqueness())
+            if (!ValidatePasswordLength() || !ValidatePasswordComposition() || !ValidateUsernameUniqueness())
             {
                 return;
             }
@@ -383,7 +402,7 @@ namespace LeLeStore
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            if (!ValidatePasswordLength() || !ValidateUsernameUniqueness())
+            if (!ValidatePasswordLength() || !ValidatePasswordComposition() || !ValidateUsernameUniqueness())
             {
                 return;
             }

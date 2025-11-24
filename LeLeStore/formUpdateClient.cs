@@ -185,6 +185,12 @@ namespace LeLeStore
             {
                 return false;
             }
+            if (string.IsNullOrWhiteSpace(diaChi))
+            {
+                MessageBox.Show("Địa chỉ khách hàng không được để trống.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtDiaChiKH.Focus();
+                return false;
+            }
 
             if (cboMaNV.SelectedValue is int selectedEmployee)
             {
@@ -217,7 +223,12 @@ namespace LeLeStore
             {
                 return false;
             }
-
+            if (string.IsNullOrWhiteSpace(diaChi))
+            {
+                MessageBox.Show("Địa chỉ khách hàng không được để trống.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtDiaChiKH.Focus();
+                return false;
+            }
             if (cboMaNV.SelectedValue is int selectedEmployee)
             {
                 maNhanVien = selectedEmployee;
@@ -332,8 +343,8 @@ namespace LeLeStore
             {
                 khachHangTableAdapter.Insert(
                     hoTen,
-                    string.IsNullOrWhiteSpace(soDienThoai) ? null : soDienThoai,
-                    string.IsNullOrWhiteSpace(diaChi) ? null : diaChi,
+                    soDienThoai,
+                    diaChi,
                     diemTichLuy,
                     maNhanVien
                 );
@@ -398,8 +409,8 @@ namespace LeLeStore
             try
             {
                 editRow.HoTen = hoTen;
-                if (string.IsNullOrWhiteSpace(soDienThoai)) editRow.SetSoDienThoaiNull(); else editRow.SoDienThoai = soDienThoai;
-                if (string.IsNullOrWhiteSpace(diaChi)) editRow.SetDiaChiNull(); else editRow.DiaChi = diaChi;
+                editRow.SoDienThoai = soDienThoai;
+                editRow.DiaChi = diaChi;
                 editRow.MaNhanVien = maNhanVien;
 
                 khachHangBindingSource.EndEdit();

@@ -204,18 +204,20 @@ namespace LeLeStore
             // Pha lưu
             if (!ValidateRequiredFields()) return;
             if (!TryParseMaNguoiDung(out int maNguoiDung)) return;
+            if (!ValidateMaNguoiDungUnique(maNguoiDung, null)) return;
             if (!AskConfirm("Xác nhận lưu nhân viên mới?")) return;
 
             string hoTen = NormalizeRequiredText(txtTenNV.Text);
             string chucVu = GetSelectedChucVu();
             string soDienThoai = NormalizeOptionalText(txtSDT.Text);
-            string diaChi = NormalizeOptionalText(txtDC.Text);
+            string diaChi = NormalizeRequiredText(txtDC.Text);
+
 
             var newRow = gStoreDataSet.NhanVien.NewNhanVienRow();
             newRow.HoTen = hoTen;
             if (string.IsNullOrEmpty(chucVu)) newRow.SetChucVuNull(); else newRow.ChucVu = chucVu;
             if (string.IsNullOrEmpty(soDienThoai)) newRow.SetSoDienThoaiNull(); else newRow.SoDienThoai = soDienThoai;
-            if (string.IsNullOrEmpty(diaChi)) newRow.SetDiaChiNull(); else newRow.DiaChi = diaChi;
+            newRow.DiaChi = diaChi;
             newRow.MaNguoiDung = maNguoiDung;
 
             gStoreDataSet.NhanVien.AddNhanVienRow(newRow);
@@ -252,18 +254,19 @@ namespace LeLeStore
             // Pha lưu
             if (!ValidateRequiredFields()) return;
             if (!TryParseMaNguoiDung(out int maNguoiDung)) return;
+            if (!ValidateMaNguoiDungUnique(maNguoiDung, GetCurrentEditingId())) return;
             if (!AskConfirm("Xác nhận lưu thay đổi thông tin nhân viên?")) return;
 
             string hoTen = NormalizeRequiredText(txtTenNV.Text);
             string chucVu = GetSelectedChucVu();
             string soDienThoai = NormalizeOptionalText(txtSDT.Text);
-            string diaChi = NormalizeOptionalText(txtDC.Text);
+            string diaChi = NormalizeRequiredText(txtDC.Text);
 
             // So sánh thay đổi (tuỳ thích giữ đoạn của bạn); ở đây cập nhật trực tiếp
             row.HoTen = hoTen;
             if (string.IsNullOrEmpty(chucVu)) row.SetChucVuNull(); else row.ChucVu = chucVu;
             if (string.IsNullOrEmpty(soDienThoai)) row.SetSoDienThoaiNull(); else row.SoDienThoai = soDienThoai;
-            if (string.IsNullOrEmpty(diaChi)) row.SetDiaChiNull(); else row.DiaChi = diaChi;
+             row.DiaChi = diaChi;
             row.MaNguoiDung = maNguoiDung;
 
             // Lưu + reload và quay lại đúng bản ghi đang sửa
@@ -580,6 +583,12 @@ namespace LeLeStore
                 return false;
             }
 
+            if (string.IsNullOrWhiteSpace(txtDC.Text))
+            {
+                MessageBox.Show("Không được để trống Địa chỉ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
             if (!ValidatePhoneNumber())
             {
                
@@ -588,6 +597,23 @@ namespace LeLeStore
 
                 return true;
             }
+
+        private bool ValidateMaNguoiDungUnique(int maNguoiDung, int? currentNhanVienId)
+        {
+            bool duplicate = gStoreDataSet.NhanVien.Any(row =>
+                row.RowState != DataRowState.Deleted &&
+                !row.IsMaNguoiDungNull() &&
+                row.MaNguoiDung == maNguoiDung &&
+                (!currentNhanVienId.HasValue || row.MaNhanVien != currentNhanVienId.Value));
+
+            if (duplicate)
+            {
+                MessageBox.Show("Mã người dùng đã được chọn cho nhân viên khác.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            return true;
+        }
 
         private bool TryParseMaNguoiDung(out int maNguoiDung)
         {
