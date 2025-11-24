@@ -87,8 +87,8 @@ namespace LeLeStore
         {
             InitializeComponent();
 
-            
 
+            btnHuy.CausesValidation = false;   // <<< bấm Hủy không chạy Validating
             dataGridView1.SelectionChanged += dataGridView1_SelectionChanged;
             txtMaNV.ReadOnly = true;
             SetTextBoxesReadOnly(false);
@@ -604,7 +604,6 @@ namespace LeLeStore
 
         private void btnHuy_Click(object sender, EventArgs e)
         {
-            // Nếu không ở chế độ Add/Edit thì chỉ đồng bộ lại UI rồi thoát
             if (mode == OperationMode.None)
             {
                 ReloadInputs();
@@ -615,14 +614,19 @@ namespace LeLeStore
                                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
 
-            // Hủy mọi thay đổi treo
-            CancelPendingEdits();
-
-            // Trả UI về trạng thái bình thường
-            SetMode(OperationMode.None);
-
-            // Làm tươi phần nhập theo dòng đang chọn
-            ReloadInputs();
+            // TẮT validate tạm thời
+            var prev = this.AutoValidate;
+            this.AutoValidate = AutoValidate.Disable;
+            try
+            {
+                CancelPendingEdits();     // rollback các thay đổi treo
+                SetMode(OperationMode.None);
+                ReloadInputs();
+            }
+            finally
+            {
+                this.AutoValidate = prev; // khôi phục
+            }
         }
     }
 }

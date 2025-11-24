@@ -94,6 +94,7 @@ namespace LeLeStore
         {
             _username = username ?? string.Empty;
             InitializeComponent();
+            btnHuy.CausesValidation = false;
             SetOperation(ClientOperation.None);
             PopulateInputsFromSelection();
             LoadEmployeeOptions();
@@ -488,10 +489,10 @@ namespace LeLeStore
                 txtSDTKH.Focus();
                 return false;
             }
-
+            var phoneToCheck = sanitizedNumber;
             bool isDuplicate = gStoreDataSet.KhachHang.Any(row =>
                 !row.IsSoDienThoaiNull() &&
-                string.Equals(row.SoDienThoai, sanitizedNumber, StringComparison.Ordinal) &&
+                 string.Equals(row.SoDienThoai, phoneToCheck, StringComparison.Ordinal) &&
                 (!currentClientId.HasValue || row.MaKhachHang != currentClientId.Value));
 
             if (isDuplicate)
@@ -519,7 +520,6 @@ namespace LeLeStore
 
         private void btnHuy_Click(object sender, EventArgs e)
         {
-            // Nếu đang không ở chế độ Add/Edit thì chỉ làm tươi inputs theo selection hiện tại
             if (_currentOperation == ClientOperation.None)
             {
                 PopulateInputsFromSelection();
@@ -528,22 +528,28 @@ namespace LeLeStore
 
             if (!AskConfirm("Hủy các thay đổi khách hàng đang thực hiện?")) return;
 
-            // Lưu khóa hiện tại (nếu có) để sau khi hủy sẽ focus đúng lại
-            int? focusKey = null;
-            if (int.TryParse(txtMaKH.Text.Trim(), out int parsedId))
-                focusKey = parsedId;
+            // Lưu lại chế độ AutoValidate hiện tại và tắt tạm thời
+            var prev = this.AutoValidate;
+            this.AutoValidate = AutoValidate.Disable;
+            try
+            {
+                int? focusKey = null;
+                if (int.TryParse(txtMaKH.Text.Trim(), out int parsedId))
+                    focusKey = parsedId;
 
-            // Rollback mọi chỉnh sửa chưa lưu
-            try { Validate(); } catch { }
-            try { dataGridView1.CancelEdit(); } catch { }
-            try { khachHangBindingSource.CancelEdit(); } catch { }
-            try { gStoreDataSet.KhachHang.RejectChanges(); } catch { }
+                // KHÔNG gọi Validate() ở đây nữa
+                try { dataGridView1.CancelEdit(); } catch { }
+                try { khachHangBindingSource.CancelEdit(); } catch { }
+                try { gStoreDataSet.KhachHang.RejectChanges(); } catch { }
 
-            // Trả UI về trạng thái bình thường
-            SetOperation(ClientOperation.None);
-
-            // Khôi phục dữ liệu + đưa con trỏ về đúng bản ghi (nếu còn)
-            RefreshDataAndRestoreByKey(focusKey);
+                SetOperation(ClientOperation.None);
+                RefreshDataAndRestoreByKey(focusKey);
+            }
+            finally
+            {
+                // khôi phục
+                this.AutoValidate = prev;
+            }
         }
 
         private void txtSDTKH_Validating(object sender, CancelEventArgs e)
