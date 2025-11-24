@@ -82,6 +82,7 @@
             this.txtSdtNCC.Name = "txtSdtNCC";
             this.txtSdtNCC.Size = new System.Drawing.Size(197, 26);
             this.txtSdtNCC.TabIndex = 23;
+            this.txtSdtNCC.Validating += new System.ComponentModel.CancelEventHandler(this.txtSdtNCC_Validating);
             // 
             // txtTenNCC
             // 
@@ -89,7 +90,7 @@
             this.txtTenNCC.Name = "txtTenNCC";
             this.txtTenNCC.Size = new System.Drawing.Size(229, 26);
             this.txtTenNCC.TabIndex = 22;
-            this.txtTenNCC.Validating += new System.ComponentModel.CancelEventHandler(this.txtTenNCC_Validating_1);
+            this.txtTenNCC.Validating += new System.ComponentModel.CancelEventHandler(this.TxtTenNCC_Validating);
             // 
             // txtMaNCC
             // 

@@ -67,7 +67,7 @@ namespace LeLeStore
         private void CancelPendingEdits()
         {
             // Hủy edit ở UI/BindingSource
-            try { this.Validate(); } catch { }
+            
             try { dataGridView1.CancelEdit(); } catch { }
             try { nhaCungCapBindingSource.CancelEdit(); } catch { }
 
@@ -475,7 +475,6 @@ namespace LeLeStore
 
         private void btnHuy_Click(object sender, EventArgs e)
         {
-            // Nếu không ở chế độ thao tác thì chỉ làm tươi lại dữ liệu đang hiển thị
             if (_currentOperation == SupplierOperation.None)
             {
                 ReloadInputs();
@@ -488,19 +487,24 @@ namespace LeLeStore
                                           MessageBoxIcon.Question);
             if (confirm != DialogResult.Yes) return;
 
-            // Rollback mọi chỉnh sửa chưa lưu
-            CancelPendingEdits();
+            // TẮT validate tạm thời
+            var prev = this.AutoValidate;
+            this.AutoValidate = AutoValidate.Disable;
+            try
+            {
+                CancelPendingEdits();          // không còn Validate() bên trong
+                SetOperation(SupplierOperation.None);
 
-            // Trả UI về trạng thái bình thường
-            SetOperation(SupplierOperation.None);
+                btnThem.Enabled = true; btnThem.Text = "Thêm";
+                btnSua.Enabled = true; btnSua.Text = "Sửa";
+                btnXoa.Enabled = true;
 
-            // Mở lại các nút và nhãn nút như cũ
-            btnThem.Enabled = true; btnThem.Text = "Thêm";
-            btnSua.Enabled = true; btnSua.Text = "Sửa";
-            btnXoa.Enabled = true;
-
-            // Làm tươi khu nhập theo selection hiện tại
-            ReloadInputs();
+                ReloadInputs();
+            }
+            finally
+            {
+                this.AutoValidate = prev;      // khôi phục
+            }
         }
 
         private void LoadEmployeeOptions()
@@ -574,7 +578,7 @@ namespace LeLeStore
             }
         }
 
-        private void txtTenNCC_Validating_1(object sender, CancelEventArgs e)
+        private void txtSdtNCC_Validating(object sender, CancelEventArgs e)
         {
             if (!IsEditingOperation)
             {
