@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Globalization;
+using System.ComponentModel;
 namespace LeLeStore
 {
     public partial class formEmployeeSalary : Form
@@ -113,7 +114,76 @@ namespace LeLeStore
             ConfigurePayPeriodPicker();
             ApplyMonthDaysToControls();
             UpdateHoursFromDays();
+            RegisterNonNegativeValidation();
         }
+
+        private void RegisterNonNegativeValidation()
+        {
+            var textBoxesToValidate = new[]
+            {
+                txtHeSoLuong,
+                txtLuongCoBan,
+                txtLuongTheoGio,
+                txtTyLeDoanhThu,
+                txtDoanhThuKhuVuc,
+                txtHoaHongBanHang,
+                txtDoanhThuCa,
+                txtKhauTru,
+                txtThuongQTHT,
+                txtThuong,
+                txtPhuCapQuanLy,
+                txtPhuCapCaDem,
+                txtPhuCap,
+                txtLuongThucNhan,
+                txtTongThuNhap,
+                txtTongPhuCap,
+                txtTienHoaHong,
+                txtLuongKPI,
+                txtLuongCoBanTinh,
+                txtLuongGio
+            };
+
+            foreach (var textBox in textBoxesToValidate)
+            {
+                textBox.Validating += EnsureNonNegativeOnValidation;
+            }
+        }
+
+        private void EnsureNonNegativeOnValidation(object sender, CancelEventArgs e)
+        {
+            var textBox = sender as TextBox;
+            if (textBox == null)
+            {
+                return;
+            }
+
+            if (!textBox.Enabled || textBox.ReadOnly)
+            {
+                return;
+            }
+
+            var text = textBox.Text.Trim();
+            if (string.IsNullOrEmpty(text))
+            {
+                return;
+            }
+
+            if (!decimal.TryParse(text, NumberStyles.Any, CultureInfo.CurrentCulture, out decimal value)
+                && !decimal.TryParse(text, NumberStyles.Any, CultureInfo.GetCultureInfo("vi-VN"), out value)
+                && !decimal.TryParse(text, NumberStyles.Any, CultureInfo.InvariantCulture, out value))
+            {
+                return;
+            }
+
+            if (value < 0m)
+            {
+                MessageBox.Show("Giá trị không được âm.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                e.Cancel = true;
+                textBox.SelectAll();
+            }
+        }
+
+
 
         private void groupBox5_Enter(object sender, EventArgs e)
         {
@@ -541,26 +611,7 @@ VALUES
                 }
             }
         }
-        private int GetIntValue(TextBox textBox)
-        {
-            var text = textBox.Text.Trim();
-            if (string.IsNullOrEmpty(text))
-            {
-                return 0;
-            }
-
-            if (int.TryParse(text, NumberStyles.Integer, CultureInfo.CurrentCulture, out int value))
-            {
-                return value;
-            }
-
-            if (int.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out value))
-            {
-                return value;
-            }
-
-            throw new FormatException($"Giá trị '{text}' không hợp lệ.");
-        }
+      
         private decimal GetDecimalValue(TextBox textBox)
         {
             var text = textBox.Text.Trim();
