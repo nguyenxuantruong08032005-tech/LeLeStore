@@ -449,6 +449,44 @@ namespace LeLeStore
             }
         }
 
+        private bool TryParseDecimalInput(string text, out decimal value)
+        {
+            if (decimal.TryParse(text, NumberStyles.Any, CultureInfo.CurrentCulture, out value))
+            {
+                return true;
+            }
+
+            if (decimal.TryParse(text, NumberStyles.Any, CultureInfo.GetCultureInfo("vi-VN"), out value))
+            {
+                return true;
+            }
+
+            if (decimal.TryParse(text, NumberStyles.Any, CultureInfo.InvariantCulture, out value))
+            {
+                return true;
+            }
+
+            value = 0m;
+            return false;
+        }
+
+        private bool ValidateNonNegativeNumericUpDown(NumericUpDown control, ref decimal previousValue, CancelEventArgs e)
+        {
+            var text = control.Text?.Trim() ?? string.Empty;
+            if (TryParseDecimalInput(text, out decimal typedValue) && typedValue < 0)
+            {
+                MessageBox.Show("Giá trị không được âm.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                control.Value = previousValue;
+                e.Cancel = true;
+                control.Select(0, control.Text.Length);
+                return false;
+            }
+
+            previousValue = control.Value;
+            return true;
+        }
+
+
         private void btnTinhLuong_Click(object sender, EventArgs e)
         {
             try
@@ -816,28 +854,12 @@ VALUES
 
         private void nudSoNgay_Validating(object sender, CancelEventArgs e)
         {
-            if (nudSoNgay.Value < 0)
-            {
-                MessageBox.Show("Giá trị không được âm.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                nudSoNgay.Value = previousWorkdayValue;
-                e.Cancel = true;
-                return;
-            }
-
-            previousWorkdayValue = nudSoNgay.Value;
+            ValidateNonNegativeNumericUpDown(nudSoNgay, ref previousWorkdayValue, e);
         }
 
         private void nudSoGio_Validating(object sender, CancelEventArgs e)
         {
-            if (nudSoGio.Value < 0)
-            {
-                MessageBox.Show("Giá trị không được âm.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                nudSoGio.Value = previousHourValue;
-                e.Cancel = true;
-                return;
-            }
-
-            previousHourValue = nudSoGio.Value;
+            ValidateNonNegativeNumericUpDown(nudSoGio, ref previousHourValue, e);
         }
     }
 }
