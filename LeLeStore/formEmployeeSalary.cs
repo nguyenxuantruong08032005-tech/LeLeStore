@@ -15,7 +15,7 @@ namespace LeLeStore
         private readonly TextBox[] managedTextBoxes;
         private bool updatingWorkdayControls;
         private readonly Dictionary<string, TextBox[]> roleTextBoxes;
-        private readonly Dictionary<string, (decimal BaseSalary, decimal SalaryCoefficient)> roleSalaryDefaults;
+        private readonly Dictionary<string, (decimal BaseSalary, decimal SalaryCoefficient, decimal HourlyRate)> roleSalaryDefaults;
         public formEmployeeSalary()
         {
             InitializeComponent();
@@ -94,11 +94,11 @@ namespace LeLeStore
                     }
                 }
             };
-            roleSalaryDefaults = new Dictionary<string, (decimal BaseSalary, decimal SalaryCoefficient)>(StringComparer.CurrentCultureIgnoreCase)
+            roleSalaryDefaults = new Dictionary<string, (decimal BaseSalary, decimal SalaryCoefficient, decimal HourlyRate)>(StringComparer.CurrentCultureIgnoreCase)
             {
-                { "Nhân viên bán hàng", (3_000_000m, 1.1m) },
-                { "Nhân viên kho", (3_200_000m, 1.05m) },
-                { "Quản lý cửa hàng", (5_000_000m, 1.3m) }
+                { "Nhân viên bán hàng", (3_000_000m, 1.1m, 15_000m) },
+                { "Nhân viên kho", (3_200_000m, 1.05m, 16_000m) },
+                { "Quản lý cửa hàng", (5_000_000m, 1.3m, 0m) }
             };
             Load += formEmployeeSalary_Load;
             cboNhanVien.SelectedIndexChanged += cboNhanVien_SelectedIndexChanged;
@@ -404,6 +404,7 @@ namespace LeLeStore
             {
                 txtLuongCoBan.Text = string.Empty;
                 txtHeSoLuong.Text = string.Empty;
+                txtLuongTheoGio.Text = string.Empty;
                 return;
             }
 
@@ -412,11 +413,15 @@ namespace LeLeStore
             {
                 txtLuongCoBan.Text = FormatCurrency(defaults.BaseSalary);
                 txtHeSoLuong.Text = defaults.SalaryCoefficient.ToString("N2", CultureInfo.CurrentCulture);
+                txtLuongTheoGio.Text = defaults.HourlyRate > 0m
+                 ? FormatCurrency(defaults.HourlyRate)
+                 : string.Empty;
             }
             else
             {
                 txtLuongCoBan.Text = string.Empty;
                 txtHeSoLuong.Text = string.Empty;
+                txtLuongTheoGio.Text = string.Empty;
             }
         }
 
