@@ -37,7 +37,6 @@
             this.cboNhanVien = new System.Windows.Forms.ComboBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.txtKy = new System.Windows.Forms.TextBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.label9 = new System.Windows.Forms.Label();
             this.txtHeSoLuong = new System.Windows.Forms.TextBox();
@@ -46,9 +45,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.txtLuongTheoGio = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.txtSoGioLam = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.txtSoNgayLam = new System.Windows.Forms.TextBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.label11 = new System.Windows.Forms.Label();
             this.txtTyLeDoanhThu = new System.Windows.Forms.TextBox();
@@ -90,12 +87,17 @@
             this.btnLuu = new ReaLTaiizor.Controls.Button();
             this.btnThoat = new ReaLTaiizor.Controls.Button();
             this.btnBangLuong = new ReaLTaiizor.Controls.Button();
+            this.dtpKiLuong = new System.Windows.Forms.DateTimePicker();
+            this.nudSoNgay = new System.Windows.Forms.NumericUpDown();
+            this.nudSoGio = new System.Windows.Forms.NumericUpDown();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudSoNgay)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudSoGio)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -169,8 +171,8 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.dtpKiLuong);
             this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Controls.Add(this.txtKy);
             this.groupBox2.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
             this.groupBox2.Location = new System.Drawing.Point(796, 31);
             this.groupBox2.Name = "groupBox2";
@@ -188,15 +190,10 @@
             this.label4.TabIndex = 6;
             this.label4.Text = "Kì Lương:";
             // 
-            // txtKy
-            // 
-            this.txtKy.Location = new System.Drawing.Point(22, 64);
-            this.txtKy.Name = "txtKy";
-            this.txtKy.Size = new System.Drawing.Size(129, 30);
-            this.txtKy.TabIndex = 0;
-            // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.nudSoGio);
+            this.groupBox3.Controls.Add(this.nudSoNgay);
             this.groupBox3.Controls.Add(this.label9);
             this.groupBox3.Controls.Add(this.txtHeSoLuong);
             this.groupBox3.Controls.Add(this.label8);
@@ -204,9 +201,7 @@
             this.groupBox3.Controls.Add(this.label7);
             this.groupBox3.Controls.Add(this.txtLuongTheoGio);
             this.groupBox3.Controls.Add(this.label6);
-            this.groupBox3.Controls.Add(this.txtSoGioLam);
             this.groupBox3.Controls.Add(this.label5);
-            this.groupBox3.Controls.Add(this.txtSoNgayLam);
             this.groupBox3.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
             this.groupBox3.Location = new System.Drawing.Point(29, 196);
             this.groupBox3.Name = "groupBox3";
@@ -274,13 +269,6 @@
             this.label6.TabIndex = 10;
             this.label6.Text = "Số giờ làm:";
             // 
-            // txtSoGioLam
-            // 
-            this.txtSoGioLam.Location = new System.Drawing.Point(152, 66);
-            this.txtSoGioLam.Name = "txtSoGioLam";
-            this.txtSoGioLam.Size = new System.Drawing.Size(120, 30);
-            this.txtSoGioLam.TabIndex = 9;
-            // 
             // label5
             // 
             this.label5.AutoSize = true;
@@ -289,13 +277,6 @@
             this.label5.Size = new System.Drawing.Size(133, 24);
             this.label5.TabIndex = 8;
             this.label5.Text = "Số ngày làm:";
-            // 
-            // txtSoNgayLam
-            // 
-            this.txtSoNgayLam.Location = new System.Drawing.Point(6, 66);
-            this.txtSoNgayLam.Name = "txtSoNgayLam";
-            this.txtSoNgayLam.Size = new System.Drawing.Size(99, 30);
-            this.txtSoNgayLam.TabIndex = 7;
             // 
             // groupBox4
             // 
@@ -724,6 +705,27 @@
             this.btnBangLuong.TextAlignment = System.Drawing.StringAlignment.Center;
             this.btnBangLuong.Click += new System.EventHandler(this.btnBangLuong_Click);
             // 
+            // dtpKiLuong
+            // 
+            this.dtpKiLuong.Location = new System.Drawing.Point(6, 66);
+            this.dtpKiLuong.Name = "dtpKiLuong";
+            this.dtpKiLuong.Size = new System.Drawing.Size(174, 30);
+            this.dtpKiLuong.TabIndex = 7;
+            // 
+            // nudSoNgay
+            // 
+            this.nudSoNgay.Location = new System.Drawing.Point(10, 67);
+            this.nudSoNgay.Name = "nudSoNgay";
+            this.nudSoNgay.Size = new System.Drawing.Size(94, 30);
+            this.nudSoNgay.TabIndex = 17;
+            // 
+            // nudSoGio
+            // 
+            this.nudSoGio.Location = new System.Drawing.Point(152, 67);
+            this.nudSoGio.Name = "nudSoGio";
+            this.nudSoGio.Size = new System.Drawing.Size(104, 30);
+            this.nudSoGio.TabIndex = 18;
+            // 
             // formEmployeeSalary
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -755,6 +757,8 @@
             this.groupBox5.PerformLayout();
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudSoNgay)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudSoGio)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -770,7 +774,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox txtKy;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox txtHeSoLuong;
@@ -779,9 +782,7 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox txtLuongTheoGio;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox txtSoGioLam;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox txtSoNgayLam;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox txtTyLeDoanhThu;
@@ -823,5 +824,8 @@
         private ReaLTaiizor.Controls.Button btnLuu;
         private ReaLTaiizor.Controls.Button btnThoat;
         private ReaLTaiizor.Controls.Button btnBangLuong;
+        private System.Windows.Forms.DateTimePicker dtpKiLuong;
+        private System.Windows.Forms.NumericUpDown nudSoGio;
+        private System.Windows.Forms.NumericUpDown nudSoNgay;
     }
 }
