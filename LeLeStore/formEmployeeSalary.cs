@@ -297,6 +297,7 @@ namespace LeLeStore
             decimal phuCapCaDem = 0m;
             decimal phuCapQuanLy = 0m;
             decimal thuongQTHT = 0m;
+            decimal tyLeDoanhThu = 0m;
 
             if (string.Equals(role, "Nhân viên bán hàng", StringComparison.CurrentCultureIgnoreCase))
             {
@@ -314,23 +315,33 @@ namespace LeLeStore
                 phuCap = 150_000m;
                 phuCapCaDem = 200_000m;
                 var doanhThuKhuVuc = GetDecimalValue(txtDoanhThuKhuVuc);
-                var tyLeDoanhThu = doanhThuKhuVuc < 500_000m
+                tyLeDoanhThu = doanhThuKhuVuc < 500_000m
                     ? 0.01m
                     : doanhThuKhuVuc <= 900_000m
                         ? 0.02m
                         : 0.03m;
-                txtTyLeDoanhThu.Text = tyLeDoanhThu.ToString("N2", CultureInfo.CurrentCulture);
+                
             }
             else if (string.Equals(role, "Quản lý cửa hàng", StringComparison.CurrentCultureIgnoreCase))
             {
+                phuCapQuanLy = 300_000m;
                 phuCap = 250_000m;
                 thuongQTHT = 150_000m;
+                var doanhThuKhuVuc = GetDecimalValue(txtDoanhThuKhuVuc);
+                tyLeDoanhThu = doanhThuKhuVuc < 500_000m
+                    ? 0.01m
+                    : doanhThuKhuVuc <= 900_000m
+                        ? 0.02m
+                        : 0.03m;
             }
 
             txtPhuCap.Text = FormatCurrency(phuCap);
             txtPhuCapCaDem.Text = FormatCurrency(phuCapCaDem);
             txtPhuCapQuanLy.Text = FormatCurrency(phuCapQuanLy);
             txtThuongQTHT.Text = FormatCurrency(thuongQTHT);
+            txtTyLeDoanhThu.Text = tyLeDoanhThu > 0m
+             ? tyLeDoanhThu.ToString("N2", CultureInfo.CurrentCulture)
+             : string.Empty;
         }
 
         private void ConfigurePayPeriodPicker()
