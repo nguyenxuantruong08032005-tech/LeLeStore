@@ -189,7 +189,7 @@ namespace LeLeStore
                 {
                     try
                     {
-                        var doanhThuCa = CalculateSalesRevenue(maNhanVien);
+                        var doanhThuCa = CalculateSalesRevenue(maNhanVien, dtpKiLuong.Value.Year, dtpKiLuong.Value.Month);
                         txtDoanhThuCa.Text = FormatCurrency(doanhThuCa);
                     }
                     catch (Exception ex)
@@ -202,6 +202,7 @@ namespace LeLeStore
                 {
                     txtDoanhThuCa.Text = string.Empty;
                 }
+                ApplyCompensationRules();
             }
             else
             {
@@ -231,6 +232,20 @@ namespace LeLeStore
                 {
                     MessageBox.Show($"Không thể tính doanh thu khu vực: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     txtDoanhThuKhuVuc.Text = string.Empty;
+                }
+            }
+            if (string.Equals(txtChucVu.Text, "Nhân viên bán hàng", StringComparison.CurrentCultureIgnoreCase)
+              && int.TryParse(cboNhanVien.SelectedValue?.ToString(), out int maNhanVien))
+            {
+                try
+                {
+                    var doanhThuCa = CalculateSalesRevenue(maNhanVien, dtpKiLuong.Value.Year, dtpKiLuong.Value.Month);
+                    txtDoanhThuCa.Text = FormatCurrency(doanhThuCa);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Không thể tính doanh thu ca: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    txtDoanhThuCa.Text = string.Empty;
                 }
             }
         }
@@ -286,11 +301,25 @@ namespace LeLeStore
             if (string.Equals(role, "Nhân viên bán hàng", StringComparison.CurrentCultureIgnoreCase))
             {
                 phuCap = 200_000m;
+                var doanhThuCa = GetDecimalValue(txtDoanhThuCa);
+                var hoaHongBanHang = doanhThuCa < 100_000m
+                    ? 0.01m
+                    : doanhThuCa <= 500_000m
+                        ? 0.02m
+                        : 0.03m;
+                txtHoaHongBanHang.Text = hoaHongBanHang.ToString("N2", CultureInfo.CurrentCulture);
             }
             else if (string.Equals(role, "Nhân viên kho", StringComparison.CurrentCultureIgnoreCase))
             {
                 phuCap = 150_000m;
                 phuCapCaDem = 200_000m;
+                var doanhThuKhuVuc = GetDecimalValue(txtDoanhThuKhuVuc);
+                var tyLeDoanhThu = doanhThuKhuVuc < 500_000m
+                    ? 0.01m
+                    : doanhThuKhuVuc <= 900_000m
+                        ? 0.02m
+                        : 0.03m;
+                txtTyLeDoanhThu.Text = tyLeDoanhThu.ToString("N2", CultureInfo.CurrentCulture);
             }
             else if (string.Equals(role, "Quản lý cửa hàng", StringComparison.CurrentCultureIgnoreCase))
             {
@@ -613,14 +642,16 @@ VALUES
             }
         }
 
-        private decimal CalculateSalesRevenue(int maNhanVien)
+        private decimal CalculateSalesRevenue(int maNhanVien, int year, int month)
         {
             using (var connection = new SqlConnection(connectionString))
             using (var command = new SqlCommand(
-                       "SELECT SUM(ISNULL(TongTien, 0)) FROM HoaDon WHERE MaNhanVien = @MaNhanVien",
+                       "SELECT SUM(ISNULL(TongTien, 0)) FROM HoaDon WHERE MaNhanVien = @MaNhanVien AND MONTH(NgayLap) = @Month AND YEAR(NgayLap) = @Year",
                        connection))
             {
                 command.Parameters.Add("@MaNhanVien", SqlDbType.Int).Value = maNhanVien;
+                command.Parameters.Add("@Month", SqlDbType.Int).Value = month;
+                command.Parameters.Add("@Year", SqlDbType.Int).Value = year;
                 connection.Open();
 
                 var result = command.ExecuteScalar();
