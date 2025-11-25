@@ -356,22 +356,22 @@ namespace LeLeStore
         {
             try
             {
-                int soNgayLam = (int)nudSoNgay.Value;
+                int soNgayLam = GetValidatedWorkDays();
                 decimal soGioLam = nudSoGio.Value;
                 decimal luongTheoGio = GetDecimalValue(txtLuongTheoGio);
                 decimal luongCoBan = GetDecimalValue(txtLuongCoBan);
                 decimal heSoLuong = GetDecimalValue(txtHeSoLuong);
-                decimal doanhThuCa = GetDecimalValue(txtDoanhThuCa);
-                decimal hoaHongBanHang = GetDecimalValue(txtHoaHongBanHang);
-                decimal doanhThuKhuVuc = GetDecimalValue(txtDoanhThuKhuVuc);
+                decimal doanhThuCa = GetNonNegativeDecimal(txtDoanhThuCa, "Doanh thu ca");
+                decimal hoaHongBanHang = GetNonNegativeDecimal(txtHoaHongBanHang, "Hoa hồng bán hàng");
+                decimal doanhThuKhuVuc = GetNonNegativeDecimal(txtDoanhThuKhuVuc, "Doanh thu khu vực");
                 decimal tyLeDoanhThu = GetDecimalValue(txtTyLeDoanhThu);
                 ApplyCompensationRules();
-                decimal phuCap = GetDecimalValue(txtPhuCap);
-                decimal phuCapCaDem = GetDecimalValue(txtPhuCapCaDem);
+                decimal phuCap = GetNonNegativeDecimal(txtPhuCap, "Phụ cấp");
+                decimal phuCapCaDem = GetNonNegativeDecimal(txtPhuCapCaDem, "Phụ cấp ca đêm");
                 decimal phuCapQuanLy = GetDecimalValue(txtPhuCapQuanLy);
-                decimal thuong = GetDecimalValue(txtThuong);
-                decimal thuongQTHT = GetDecimalValue(txtThuongQTHT);
-                decimal khauTru = GetDecimalValue(txtKhauTru);
+                decimal thuong = GetNonNegativeDecimal(txtThuong, "Thưởng");
+                decimal thuongQTHT = GetNonNegativeDecimal(txtThuongQTHT, "Thưởng QTHT");
+                decimal khauTru = GetNonNegativeDecimal(txtKhauTru, "Khấu trừ");
 
                 decimal luongGio = soGioLam * luongTheoGio;
                 decimal luongCoBanTinh = luongCoBan * heSoLuong;
@@ -438,22 +438,22 @@ namespace LeLeStore
             try
             {
                 int maNv = Convert.ToInt32(cboNhanVien.SelectedValue);
-                int soNgayLam = (int)nudSoNgay.Value;
+                int soNgayLam = GetValidatedWorkDays();
                 decimal soGioLam = nudSoGio.Value;
                 decimal luongTheoGio = GetDecimalValue(txtLuongTheoGio);
-                decimal doanhThuCa = GetDecimalValue(txtDoanhThuCa);
-                decimal hoaHongBanHang = GetDecimalValue(txtHoaHongBanHang);
-                decimal doanhThuKhuVuc = GetDecimalValue(txtDoanhThuKhuVuc);
+                decimal doanhThuCa = GetNonNegativeDecimal(txtDoanhThuCa, "Doanh thu ca");
+                decimal hoaHongBanHang = GetNonNegativeDecimal(txtHoaHongBanHang, "Hoa hồng bán hàng");
+                decimal doanhThuKhuVuc = GetNonNegativeDecimal(txtDoanhThuKhuVuc, "Doanh thu khu vực");
                 decimal tyLeDoanhThu = GetDecimalValue(txtTyLeDoanhThu);
                 decimal luongCoBan = GetDecimalValue(txtLuongCoBan);
                 decimal heSoLuong = GetDecimalValue(txtHeSoLuong);
                 ApplyCompensationRules();
-                decimal phuCap = GetDecimalValue(txtPhuCap);
-                decimal thuong = GetDecimalValue(txtThuong);
-                decimal khauTru = GetDecimalValue(txtKhauTru);
-                decimal phuCapCaDem = GetDecimalValue(txtPhuCapCaDem);
+                decimal phuCap = GetNonNegativeDecimal(txtPhuCap, "Phụ cấp");
+                decimal thuong = GetNonNegativeDecimal(txtThuong, "Thưởng");
+                decimal khauTru = GetNonNegativeDecimal(txtKhauTru, "Khấu trừ");
+                decimal phuCapCaDem = GetNonNegativeDecimal(txtPhuCapCaDem, "Phụ cấp ca đêm");
                 decimal phuCapQuanLy = GetDecimalValue(txtPhuCapQuanLy);
-                decimal thuongQTHT = GetDecimalValue(txtThuongQTHT);
+                decimal thuongQTHT = GetNonNegativeDecimal(txtThuongQTHT, "Thưởng QTHT");
 
                 UpsertCongNv(maNv, ky, soNgayLam, soGioLam, luongTheoGio, doanhThuCa, hoaHongBanHang, doanhThuKhuVuc,
                     tyLeDoanhThu, luongCoBan, heSoLuong, phuCap, thuong, khauTru, phuCapCaDem, phuCapQuanLy, thuongQTHT);
@@ -586,6 +586,43 @@ VALUES
 
             throw new FormatException($"Giá trị '{text}' không hợp lệ.");
         }
+
+        private decimal GetNonNegativeDecimal(TextBox textBox, string fieldName)
+        {
+            var text = textBox.Text.Trim();
+            if (text == "-1")
+            {
+                MessageBox.Show($"{fieldName} không được là -1. Vui lòng nhập giá trị không âm.", "Giá trị không hợp lệ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                throw new FormatException($"{fieldName} không được là -1.");
+            }
+
+            var value = GetDecimalValue(textBox);
+            if (value < 0m)
+            {
+                throw new FormatException($"{fieldName} không được âm.");
+            }
+
+            return value;
+        }
+
+        private int GetValidatedWorkDays()
+        {
+            var text = nudSoNgay.Text.Trim();
+            if (text == "-1")
+            {
+                MessageBox.Show("Số ngày làm không được là -1. Vui lòng nhập giá trị không âm.", "Giá trị không hợp lệ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                throw new FormatException("Số ngày làm không được là -1.");
+            }
+
+            int value = (int)nudSoNgay.Value;
+            if (value < 0)
+            {
+                throw new FormatException("Số ngày làm không được âm.");
+            }
+
+            return value;
+        }
+
         private void SetResultTextBoxesReadOnly()
         {
             txtLuongGio.ReadOnly = true;

@@ -240,6 +240,11 @@
             0,
             0,
             0});
+            this.nudSoNgay.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.nudSoNgay.Name = "nudSoNgay";
             this.nudSoNgay.Size = new System.Drawing.Size(94, 30);
             this.nudSoNgay.TabIndex = 17;
