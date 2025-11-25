@@ -36,8 +36,11 @@
             this.label1 = new System.Windows.Forms.Label();
             this.cboNhanVien = new System.Windows.Forms.ComboBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.dtpKiLuong = new System.Windows.Forms.DateTimePicker();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.nudSoGio = new System.Windows.Forms.NumericUpDown();
+            this.nudSoNgay = new System.Windows.Forms.NumericUpDown();
             this.label9 = new System.Windows.Forms.Label();
             this.txtHeSoLuong = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
@@ -87,17 +90,14 @@
             this.btnLuu = new ReaLTaiizor.Controls.Button();
             this.btnThoat = new ReaLTaiizor.Controls.Button();
             this.btnBangLuong = new ReaLTaiizor.Controls.Button();
-            this.dtpKiLuong = new System.Windows.Forms.DateTimePicker();
-            this.nudSoNgay = new System.Windows.Forms.NumericUpDown();
-            this.nudSoGio = new System.Windows.Forms.NumericUpDown();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudSoGio)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudSoNgay)).BeginInit();
             this.groupBox4.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudSoNgay)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudSoGio)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -181,6 +181,16 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Kì lương";
             // 
+            // dtpKiLuong
+            // 
+            this.dtpKiLuong.CustomFormat = "yyyy-MM";
+            this.dtpKiLuong.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dtpKiLuong.Location = new System.Drawing.Point(6, 66);
+            this.dtpKiLuong.Name = "dtpKiLuong";
+            this.dtpKiLuong.ShowUpDown = true;
+            this.dtpKiLuong.Size = new System.Drawing.Size(174, 30);
+            this.dtpKiLuong.TabIndex = 7;
+            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -209,6 +219,31 @@
             this.groupBox3.TabIndex = 2;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Chấm công – Lương cơ bản";
+            // 
+            // nudSoGio
+            // 
+            this.nudSoGio.Location = new System.Drawing.Point(152, 67);
+            this.nudSoGio.Maximum = new decimal(new int[] {
+            744,
+            0,
+            0,
+            0});
+            this.nudSoGio.Name = "nudSoGio";
+            this.nudSoGio.Size = new System.Drawing.Size(104, 30);
+            this.nudSoGio.TabIndex = 18;
+            // 
+            // nudSoNgay
+            // 
+            this.nudSoNgay.Location = new System.Drawing.Point(10, 67);
+            this.nudSoNgay.Maximum = new decimal(new int[] {
+            31,
+            0,
+            0,
+            0});
+            this.nudSoNgay.Name = "nudSoNgay";
+            this.nudSoNgay.Size = new System.Drawing.Size(94, 30);
+            this.nudSoNgay.TabIndex = 17;
+            this.nudSoNgay.ValueChanged += new System.EventHandler(this.nudSoNgay_ValueChanged);
             // 
             // label9
             // 
@@ -705,27 +740,6 @@
             this.btnBangLuong.TextAlignment = System.Drawing.StringAlignment.Center;
             this.btnBangLuong.Click += new System.EventHandler(this.btnBangLuong_Click);
             // 
-            // dtpKiLuong
-            // 
-            this.dtpKiLuong.Location = new System.Drawing.Point(6, 66);
-            this.dtpKiLuong.Name = "dtpKiLuong";
-            this.dtpKiLuong.Size = new System.Drawing.Size(174, 30);
-            this.dtpKiLuong.TabIndex = 7;
-            // 
-            // nudSoNgay
-            // 
-            this.nudSoNgay.Location = new System.Drawing.Point(10, 67);
-            this.nudSoNgay.Name = "nudSoNgay";
-            this.nudSoNgay.Size = new System.Drawing.Size(94, 30);
-            this.nudSoNgay.TabIndex = 17;
-            // 
-            // nudSoGio
-            // 
-            this.nudSoGio.Location = new System.Drawing.Point(152, 67);
-            this.nudSoGio.Name = "nudSoGio";
-            this.nudSoGio.Size = new System.Drawing.Size(104, 30);
-            this.nudSoGio.TabIndex = 18;
-            // 
             // formEmployeeSalary
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -751,14 +765,14 @@
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudSoGio)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudSoNgay)).EndInit();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudSoNgay)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudSoGio)).EndInit();
             this.ResumeLayout(false);
 
         }

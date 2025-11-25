@@ -13,6 +13,7 @@ namespace LeLeStore
     {
         private readonly string connectionString;
         private readonly TextBox[] managedTextBoxes;
+        private bool updatingWorkdayControls;
         private readonly Dictionary<string, TextBox[]> roleTextBoxes;
         private readonly Dictionary<string, (decimal BaseSalary, decimal SalaryCoefficient)> roleSalaryDefaults;
         public formEmployeeSalary()
@@ -23,12 +24,11 @@ namespace LeLeStore
                   ?? throw new InvalidOperationException("Không tìm thấy chuỗi kết nối GStore.");
             managedTextBoxes = new[]
            {
-                txtKy,
+                
                 txtHeSoLuong,
                 txtLuongCoBan,
                 txtLuongTheoGio,
-                txtSoGioLam,
-                txtSoNgayLam,
+                
                 txtTyLeDoanhThu,
                 txtDoanhThuKhuVuc,
                 txtHoaHongBanHang,
@@ -54,8 +54,7 @@ namespace LeLeStore
                     "Nhân viên bán hàng",
                     new[]
                     {
-                        txtSoNgayLam,
-                        txtSoGioLam,
+                       
                         txtLuongTheoGio,
                         txtLuongCoBan,
                         txtHeSoLuong,
@@ -70,8 +69,7 @@ namespace LeLeStore
                     "Nhân viên kho",
                     new[]
                     {
-                        txtSoNgayLam,
-                        txtSoGioLam,
+                        
                         txtLuongTheoGio,
                         txtLuongCoBan,
                         txtHeSoLuong,
@@ -85,8 +83,7 @@ namespace LeLeStore
                     "Quản lý cửa hàng",
                     new[]
                     {
-                        txtSoNgayLam,
-                        txtSoGioLam,
+                        
                         txtLuongCoBan,
                         txtHeSoLuong,
                         txtPhuCap,
@@ -108,9 +105,14 @@ namespace LeLeStore
             btnTinhLuong.Click += btnTinhLuong_Click;
             btnLuu.Click += btnLuu_Click;
             btnThoat.Click += (sender, e) => Close();
+            dtpKiLuong.ValueChanged += dtpKiLuong_ValueChanged;
+            nudSoNgay.ValueChanged += nudSoNgay_ValueChanged;
 
             SetResultTextBoxesReadOnly();
             DisableAllManagedTextBoxes();
+            ConfigurePayPeriodPicker();
+            ApplyMonthDaysToControls();
+            UpdateHoursFromDays();
         }
 
         private void groupBox5_Enter(object sender, EventArgs e)
@@ -164,6 +166,24 @@ namespace LeLeStore
                 txtChucVu.Text = chucVu;
                 EnableTextBoxesForRole(chucVu);
                 ApplyRoleSalaryDefaults(chucVu);
+                ApplyCompensationRules();
+                if (string.Equals(chucVu, "Quản lý cửa hàng", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    try
+                    {
+                        var doanhThuKhuVuc = CalculateAreaRevenue(dtpKiLuong.Value.Year, dtpKiLuong.Value.Month);
+                        txtDoanhThuKhuVuc.Text = FormatCurrency(doanhThuKhuVuc);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Không thể tính doanh thu khu vực: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        txtDoanhThuKhuVuc.Text = string.Empty;
+                    }
+                }
+                else
+                {
+                    txtDoanhThuKhuVuc.Text = string.Empty;
+                }
                 if (string.Equals(chucVu, "Nhân viên bán hàng", StringComparison.CurrentCultureIgnoreCase)
                     && int.TryParse(rowView["MaNhanVien"].ToString(), out int maNhanVien))
                 {
@@ -190,15 +210,114 @@ namespace LeLeStore
                 ClearManagedTextBoxes();
                 EnableTextBoxesForRole(null);
                 ApplyRoleSalaryDefaults(null);
+                ApplyCompensationRules();
             }
         }
+
+        private void dtpKiLuong_ValueChanged(object sender, EventArgs e)
+        {
+            ApplyMonthDaysToControls();
+            UpdateHoursFromDays();
+            ApplyCompensationRules();
+
+            if (string.Equals(txtChucVu.Text, "Quản lý cửa hàng", StringComparison.CurrentCultureIgnoreCase))
+            {
+                try
+                {
+                    var doanhThuKhuVuc = CalculateAreaRevenue(dtpKiLuong.Value.Year, dtpKiLuong.Value.Month);
+                    txtDoanhThuKhuVuc.Text = FormatCurrency(doanhThuKhuVuc);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Không thể tính doanh thu khu vực: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    txtDoanhThuKhuVuc.Text = string.Empty;
+                }
+            }
+        }
+
+        private void ApplyMonthDaysToControls()
+        {
+            updatingWorkdayControls = true;
+            int daysInMonth = GetDaysInSelectedMonth();
+            nudSoNgay.Value = Math.Min(nudSoNgay.Maximum, daysInMonth);
+            updatingWorkdayControls = false;
+        }
+
+        private int GetDaysInSelectedMonth()
+        {
+            return DateTime.DaysInMonth(dtpKiLuong.Value.Year, dtpKiLuong.Value.Month);
+        }
+
+        private void UpdateHoursFromDays()
+        {
+            if (updatingWorkdayControls)
+            {
+                return;
+            }
+
+            updatingWorkdayControls = true;
+            decimal suggestedHours = nudSoNgay.Value * 8;
+            if (suggestedHours > nudSoGio.Maximum)
+            {
+                suggestedHours = nudSoGio.Maximum;
+            }
+
+            nudSoGio.Value = suggestedHours;
+            updatingWorkdayControls = false;
+        }
+
+        private void ApplyCompensationRules()
+        {
+            int soNgayLam = (int)nudSoNgay.Value;
+            int daysInMonth = GetDaysInSelectedMonth();
+            var role = txtChucVu.Text?.Trim();
+
+            decimal thuong = (soNgayLam >= daysInMonth && daysInMonth >= 29) ? 200_000m : 100_000m;
+            txtThuong.Text = FormatCurrency(thuong);
+
+            decimal khauTru = soNgayLam < 25 ? 50_000m : 0m;
+            txtKhauTru.Text = FormatCurrency(khauTru);
+
+            decimal phuCap = 0m;
+            decimal phuCapCaDem = 0m;
+            decimal phuCapQuanLy = 0m;
+            decimal thuongQTHT = 0m;
+
+            if (string.Equals(role, "Nhân viên bán hàng", StringComparison.CurrentCultureIgnoreCase))
+            {
+                phuCap = 200_000m;
+            }
+            else if (string.Equals(role, "Nhân viên kho", StringComparison.CurrentCultureIgnoreCase))
+            {
+                phuCap = 150_000m;
+                phuCapCaDem = 200_000m;
+            }
+            else if (string.Equals(role, "Quản lý cửa hàng", StringComparison.CurrentCultureIgnoreCase))
+            {
+                phuCap = 250_000m;
+                thuongQTHT = 150_000m;
+            }
+
+            txtPhuCap.Text = FormatCurrency(phuCap);
+            txtPhuCapCaDem.Text = FormatCurrency(phuCapCaDem);
+            txtPhuCapQuanLy.Text = FormatCurrency(phuCapQuanLy);
+            txtThuongQTHT.Text = FormatCurrency(thuongQTHT);
+        }
+
+        private void ConfigurePayPeriodPicker()
+        {
+            dtpKiLuong.Format = DateTimePickerFormat.Custom;
+            dtpKiLuong.CustomFormat = "yyyy-MM";
+            dtpKiLuong.ShowUpDown = true;
+        }
+
 
         private void btnTinhLuong_Click(object sender, EventArgs e)
         {
             try
             {
-                int soNgayLam = GetIntValue(txtSoNgayLam);
-                decimal soGioLam = GetDecimalValue(txtSoGioLam);
+                int soNgayLam = (int)nudSoNgay.Value;
+                decimal soGioLam = nudSoGio.Value;
                 decimal luongTheoGio = GetDecimalValue(txtLuongTheoGio);
                 decimal luongCoBan = GetDecimalValue(txtLuongCoBan);
                 decimal heSoLuong = GetDecimalValue(txtHeSoLuong);
@@ -206,6 +325,7 @@ namespace LeLeStore
                 decimal hoaHongBanHang = GetDecimalValue(txtHoaHongBanHang);
                 decimal doanhThuKhuVuc = GetDecimalValue(txtDoanhThuKhuVuc);
                 decimal tyLeDoanhThu = GetDecimalValue(txtTyLeDoanhThu);
+                ApplyCompensationRules();
                 decimal phuCap = GetDecimalValue(txtPhuCap);
                 decimal phuCapCaDem = GetDecimalValue(txtPhuCapCaDem);
                 decimal phuCapQuanLy = GetDecimalValue(txtPhuCapQuanLy);
@@ -268,18 +388,13 @@ namespace LeLeStore
                 return;
             }
 
-            string ky = txtKy.Text.Trim();
-            if (string.IsNullOrEmpty(ky))
-            {
-                MessageBox.Show("Vui lòng nhập kỳ lương.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
+            string ky = dtpKiLuong.Value.ToString("yyyy-MM");
 
             try
             {
                 int maNv = Convert.ToInt32(cboNhanVien.SelectedValue);
-                int soNgayLam = GetIntValue(txtSoNgayLam);
-                decimal soGioLam = GetDecimalValue(txtSoGioLam);
+                int soNgayLam = (int)nudSoNgay.Value;
+                decimal soGioLam = nudSoGio.Value;
                 decimal luongTheoGio = GetDecimalValue(txtLuongTheoGio);
                 decimal doanhThuCa = GetDecimalValue(txtDoanhThuCa);
                 decimal hoaHongBanHang = GetDecimalValue(txtHoaHongBanHang);
@@ -287,6 +402,7 @@ namespace LeLeStore
                 decimal tyLeDoanhThu = GetDecimalValue(txtTyLeDoanhThu);
                 decimal luongCoBan = GetDecimalValue(txtLuongCoBan);
                 decimal heSoLuong = GetDecimalValue(txtHeSoLuong);
+                ApplyCompensationRules();
                 decimal phuCap = GetDecimalValue(txtPhuCap);
                 decimal thuong = GetDecimalValue(txtThuong);
                 decimal khauTru = GetDecimalValue(txtKhauTru);
@@ -452,13 +568,15 @@ VALUES
         private void EnableTextBoxesForRole(string role)
         {
             DisableAllManagedTextBoxes();
+            nudSoNgay.Enabled = role != null;
+            nudSoGio.Enabled = role != null;
 
             if (role == null)
             {
                 return;
             }
 
-            txtKy.Enabled = true;
+           
 
             var key = role.Trim();
             if (key.Length == 0)
@@ -474,6 +592,27 @@ VALUES
                 }
             }
         }
+        private decimal CalculateAreaRevenue(int year, int month)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            using (var command = new SqlCommand(
+                       "SELECT SUM(ISNULL(TongTien, 0)) FROM HoaDon WHERE MONTH(NgayLap) = @Month AND YEAR(NgayLap) = @Year",
+                       connection))
+            {
+                command.Parameters.Add("@Month", SqlDbType.Int).Value = month;
+                command.Parameters.Add("@Year", SqlDbType.Int).Value = year;
+                connection.Open();
+
+                var result = command.ExecuteScalar();
+                if (result == null || result == DBNull.Value)
+                {
+                    return 0m;
+                }
+
+                return Convert.ToDecimal(result, CultureInfo.InvariantCulture);
+            }
+        }
+
         private decimal CalculateSalesRevenue(int maNhanVien)
         {
             using (var connection = new SqlConnection(connectionString))
@@ -505,6 +644,12 @@ VALUES
                 f.StartPosition = FormStartPosition.CenterScreen;
                 f.ShowDialog();
             }
+        }
+
+        private void nudSoNgay_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateHoursFromDays();
+            ApplyCompensationRules();
         }
     }
 }
