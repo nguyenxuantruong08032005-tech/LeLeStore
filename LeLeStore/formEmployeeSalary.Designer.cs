@@ -231,6 +231,7 @@
             this.nudSoGio.Name = "nudSoGio";
             this.nudSoGio.Size = new System.Drawing.Size(104, 30);
             this.nudSoGio.TabIndex = 18;
+            this.nudSoGio.Validating += new System.ComponentModel.CancelEventHandler(this.nudSoGio_Validating);
             // 
             // nudSoNgay
             // 
@@ -240,15 +241,11 @@
             0,
             0,
             0});
-            this.nudSoNgay.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
             this.nudSoNgay.Name = "nudSoNgay";
             this.nudSoNgay.Size = new System.Drawing.Size(94, 30);
             this.nudSoNgay.TabIndex = 17;
             this.nudSoNgay.ValueChanged += new System.EventHandler(this.nudSoNgay_ValueChanged);
+            this.nudSoNgay.Validating += new System.ComponentModel.CancelEventHandler(this.nudSoNgay_Validating);
             // 
             // label9
             // 

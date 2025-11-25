@@ -15,6 +15,8 @@ namespace LeLeStore
         private readonly string connectionString;
         private readonly TextBox[] managedTextBoxes;
         private bool updatingWorkdayControls;
+        private decimal previousWorkdayValue;
+        private decimal previousHourValue;
         private readonly Dictionary<string, TextBox[]> roleTextBoxes;
         private readonly Dictionary<string, (decimal BaseSalary, decimal SalaryCoefficient, decimal HourlyRate)> roleSalaryDefaults;
         public formEmployeeSalary()
@@ -115,6 +117,8 @@ namespace LeLeStore
             ApplyMonthDaysToControls();
             UpdateHoursFromDays();
             RegisterNonNegativeValidation();
+            RegisterWorkScheduleValidation();
+            CacheNonNegativeWorkValues();
         }
 
         private void RegisterNonNegativeValidation()
@@ -148,6 +152,16 @@ namespace LeLeStore
                 textBox.Validating += EnsureNonNegativeOnValidation;
             }
         }
+
+        private void RegisterWorkScheduleValidation()
+        {
+            nudSoNgay.Enter += (_, __) => previousWorkdayValue = nudSoNgay.Value;
+            nudSoNgay.Validating += nudSoNgay_Validating;
+
+            nudSoGio.Enter += (_, __) => previousHourValue = nudSoGio.Value;
+            nudSoGio.Validating += nudSoGio_Validating;
+        }
+
 
         private void EnsureNonNegativeOnValidation(object sender, CancelEventArgs e)
         {
@@ -326,6 +340,7 @@ namespace LeLeStore
             int daysInMonth = GetDaysInSelectedMonth();
             nudSoNgay.Value = Math.Min(nudSoNgay.Maximum, daysInMonth);
             updatingWorkdayControls = false;
+            CacheNonNegativeWorkValues();
         }
 
         private int GetDaysInSelectedMonth()
@@ -349,6 +364,7 @@ namespace LeLeStore
 
             nudSoGio.Value = suggestedHours;
             updatingWorkdayControls = false;
+            CacheNonNegativeWorkValues();
         }
 
         private void ApplyCompensationRules()
@@ -420,7 +436,18 @@ namespace LeLeStore
             dtpKiLuong.CustomFormat = "yyyy-MM";
             dtpKiLuong.ShowUpDown = true;
         }
+        private void CacheNonNegativeWorkValues()
+        {
+            if (nudSoNgay.Value >= 0)
+            {
+                previousWorkdayValue = nudSoNgay.Value;
+            }
 
+            if (nudSoGio.Value >= 0)
+            {
+                previousHourValue = nudSoGio.Value;
+            }
+        }
 
         private void btnTinhLuong_Click(object sender, EventArgs e)
         {
@@ -785,6 +812,32 @@ VALUES
         {
             UpdateHoursFromDays();
             ApplyCompensationRules();
+        }
+
+        private void nudSoNgay_Validating(object sender, CancelEventArgs e)
+        {
+            if (nudSoNgay.Value < 0)
+            {
+                MessageBox.Show("Giá trị không được âm.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                nudSoNgay.Value = previousWorkdayValue;
+                e.Cancel = true;
+                return;
+            }
+
+            previousWorkdayValue = nudSoNgay.Value;
+        }
+
+        private void nudSoGio_Validating(object sender, CancelEventArgs e)
+        {
+            if (nudSoGio.Value < 0)
+            {
+                MessageBox.Show("Giá trị không được âm.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                nudSoGio.Value = previousHourValue;
+                e.Cancel = true;
+                return;
+            }
+
+            previousHourValue = nudSoGio.Value;
         }
     }
 }
