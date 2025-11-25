@@ -17,6 +17,7 @@ namespace LeLeStore
         private bool updatingWorkdayControls;
         private decimal previousWorkdayValue;
         private decimal previousHourValue;
+        private readonly Dictionary<TextBox, string> defaultTextBoxValues;
         private readonly Dictionary<string, TextBox[]> roleTextBoxes;
         private readonly Dictionary<string, (decimal BaseSalary, decimal SalaryCoefficient, decimal HourlyRate)> roleSalaryDefaults;
         public formEmployeeSalary()
@@ -50,7 +51,7 @@ namespace LeLeStore
                 txtLuongCoBanTinh,
                 txtLuongGio
             };
-
+            defaultTextBoxValues = new Dictionary<TextBox, string>();
             roleTextBoxes = new Dictionary<string, TextBox[]>(StringComparer.CurrentCultureIgnoreCase)
             {
                 {
@@ -119,6 +120,7 @@ namespace LeLeStore
             RegisterNonNegativeValidation();
             RegisterWorkScheduleValidation();
             CacheNonNegativeWorkValues();
+            RefreshDefaultTextBoxValues();
         }
 
         private void RegisterNonNegativeValidation()
@@ -150,6 +152,7 @@ namespace LeLeStore
             foreach (var textBox in textBoxesToValidate)
             {
                 textBox.Validating += EnsureNonNegativeOnValidation;
+                textBox.Enter += CacheDefaultTextBoxValue;
             }
         }
 
@@ -192,9 +195,12 @@ namespace LeLeStore
             if (value < 0m)
             {
                 MessageBox.Show("Giá trị không được âm.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                RestoreDefaultTextBoxValue(textBox);
                 e.Cancel = true;
                 textBox.SelectAll();
+                return;
             }
+            UpdateDefaultTextBoxValue(textBox);
         }
 
 
@@ -428,6 +434,7 @@ namespace LeLeStore
             txtTyLeDoanhThu.Text = tyLeDoanhThu > 0m
              ? tyLeDoanhThu.ToString("N2", CultureInfo.CurrentCulture)
              : string.Empty;
+            RefreshDefaultTextBoxValues();
         }
 
         private void ConfigurePayPeriodPicker()
@@ -436,6 +443,40 @@ namespace LeLeStore
             dtpKiLuong.CustomFormat = "yyyy-MM";
             dtpKiLuong.ShowUpDown = true;
         }
+
+        private void CacheDefaultTextBoxValue(object sender, EventArgs e)
+        {
+            if (sender is TextBox textBox)
+            {
+                UpdateDefaultTextBoxValue(textBox);
+            }
+        }
+
+        private void UpdateDefaultTextBoxValue(TextBox textBox)
+        {
+            defaultTextBoxValues[textBox] = textBox.Text;
+        }
+
+        private void RestoreDefaultTextBoxValue(TextBox textBox)
+        {
+            if (defaultTextBoxValues.TryGetValue(textBox, out var defaultValue))
+            {
+                textBox.Text = defaultValue;
+            }
+            else
+            {
+                textBox.Text = string.Empty;
+            }
+        }
+
+        private void RefreshDefaultTextBoxValues()
+        {
+            foreach (var textBox in managedTextBoxes)
+            {
+                defaultTextBoxValues[textBox] = textBox.Text;
+            }
+        }
+
         private void CacheNonNegativeWorkValues()
         {
             if (nudSoNgay.Value >= 0)

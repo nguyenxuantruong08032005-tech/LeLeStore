@@ -137,6 +137,7 @@
             this.dtpToBH.Name = "dtpToBH";
             this.dtpToBH.Size = new System.Drawing.Size(347, 30);
             this.dtpToBH.TabIndex = 3;
+            this.dtpToBH.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dtpToBH_KeyDown);
             // 
             // label2
             // 

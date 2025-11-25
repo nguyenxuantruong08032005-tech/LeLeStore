@@ -64,7 +64,7 @@ namespace LeLeStore
             var today = DateTime.Today;
             dtpFromBH.Value = today.AddDays(-5);
             dtpToBH.Value = today;
-
+            dtpToBH.MaxDate = today;
             cboLoaiThongKeBH.Items.Clear();
             cboLoaiThongKeBH.Items.Add("Doanh thu theo ngày");
             cboLoaiThongKeBH.Items.Add("Top sản phẩm bán chạy");
@@ -520,8 +520,22 @@ namespace LeLeStore
             chartBanHang.Titles.Clear();
             chartBanHang.Titles.Add("Top sản phẩm bán chạy");
         }
-       
 
+        private void dtpToBH_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode != Keys.Enter)
+            {
+                return;
+            }
 
+            var today = DateTime.Today;
+            if (dtpToBH.Value.Date > today)
+            {
+                MessageBox.Show("Ngày kết thúc không được lớn hơn ngày hiện tại.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                dtpToBH.Value = today;
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
+        }
     }
 }
