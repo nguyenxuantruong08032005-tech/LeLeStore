@@ -324,7 +324,7 @@ namespace LeLeStore
             }
             else if (string.Equals(role, "Quản lý cửa hàng", StringComparison.CurrentCultureIgnoreCase))
             {
-                phuCapQuanLy = 300_000m;
+                phuCapQuanLy = 500_000m;
                 phuCap = 250_000m;
                 thuongQTHT = 150_000m;
                 var doanhThuKhuVuc = GetDecimalValue(txtDoanhThuKhuVuc);
