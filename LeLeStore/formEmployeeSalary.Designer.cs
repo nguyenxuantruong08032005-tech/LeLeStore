@@ -431,7 +431,7 @@
             // 
             this.txtKhauTru.Location = new System.Drawing.Point(6, 148);
             this.txtKhauTru.Name = "txtKhauTru";
-            this.txtKhauTru.Size = new System.Drawing.Size(120, 30);
+            this.txtKhauTru.Size = new System.Drawing.Size(146, 30);
             this.txtKhauTru.TabIndex = 17;
             // 
             // label18
@@ -511,7 +511,7 @@
             // 
             this.txtPhuCap.Location = new System.Drawing.Point(6, 66);
             this.txtPhuCap.Name = "txtPhuCap";
-            this.txtPhuCap.Size = new System.Drawing.Size(99, 30);
+            this.txtPhuCap.Size = new System.Drawing.Size(133, 30);
             this.txtPhuCap.TabIndex = 7;
             // 
             // groupBox6
