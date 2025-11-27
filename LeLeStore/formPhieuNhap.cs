@@ -207,6 +207,12 @@ namespace LeLeStore
                         .OrderBy(item => item.Key)
                         .ToList();
                 }
+                // Nếu đăng nhập bằng tài khoản người dùng, chỉ cho phép chọn đúng nhân viên tương ứng
+                // kể cả khi MaNV hiện tại của giao dịch khác.
+                if (employees.Count > 0 && selectedEmployeeId.HasValue && !employees.Any(emp => emp.Key == selectedEmployeeId.Value))
+                {
+                    selectedEmployeeId = employees.First().Key;
+                }
             }
 
             if (employees.Count == 0)
@@ -600,6 +606,10 @@ namespace LeLeStore
             }
 
             var row = view.Row as GStoreDataSet.GiaoDichKhoRow;
+            if (transactionMode == EditMode.Edit && transactionEditingId.HasValue)
+            {
+                row = gStoreDataSet.GiaoDichKho.FindByMaGD(transactionEditingId.Value) ?? row;
+            }
             if (row == null || row.RowState == DataRowState.Deleted)
             {
                 MessageBox.Show("Vui lòng chọn giao dịch cần sửa.", "Thông báo",
@@ -632,6 +642,7 @@ namespace LeLeStore
                 giaoDichBindingSource.EndEdit();
                 giaoDichKhoTableAdapter.Update(row); // không Fill
                 giaoDichBindingSource.ResetCurrentItem();
+                TryFocusTransaction(row.MaGD);
 
                 MessageBox.Show("Đã cập nhật giao dịch.", "Thông báo",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -784,6 +795,10 @@ namespace LeLeStore
             }
 
             var row = view.Row as GStoreDataSet.ChiTietGiaoDichKhoRow;
+            if (detailMode == EditMode.Edit && detailEditingKey.HasValue)
+            {
+                row = gStoreDataSet.ChiTietGiaoDichKho.FindByMaGDMaSP(detailEditingKey.Value.MaGD, detailEditingKey.Value.MaSP) ?? row;
+            }
             if (row == null || row.RowState == DataRowState.Deleted)
             {
                 MessageBox.Show("Vui lòng chọn chi tiết giao dịch cần sửa.", "Thông báo",
@@ -877,6 +892,7 @@ namespace LeLeStore
 
                     // Làm mới lưới & giữ vị trí gần kề
                     RefreshDetails(false);
+                    TryFocusDetail(newMaGD, newMaSP);
                 }
                 else
                 {
@@ -897,6 +913,7 @@ namespace LeLeStore
                     chiTietGiaoDichKhoBindingSource.EndEdit();
                     chiTietGiaoDichKhoTableAdapter.Update(row);   // không Fill để giữ vị trí
                     chiTietGiaoDichKhoBindingSource.ResetCurrentItem();
+                    TryFocusDetail(newMaGD, newMaSP);
                 }
 
                 MessageBox.Show("Đã cập nhật chi tiết giao dịch.", "Thông báo",
@@ -912,6 +929,20 @@ namespace LeLeStore
                 detailEditingKey = null;
                 SetDetailMode(EditMode.None);
             }
+        }
+        private DataRowView TryFocusTransaction(int maGD)
+        {
+            foreach (DataRowView rv in giaoDichBindingSource)
+            {
+                var r = rv.Row as GStoreDataSet.GiaoDichKhoRow;
+                if (r != null && r.RowState != DataRowState.Deleted && r.MaGD == maGD)
+                {
+                    giaoDichBindingSource.Position = giaoDichBindingSource.IndexOf(rv);
+                    return rv;
+                }
+            }
+
+            return null;
         }
 
         private bool DetailExists(int maGD, int maSP)
