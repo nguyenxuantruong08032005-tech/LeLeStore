@@ -137,6 +137,12 @@ namespace LeLeStore
                 txtTenNCC.Focus();
                 return false;
             }
+            if (IsDuplicateSupplierName(tenNcc))
+            {
+                MessageBox.Show("Tên nhà cung cấp đã tồn tại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtTenNCC.Focus();
+                return false;
+            }
 
             if (!ValidateSupplierPhoneNumber(showMessage: true, out soDienThoai))
             {
@@ -162,6 +168,23 @@ namespace LeLeStore
             }
 
             return true;
+        }
+
+        private bool IsDuplicateSupplierName(string tenNcc)
+        {
+            if (string.IsNullOrWhiteSpace(tenNcc)) return false; // hoặc throw ArgumentException
+
+            var currentSupplierId = GetCurrentSupplierId();
+            var normalized = tenNcc.Trim();
+
+            return gStoreDataSet.NhaCungCap
+                .Where(row => !row.IsNull("TenNCC"))                          // tránh DBNull
+                .Any(row =>
+                {
+                    var name = row.Field<string>("TenNCC")?.Trim();            // an toàn với DBNull
+                    return string.Equals(name, normalized, StringComparison.OrdinalIgnoreCase)
+                        && (!currentSupplierId.HasValue || row.MaNCC != currentSupplierId.Value);
+                });
         }
         private bool ValidateSupplierPhoneNumber(bool showMessage, out string sanitized)
         {

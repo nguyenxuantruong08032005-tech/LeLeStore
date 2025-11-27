@@ -757,6 +757,17 @@ namespace LeLeStore
             var view = chiTietGiaoDichKhoBindingSource.Current as DataRowView;
             if (view == null)
             {
+                // Thử chọn chi tiết dựa trên các giá trị đang hiển thị trên combobox
+                var selectedMaGD = GetSelectedTransactionId();
+                var selectedMaSP = GetSelectedProductId();
+
+                if (selectedMaGD.HasValue && selectedMaSP.HasValue)
+                {
+                    view = TryFocusDetail(selectedMaGD.Value, selectedMaSP.Value);
+                }
+            }
+            if (view == null)
+            {
                 MessageBox.Show("Vui lòng chọn chi tiết giao dịch cần sửa.", "Thông báo",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
@@ -1458,17 +1469,7 @@ namespace LeLeStore
         {
             if (focusKey.HasValue)
             {
-                // Dò lại dòng detail theo khóa ghép
-                foreach (DataRowView rv in chiTietGiaoDichKhoBindingSource)
-                {
-                    var r = rv.Row as GStoreDataSet.ChiTietGiaoDichKhoRow;
-                    if (r != null && r.RowState != DataRowState.Deleted &&
-                        r.MaGD == focusKey.Value.MaGD && r.MaSP == focusKey.Value.MaSP)
-                    {
-                        chiTietGiaoDichKhoBindingSource.Position = chiTietGiaoDichKhoBindingSource.IndexOf(rv);
-                        break;
-                    }
-                }
+                TryFocusDetail(focusKey.Value.MaGD, focusKey.Value.MaSP);
             }
 
             if (chiTietGiaoDichKhoBindingSource.Current is DataRowView v &&
@@ -1484,7 +1485,21 @@ namespace LeLeStore
 
             try { chiTietGiaoDichKhoBindingSource.ResetCurrentItem(); } catch { }
         }
+        private DataRowView TryFocusDetail(int maGD, int maSP)
+        {
+            foreach (DataRowView rv in chiTietGiaoDichKhoBindingSource)
+            {
+                var r = rv.Row as GStoreDataSet.ChiTietGiaoDichKhoRow;
+                if (r != null && r.RowState != DataRowState.Deleted &&
+                    r.MaGD == maGD && r.MaSP == maSP)
+                {
+                    chiTietGiaoDichKhoBindingSource.Position = chiTietGiaoDichKhoBindingSource.IndexOf(rv);
+                    return rv;
+                }
+            }
 
+            return null;
+        }
         private void btnHuy_Click(object sender, EventArgs e)
         {
             // Nếu đang không ở chế độ Add/Edit thì chỉ làm tươi lại inputs

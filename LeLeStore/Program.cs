@@ -17,7 +17,7 @@ namespace LeLeStore
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             PdfEmbeddedFontResolver.RegisterGlobal();
-            Application.Run(new Form1());
+            Application.Run(new FormLogin());
         }
     }
 }

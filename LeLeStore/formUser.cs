@@ -263,15 +263,15 @@ namespace LeLeStore
                 ValidateUsernameUniqueness();
             }
         }
-
+        private bool _suppressValidation = false;
         private void txtMK_Leave(object sender, EventArgs e)
         {
+            if (_suppressValidation) return;                 // <— NEW
+            if (this.ActiveControl == btnHuy) return;        // <— NEW
+
             if (_currentOperation == UserOperation.Add || _currentOperation == UserOperation.Edit)
             {
-                if (ValidatePasswordLength())
-                {
-                    ValidatePasswordComposition();
-                }
+                if (ValidatePasswordLength()) ValidatePasswordComposition();
             }
         }
 
@@ -441,30 +441,24 @@ namespace LeLeStore
 
         private void btnHuy_Click(object sender, EventArgs e)
         {
-            // Nếu không ở chế độ Add/Edit thì chỉ việc đồng bộ UI rồi thoát
             if (_currentOperation == UserOperation.None)
             {
                 ReloadInputsFromCurrent();
                 return;
             }
 
-            var confirm = MessageBox.Show(
-                "Hủy các thay đổi đang thực hiện?",
-                "Xác nhận",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question);
+            if (MessageBox.Show("Hủy các thay đổi đang thực hiện?", "Xác nhận",
+                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes) return;
 
-            if (confirm != DialogResult.Yes) return;
-
-            // Hủy mọi chỉnh sửa treo (UI + BindingSource + DataRow)
-            CancelPendingUiEdits();
-
-            // Trả UI về bình thường, nạp lại dữ liệu từ dòng hiện tại
-            SetOperation(UserOperation.None);
-            ReloadInputsFromCurrent();
-
-            // Làm tươi binding/grid nếu cần
-            try { nguoiDungBindingSource.ResetCurrentItem(); } catch { }
+            _suppressValidation = true;     // <— NEW: chặn validate khi rời ô
+            try
+            {
+                CancelPendingUiEdits();
+                SetOperation(UserOperation.None);
+                ReloadInputsFromCurrent();
+                try { nguoiDungBindingSource.ResetCurrentItem(); } catch { }
+            }
+            finally { _suppressValidation = false; }  // <— bật lại
         }
     }
 }
