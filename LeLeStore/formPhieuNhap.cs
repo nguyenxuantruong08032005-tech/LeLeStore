@@ -18,6 +18,7 @@ namespace LeLeStore
         private readonly SanPhamTableAdapter sanPhamTableAdapter = new SanPhamTableAdapter();
         private readonly NhanVienTableAdapter nhanVienTableAdapter = new NhanVienTableAdapter();
         private readonly NguoiDungTableAdapter nguoiDungTableAdapter = new NguoiDungTableAdapter();
+        private readonly List<KeyValuePair<int, string>> _employeeOptions = new List<KeyValuePair<int, string>>();
         private readonly BindingSource giaoDichBindingSource = new BindingSource();
 
         private class SupplierComboItem
@@ -137,7 +138,7 @@ namespace LeLeStore
             cboMaNCC.DropDownStyle = ComboBoxStyle.DropDownList;
             cboMaNCC.DisplayMember = nameof(SupplierComboItem.Display);
             cboMaNCC.ValueMember = nameof(SupplierComboItem.MaNCC);
-            cboMaNV.DropDownStyle = ComboBoxStyle.DropDownList;
+            LoadEmployeeOptions();
 
 
             cboMaGD.DropDownStyle = ComboBoxStyle.DropDownList;
@@ -147,18 +148,7 @@ namespace LeLeStore
 
         }
 
-        private void EnsureEmployeeDataLoaded()
-        {
-            if (gStoreDataSet.NguoiDung.Count == 0)
-            {
-                ExecuteSafely(() => nguoiDungTableAdapter.Fill(gStoreDataSet.NguoiDung), "Không thể tải dữ liệu người dùng");
-            }
-
-            if (gStoreDataSet.NhanVien.Count == 0)
-            {
-                ExecuteSafely(() => nhanVienTableAdapter.Fill(gStoreDataSet.NhanVien), "Không thể tải dữ liệu nhân viên");
-            }
-        }
+       
 
         private void groupBox1_Enter(object sender, EventArgs e)
         {
@@ -182,67 +172,79 @@ namespace LeLeStore
             ExecuteSafely(() => giaoDichKhoTableAdapter.Fill(gStoreDataSet.GiaoDichKho), "Không thể tải dữ liệu giao dịch kho");
             ExecuteSafely(() => chiTietGiaoDichKhoTableAdapter.Fill(gStoreDataSet.ChiTietGiaoDichKho), "Không thể tải dữ liệu chi tiết giao dịch");
             EnsureLookupDataLoaded();
-            EnsureEmployeeDataLoaded();
+            
             PopulateTransactionComboBox();
             PopulateSupplierComboBox();
-            PopulateEmployeeComboBox();
+            SetEmployeeSelection(null);
         }
-        private void PopulateEmployeeComboBox(int? selectedEmployeeId = null)
+        private void LoadEmployeeOptions()
         {
-            EnsureEmployeeDataLoaded();
-            const string warehouseRole = "Nhân viên kho";
-
-            var employees = new List<KeyValuePair<int, string>>();
-
-            if (!string.IsNullOrWhiteSpace(_username))
+            try
             {
-                var userRow = gStoreDataSet.NguoiDung
-                    .FirstOrDefault(row => !row.IsNull(gStoreDataSet.NguoiDung.TenDangNhapColumn)
-                                          && string.Equals(row.TenDangNhap, _username, StringComparison.OrdinalIgnoreCase));
+                gStoreDataSet.NguoiDung.Clear();
+                gStoreDataSet.NhanVien.Clear();
 
-                if (userRow != null)
-                {
-                    employees = gStoreDataSet.NhanVien
-                       .Where(row => row.RowState != DataRowState.Deleted
-                                      && !row.IsMaNguoiDungNull()
-                                      && row.MaNguoiDung == userRow.MaNguoiDung
-                                      && !row.IsChucVuNull()
-                                      && string.Equals(row.ChucVu, warehouseRole, StringComparison.CurrentCultureIgnoreCase))
-                        .Select(row => new KeyValuePair<int, string>(row.MaNhanVien, $"{row.MaNhanVien} - {row.HoTen}"))
-                        .OrderBy(item => item.Key)
-                        .ToList();
-                }
-                // Nếu đăng nhập bằng tài khoản người dùng, chỉ cho phép chọn đúng nhân viên tương ứng
-                // kể cả khi MaNV hiện tại của giao dịch khác.
-                if (employees.Count > 0 && selectedEmployeeId.HasValue && !employees.Any(emp => emp.Key == selectedEmployeeId.Value))
-                {
-                    selectedEmployeeId = employees.First().Key;
-                }
-            }
+                nguoiDungTableAdapter.ClearBeforeFill = true;
+                nguoiDungTableAdapter.Fill(gStoreDataSet.NguoiDung);
 
-            if (employees.Count == 0)
+                nhanVienTableAdapter.ClearBeforeFill = true;
+                nhanVienTableAdapter.Fill(gStoreDataSet.NhanVien);
+
+
+                _employeeOptions.Clear();
+
+                if (!string.IsNullOrWhiteSpace(_username))
+                {
+                    var userRow = gStoreDataSet.NguoiDung
+                      .FirstOrDefault(row => !row.IsNull(gStoreDataSet.NguoiDung.TenDangNhapColumn)
+                                            && string.Equals(row.TenDangNhap, _username, StringComparison.OrdinalIgnoreCase));
+
+                    if (userRow != null)
+                    {
+                        _employeeOptions.AddRange(
+                            gStoreDataSet.NhanVien
+                                .Where(row => !row.IsMaNguoiDungNull() && row.MaNguoiDung == userRow.MaNguoiDung)
+                                .Select(row => new KeyValuePair<int, string>(row.MaNhanVien, $"{row.MaNhanVien} - {row.HoTen}"))
+                                .OrderBy(item => item.Key));
+                    }
+                }
+            
+               ConfigureEmployeeCombo(_employeeOptions);
+        }
+            catch (Exception ex)
             {
-                employees = gStoreDataSet.NhanVien
-                   .Where(row => row.RowState != DataRowState.Deleted
-                                  && !row.IsChucVuNull()
-                                  && string.Equals(row.ChucVu, warehouseRole, StringComparison.CurrentCultureIgnoreCase))
-                    .Select(row => new KeyValuePair<int, string>(row.MaNhanVien, $"{row.MaNhanVien} - {row.HoTen}"))
-                    .OrderBy(item => item.Key)
-                    .ToList();
+                MessageBox.Show($"Không thể tải danh sách nhân viên.\n{ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ConfigureEmployeeCombo(new List<KeyValuePair<int, string>>());
             }
-
+        }
+        private void ConfigureEmployeeCombo(IList<KeyValuePair<int, string>> employees)
+        {
             cboMaNV.DisplayMember = "Value";
             cboMaNV.ValueMember = "Key";
             cboMaNV.DropDownStyle = ComboBoxStyle.DropDownList;
-            cboMaNV.DataSource = employees;
+            cboMaNV.DataSource = employees.ToList();
+            cboMaNV.SelectedIndex = employees.Count > 0 ? 0 : -1;
+        }
 
-            if (selectedEmployeeId.HasValue && employees.Any(emp => emp.Key == selectedEmployeeId.Value))
+        private void SetEmployeeSelection(int? maNhanVien)
+        {
+            if (cboMaNV.DataSource == null)
             {
-                cboMaNV.SelectedValue = selectedEmployeeId.Value;
+                cboMaNV.SelectedIndex = -1;
+                return;
+            }
+
+            if (maNhanVien.HasValue)
+            {
+                cboMaNV.SelectedValue = maNhanVien.Value;
+                if (cboMaNV.SelectedIndex < 0)
+                {
+                    cboMaNV.SelectedIndex = cboMaNV.Items.Count > 0 ? 0 : -1;
+                }
             }
             else
             {
-                cboMaNV.SelectedIndex = employees.Count > 0 ? 0 : -1;
+                cboMaNV.SelectedIndex = cboMaNV.Items.Count > 0 ? 0 : -1;
             }
         }
 
@@ -388,26 +390,7 @@ namespace LeLeStore
         {
             return GetSelectedTransactionId();
         }
-        private int? GetSelectedEmployeeId()
-        {
-            if (cboMaNV.SelectedValue is int selectedValue)
-            {
-                return selectedValue;
-            }
-
-            if (cboMaNV.SelectedItem is KeyValuePair<int, string> item)
-            {
-                return item.Key;
-            }
-
-            if (!string.IsNullOrWhiteSpace(cboMaNV.Text) && int.TryParse(cboMaNV.Text.Trim(), out int parsedValue))
-            {
-                return parsedValue;
-            }
-
-            return null;
-        }
-
+      
 
         private int? GetSelectedProductId()
         {
@@ -1044,7 +1027,7 @@ namespace LeLeStore
             cbLoaiGD.SelectedIndex = -1;
             dateTimePicker1.Value = DateTime.Now;
             cboMaNCC.SelectedIndex = -1;
-            cboMaNV.SelectedIndex = cboMaNV.Items.Count > 0 ? 0 : -1;
+            SetEmployeeSelection(null);
             txtMaGD.Text = GenerateNextTransactionId().ToString();
             if (detailMode != EditMode.Add)
             {
@@ -1073,8 +1056,11 @@ namespace LeLeStore
             EnsureLoaiGiaoDichItem(row.LoaiGD);
             cbLoaiGD.SelectedItem = row.LoaiGD;
             dateTimePicker1.Value = row.NgayGD;
-            PopulateSupplierComboBox(row.IsMaNCCNull() ? null : (int?)row.MaNCC);
-            PopulateEmployeeComboBox(row.MaNhanVien);
+
+            PopulateSupplierComboBox(row.IsMaNCCNull() ? (int?)null : (int?)row.MaNCC);
+
+            // MaNhanVien là cột NOT NULL nên dùng trực tiếp
+            SetEmployeeSelection(row.MaNhanVien);
         }
         private void EnsureLoaiGiaoDichItem(string loaiGiaoDich)
         {
@@ -1105,14 +1091,14 @@ namespace LeLeStore
 
             maNcc = GetSelectedSupplierId();
 
-            var selectedEmployeeId = GetSelectedEmployeeId();
-            if (!selectedEmployeeId.HasValue)
+            // Cú pháp C# 7.3
+            if (!(cboMaNV.SelectedValue is int selectedEmployeeId))
             {
                 MessageBox.Show("Vui lòng chọn mã nhân viên hợp lệ.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 maNhanVien = 0;
                 return false;
             }
-            // 🔒 NHẬP bắt buộc có NCC
+
             var norm = loaiGD.Trim().ToUpperInvariant();
             if (norm == "NHAP" && !maNcc.HasValue)
             {
@@ -1129,13 +1115,8 @@ namespace LeLeStore
                 maNhanVien = 0;
                 return false;
             }
-            if (!selectedEmployeeId.HasValue)
-            {
-                MessageBox.Show("Vui lòng chọn mã nhân viên hợp lệ.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                maNhanVien = 0;
-                return false;
-            }
-            maNhanVien = selectedEmployeeId.Value;
+
+            maNhanVien = selectedEmployeeId;
             return true;
         }
 

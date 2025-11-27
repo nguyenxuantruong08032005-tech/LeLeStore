@@ -349,10 +349,7 @@ namespace LeLeStore
         {
             OpenChildForm(new formPayMent(_username));
         }
-        private void PayMent_FormClosed(object sender, EventArgs e)
-        {
-            payment = null;
-        }
+        
         bool menuExpand2 = false;
         private void menuTransition2_Tick(object sender, EventArgs e)
         {
@@ -389,7 +386,7 @@ namespace LeLeStore
 
         private void btnPN_Click(object sender, EventArgs e)
         {
-            OpenChildForm(new formPhieuNhap());
+            OpenChildForm(new formPhieuNhap(_username));
         }
         private void PhieuNhap_FormClosed(object sender, EventArgs e)
         {
