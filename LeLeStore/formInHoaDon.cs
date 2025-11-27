@@ -58,14 +58,14 @@ namespace LeLeStore
         // === HẾT ĐOẠN THÊM ===
 
         public bool IsInvoiceSaved => _isSaved;
-        public formInHoaDon() : this(new InvoiceSnapshot(Array.Empty<InvoiceLine>(), DateTime.Now, null, string.Empty))
+        public formInHoaDon(string username = "") : this(new InvoiceSnapshot(Array.Empty<InvoiceLine>(), DateTime.Now, null, username ?? string.Empty), username)
         {
         }
 
-        public formInHoaDon(InvoiceSnapshot invoiceSnapshot)
+        public formInHoaDon(InvoiceSnapshot invoiceSnapshot, string username = "")
         {
             _invoiceSnapshot = invoiceSnapshot ?? throw new ArgumentNullException(nameof(invoiceSnapshot));
-            _username = invoiceSnapshot.EmployeeUsername ?? string.Empty;
+            _username = string.IsNullOrWhiteSpace(username) ? (invoiceSnapshot.EmployeeUsername ?? string.Empty) : username;
             InitializeComponent();
            
 
@@ -86,8 +86,8 @@ namespace LeLeStore
             textBox1.ReadOnly = true;
             cboMaNV.DropDownStyle = ComboBoxStyle.DropDownList;
             dateTimePicker1.Enabled = false;
+            LoadEmployeeOptions();
 
-          
             InitializeCustomerFeatures();
         }
         private void LoadEmployeeOptions()
@@ -121,29 +121,22 @@ namespace LeLeStore
                     }
                 }
 
-                if (employees.Count == 0)
-                {
-                    employees = _dataSet.NhanVien
-                        .Where(row => !row.IsNull("MaNhanVien"))
-                        .Select(row => new KeyValuePair<int, string>(row.MaNhanVien, $"{row.MaNhanVien} - {row.HoTen}"))
-                        .OrderBy(item => item.Key)
-                        .ToList();
-                }
-
-                cboMaNV.DisplayMember = "Value";
-                cboMaNV.ValueMember = "Key";
-                cboMaNV.DropDownStyle = ComboBoxStyle.DropDownList;
-                cboMaNV.DataSource = employees;
-                cboMaNV.SelectedIndex = employees.Count > 0 ? 0 : -1;
+                ConfigureEmployeeCombo(employees);
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Không thể tải danh sách nhân viên.\n{ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                cboMaNV.DataSource = new List<KeyValuePair<int, string>>();
-                cboMaNV.SelectedIndex = -1;
+                ConfigureEmployeeCombo(new List<KeyValuePair<int, string>>());
             }
         }
-
+        private void ConfigureEmployeeCombo(IList<KeyValuePair<int, string>> employees)
+        {
+            cboMaNV.DisplayMember = "Value";
+            cboMaNV.ValueMember = "Key";
+            cboMaNV.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboMaNV.DataSource = employees;
+            cboMaNV.SelectedIndex = employees.Count > 0 ? 0 : -1;
+        }
         private void SetEmployeeSelection(int? maNhanVien)
         {
             if (cboMaNV.DataSource == null)
@@ -240,7 +233,7 @@ namespace LeLeStore
 
         private void formInHoaDon_Load(object sender, EventArgs e)
         {
-            LoadEmployeeOptions();
+            
             PopulateInvoiceMetadata();
             UpdateTotalsDisplay();
             TryReloadCustomerData();

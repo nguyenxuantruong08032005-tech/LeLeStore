@@ -33,6 +33,7 @@ namespace LeLeStore
         {
             _username = username ?? string.Empty;
             InitializeComponent();
+            LoadEmployeeOptions();
         }
 
         private void formProduct_Load(object sender, EventArgs e)
@@ -381,11 +382,7 @@ namespace LeLeStore
                 gStoreDataSet.NhaCungCap.Clear();
                 _nhaCungCapTableAdapter.Fill(gStoreDataSet.NhaCungCap);
 
-                gStoreDataSet.NguoiDung.Clear();
-                _nguoiDungTableAdapter.Fill(gStoreDataSet.NguoiDung);
-
-                gStoreDataSet.NhanVien.Clear();
-                _nhanVienTableAdapter.Fill(gStoreDataSet.NhanVien);
+          
 
 
                 var categoryItems = gStoreDataSet.LoaiSP
@@ -407,41 +404,53 @@ namespace LeLeStore
                 ConfigureComboBox(cboMLoai, categoryItems);
                 ConfigureComboBox(cboMDV, unitItems);
                 ConfigureComboBox(cboNCC, supplierItems);
-                ConfigureEmployeeComboBox();
+                
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Không thể tải dữ liệu danh mục.\n{ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void ConfigureEmployeeComboBox()
+        private void LoadEmployeeOptions()
         {
-            var employees = new List<KeyValuePair<int, string>>();
-
-            if (!string.IsNullOrWhiteSpace(_username))
+            try
             {
-                var userRow = gStoreDataSet.NguoiDung
-                    .FirstOrDefault(row => !row.IsNull(gStoreDataSet.NguoiDung.TenDangNhapColumn)
-                                          && string.Equals(row.TenDangNhap, _username, StringComparison.OrdinalIgnoreCase));
+                gStoreDataSet.NguoiDung.Clear();
+                gStoreDataSet.NhanVien.Clear();
 
-                if (userRow != null)
+                _nguoiDungTableAdapter.ClearBeforeFill = true;
+                _nguoiDungTableAdapter.Fill(gStoreDataSet.NguoiDung);
+
+                _nhanVienTableAdapter.ClearBeforeFill = true;
+                _nhanVienTableAdapter.Fill(gStoreDataSet.NhanVien);
+
+                var employees = new List<KeyValuePair<int, string>>();
+
+                if (!string.IsNullOrWhiteSpace(_username))
                 {
-                    employees = gStoreDataSet.NhanVien
-                        .Where(row => !row.IsMaNguoiDungNull() && row.MaNguoiDung == userRow.MaNguoiDung)
-                        .Select(row => new KeyValuePair<int, string>(row.MaNhanVien, $"{row.MaNhanVien} - {row.HoTen}"))
-                        .OrderBy(item => item.Key)
-                        .ToList();
-                }
-            }
-            if (employees.Count == 0)
-            {
-                employees = gStoreDataSet.NhanVien
-                    .Where(row => !row.IsNull("MaNhanVien"))
-                    .Select(row => new KeyValuePair<int, string>(row.MaNhanVien, $"{row.MaNhanVien} - {row.HoTen}"))
-                    .OrderBy(item => item.Key)
-                    .ToList();
-            }
+                    var userRow = gStoreDataSet.NguoiDung
+                         .FirstOrDefault(row => !row.IsNull(gStoreDataSet.NguoiDung.TenDangNhapColumn)
+                                               && string.Equals(row.TenDangNhap, _username, StringComparison.OrdinalIgnoreCase));
 
+                    if (userRow != null)
+                    {
+                        employees = gStoreDataSet.NhanVien
+                            .Where(row => !row.IsMaNguoiDungNull() && row.MaNguoiDung == userRow.MaNguoiDung)
+                            .Select(row => new KeyValuePair<int, string>(row.MaNhanVien, $"{row.MaNhanVien} - {row.HoTen}"))
+                            .OrderBy(item => item.Key)
+                            .ToList();
+                    }
+                }
+                ConfigureEmployeeCombo(employees);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Không thể tải danh sách nhân viên.\n{ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ConfigureEmployeeCombo(new List<KeyValuePair<int, string>>());
+            }
+        }
+        private void ConfigureEmployeeCombo(IList<KeyValuePair<int, string>> employees)
+        {
             cboMaNV.DisplayMember = "Value";
             cboMaNV.ValueMember = "Key";
             cboMaNV.DropDownStyle = ComboBoxStyle.DropDownList;
