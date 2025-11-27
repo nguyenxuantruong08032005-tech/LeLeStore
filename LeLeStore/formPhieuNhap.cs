@@ -754,10 +754,20 @@ namespace LeLeStore
         {
             CommitUI();
 
-            var view = chiTietGiaoDichKhoBindingSource.Current as DataRowView;
+            DataRowView view = null;
+            if (dataGridView2.CurrentRow != null)
+            {
+                view = dataGridView2.CurrentRow.DataBoundItem as DataRowView;
+            }
+            // Nếu vì lý do nào đó vẫn null thì fallback sang BindingSource như cũ
             if (view == null)
             {
-                // Thử chọn chi tiết dựa trên các giá trị đang hiển thị trên combobox
+                view = chiTietGiaoDichKhoBindingSource.Current as DataRowView;
+            }
+
+            // Nếu vẫn null nữa thì thử tìm theo combobox (giữ code cũ của bạn)
+            if (view == null)
+            {
                 var selectedMaGD = GetSelectedTransactionId();
                 var selectedMaSP = GetSelectedProductId();
 
@@ -804,10 +814,20 @@ namespace LeLeStore
 
             try
             {
-                // Giá trị cũ (để tính chênh lệch và thay thế nếu đổi khóa)
-                int oldMaGD = (int)row["MaGD", DataRowVersion.Original];
-                int oldMaSP = (int)row["MaSP", DataRowVersion.Original];
-                int oldSL = (int)row["SoLuong", DataRowVersion.Original];
+                // Ưu tiên dùng key/quantity đã lưu khi bắt đầu sửa để tránh lệ thuộc
+                // vào phiên bản dữ liệu gốc (Original) có thể bị mất khi BindingSource
+                // chưa kịp thiết lập current row theo lựa chọn trên lưới.
+                int oldMaGD = detailEditingKey?.MaGD ?? row.MaGD;
+                int oldMaSP = detailEditingKey?.MaSP ?? row.MaSP;
+                int oldSL;
+                try
+                {
+                    oldSL = (int)row["SoLuong", DataRowVersion.Original];
+                }
+                catch
+                {
+                    oldSL = row.SoLuong;
+                }
 
                 bool keyChanged = (oldMaGD != newMaGD) || (oldMaSP != newMaSP);
 
