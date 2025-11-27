@@ -190,6 +190,7 @@ namespace LeLeStore
         private void PopulateEmployeeComboBox(int? selectedEmployeeId = null)
         {
             EnsureEmployeeDataLoaded();
+            const string warehouseRole = "Nhân viên kho";
 
             var employees = new List<KeyValuePair<int, string>>();
 
@@ -202,7 +203,11 @@ namespace LeLeStore
                 if (userRow != null)
                 {
                     employees = gStoreDataSet.NhanVien
-                        .Where(row => row.RowState != DataRowState.Deleted && !row.IsMaNguoiDungNull() && row.MaNguoiDung == userRow.MaNguoiDung)
+                       .Where(row => row.RowState != DataRowState.Deleted
+                                      && !row.IsMaNguoiDungNull()
+                                      && row.MaNguoiDung == userRow.MaNguoiDung
+                                      && !row.IsChucVuNull()
+                                      && string.Equals(row.ChucVu, warehouseRole, StringComparison.CurrentCultureIgnoreCase))
                         .Select(row => new KeyValuePair<int, string>(row.MaNhanVien, $"{row.MaNhanVien} - {row.HoTen}"))
                         .OrderBy(item => item.Key)
                         .ToList();
@@ -218,7 +223,9 @@ namespace LeLeStore
             if (employees.Count == 0)
             {
                 employees = gStoreDataSet.NhanVien
-                    .Where(row => row.RowState != DataRowState.Deleted)
+                   .Where(row => row.RowState != DataRowState.Deleted
+                                  && !row.IsChucVuNull()
+                                  && string.Equals(row.ChucVu, warehouseRole, StringComparison.CurrentCultureIgnoreCase))
                     .Select(row => new KeyValuePair<int, string>(row.MaNhanVien, $"{row.MaNhanVien} - {row.HoTen}"))
                     .OrderBy(item => item.Key)
                     .ToList();
