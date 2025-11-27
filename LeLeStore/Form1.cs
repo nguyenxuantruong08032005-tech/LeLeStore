@@ -301,9 +301,9 @@ namespace LeLeStore
 
         private void button4_Click(object sender, EventArgs e)
         {
-            OpenChildForm(new formProduct());
+            OpenChildForm(new formProduct(_username));
 
-         
+
         }
         
         private void btnStaff_Click(object sender, EventArgs e)

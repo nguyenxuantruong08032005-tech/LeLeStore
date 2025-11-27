@@ -43,6 +43,7 @@ namespace LeLeStore
 
         public formPayMent(string username)
         {
+            _username = username ?? string.Empty;
             InitializeComponent();
             dgvInvoice.AutoGenerateColumns = false;
             dgvInvoice.AllowUserToAddRows = false;
@@ -132,7 +133,7 @@ namespace LeLeStore
                   _username,
                 discountToApply);
             var invoiceSaved = false;
-            using (var invoiceForm = new formInHoaDon(snapshot))
+            using (var invoiceForm = new formInHoaDon(snapshot, _username))
             {
                 invoiceForm.ShowDialog(this);
                 invoiceSaved = invoiceForm.IsInvoiceSaved;
