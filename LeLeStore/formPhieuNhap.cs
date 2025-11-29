@@ -120,6 +120,7 @@ namespace LeLeStore
             if (dataGridView2.DataSource == null)
             {
                 dataGridView2.AutoGenerateColumns = true;
+                dataGridView2.AllowUserToAddRows = false;
                 dataGridView2.DataSource = chiTietGiaoDichKhoBindingSource;
             }
 

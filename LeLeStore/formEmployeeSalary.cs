@@ -379,7 +379,7 @@ namespace LeLeStore
             int daysInMonth = GetDaysInSelectedMonth();
             var role = txtChucVu.Text?.Trim();
 
-            decimal thuong = (soNgayLam >= daysInMonth && daysInMonth >= 29) ? 200_000m : 100_000m;
+            decimal thuong = (soNgayLam >= daysInMonth && daysInMonth >= 29) ? 100_000m : 50_000m;
             txtThuong.Text = FormatCurrency(thuong);
 
             decimal khauTru = soNgayLam < 25 ? 50_000m : 0m;
@@ -393,7 +393,7 @@ namespace LeLeStore
 
             if (string.Equals(role, "Nhân viên bán hàng", StringComparison.CurrentCultureIgnoreCase))
             {
-                phuCap = 200_000m;
+                phuCap = 90_000m;
                 var doanhThuCa = GetDecimalValue(txtDoanhThuCa);
                 var hoaHongBanHang = doanhThuCa < 100_000m
                     ? 0.01m
@@ -404,8 +404,8 @@ namespace LeLeStore
             }
             else if (string.Equals(role, "Nhân viên kho", StringComparison.CurrentCultureIgnoreCase))
             {
-                phuCap = 150_000m;
-                phuCapCaDem = 200_000m;
+                phuCap = 80_000m;
+                phuCapCaDem = 100_000m;
                 var doanhThuKhuVuc = GetDecimalValue(txtDoanhThuKhuVuc);
                 tyLeDoanhThu = doanhThuKhuVuc < 500_000m
                     ? 0.01m
@@ -416,9 +416,9 @@ namespace LeLeStore
             }
             else if (string.Equals(role, "Quản lý cửa hàng", StringComparison.CurrentCultureIgnoreCase))
             {
-                phuCapQuanLy = 500_000m;
-                phuCap = 250_000m;
-                thuongQTHT = 150_000m;
+                phuCapQuanLy = 100_000m;
+                phuCap = 150_000m;
+                thuongQTHT = 100_000m;
                 var doanhThuKhuVuc = GetDecimalValue(txtDoanhThuKhuVuc);
                 tyLeDoanhThu = doanhThuKhuVuc < 500_000m
                     ? 0.01m
