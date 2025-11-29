@@ -56,6 +56,8 @@
             this.btnSua = new ReaLTaiizor.Controls.Button();
             this.btnHuy = new ReaLTaiizor.Controls.Button();
             this.cboMaNV = new System.Windows.Forms.ComboBox();
+            this.txtSearch = new System.Windows.Forms.TextBox();
+            this.btnSearch = new ReaLTaiizor.Controls.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.khachHangBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gStoreDataSet)).BeginInit();
@@ -65,7 +67,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Arial", 22F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(432, 9);
+            this.label1.Location = new System.Drawing.Point(473, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(439, 51);
             this.label1.TabIndex = 0;
@@ -342,11 +344,41 @@
             this.cboMaNV.Size = new System.Drawing.Size(229, 28);
             this.cboMaNV.TabIndex = 40;
             // 
+            // txtSearch
+            // 
+            this.txtSearch.Location = new System.Drawing.Point(994, 30);
+            this.txtSearch.Name = "txtSearch";
+            this.txtSearch.Size = new System.Drawing.Size(168, 26);
+            this.txtSearch.TabIndex = 41;
+            // 
+            // btnSearch
+            // 
+            this.btnSearch.BackColor = System.Drawing.Color.Transparent;
+            this.btnSearch.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
+            this.btnSearch.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnSearch.EnteredBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
+            this.btnSearch.EnteredColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
+            this.btnSearch.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.btnSearch.Image = null;
+            this.btnSearch.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnSearch.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
+            this.btnSearch.Location = new System.Drawing.Point(1168, 20);
+            this.btnSearch.Name = "btnSearch";
+            this.btnSearch.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
+            this.btnSearch.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
+            this.btnSearch.Size = new System.Drawing.Size(120, 40);
+            this.btnSearch.TabIndex = 42;
+            this.btnSearch.Text = "Tìm Kiếm";
+            this.btnSearch.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
+            // 
             // formUpdateClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1342, 780);
+            this.Controls.Add(this.btnSearch);
+            this.Controls.Add(this.txtSearch);
             this.Controls.Add(this.cboMaNV);
             this.Controls.Add(this.btnHuy);
             this.Controls.Add(this.btnThem);
@@ -406,5 +438,7 @@
         private ReaLTaiizor.Controls.Button btnSua;
         private ReaLTaiizor.Controls.Button btnHuy;
         private System.Windows.Forms.ComboBox cboMaNV;
+        private System.Windows.Forms.TextBox txtSearch;
+        private ReaLTaiizor.Controls.Button btnSearch;
     }
 }

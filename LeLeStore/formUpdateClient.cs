@@ -576,5 +576,53 @@ namespace LeLeStore
                 e.Cancel = true;
             }
         }
+
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            string phoneNumber = txtSearch.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(phoneNumber))
+            {
+                MessageBox.Show("Vui lòng nhập số điện thoại để tìm kiếm.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            if (gStoreDataSet.KhachHang.Count == 0)
+            {
+                try
+                {
+                    khachHangTableAdapter.Fill(gStoreDataSet.KhachHang);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Không thể tải dữ liệu khách hàng. Lỗi: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
+
+            var matchedRow = gStoreDataSet.KhachHang
+                .FirstOrDefault(row => !row.IsSoDienThoaiNull() && string.Equals(row.SoDienThoai, phoneNumber, StringComparison.Ordinal));
+
+            if (matchedRow != null)
+            {
+                int position = gStoreDataSet.KhachHang.Rows.IndexOf(matchedRow);
+                if (position >= 0)
+                {
+                    khachHangBindingSource.Position = position;
+                    PopulateInputs(matchedRow);
+
+                    if (dataGridView1.Rows.Count > position)
+                    {
+                        dataGridView1.ClearSelection();
+                        dataGridView1.Rows[position].Selected = true;
+                        dataGridView1.CurrentCell = dataGridView1.Rows[position].Cells[0];
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Số điện thoại không tồn tại", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
     }
 }
