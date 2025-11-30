@@ -719,7 +719,13 @@ namespace LeLeStore
 
                     // Điều chỉnh tồn kho theo loại giao dịch hiện chọn (NHAP/XUAT)
                     int sign = InterpretTransactionSign(cbLoaiGD.Text); // +1 nhập, -1 xuất
-                    ApplyProductAdjustments(new List<(int MaSP, int Delta)> { (maSP, soLuong * sign) });
+                    var adjustments = new List<(int MaSP, int Delta)> { (maSP, soLuong * sign) };
+                    if (!ValidateStockForAdjustments(adjustments))
+                    {
+                        return;
+                    }
+
+                    ApplyProductAdjustments(adjustments);
 
                     // Cộng dồn số lượng và lưu
                     row.SoLuong = row.SoLuong + soLuong;
@@ -745,6 +751,12 @@ namespace LeLeStore
 
             try
             {
+                int sign = InterpretTransactionSign(cbLoaiGD.Text);
+                var adjustments = new List<(int MaSP, int Delta)> { (maSP, soLuong * sign) };
+                if (!ValidateStockForAdjustments(adjustments))
+                {
+                    return;
+                }
                 var newRow = gStoreDataSet.ChiTietGiaoDichKho.NewChiTietGiaoDichKhoRow();
                 newRow.MaGD = maGD;
                 newRow.MaSP = maSP;
@@ -755,7 +767,7 @@ namespace LeLeStore
                 chiTietGiaoDichKhoTableAdapter.Update(gStoreDataSet.ChiTietGiaoDichKho);
 
                 // Điều chỉnh tồn kho theo loại GD
-                ApplyProductAdjustments(new List<(int MaSP, int Delta)> { (maSP, soLuong * InterpretTransactionSign(cbLoaiGD.Text)) });
+                ApplyProductAdjustments(adjustments);
 
                 RefreshDetails(false);
                 MessageBox.Show("Đã thêm chi tiết giao dịch.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -880,6 +892,11 @@ namespace LeLeStore
                 (oldMaSP, -oldSL * oldSign),
                 (newMaSP,  newSoLuong * newSign)
             };
+                    if (!ValidateStockForAdjustments(deltas))
+                    {
+                        return;
+                    }
+
                     ApplyProductAdjustments(deltas);
 
                     // Thay thế hàng trong DataSet
@@ -911,7 +928,13 @@ namespace LeLeStore
                     int deltaSL = newSoLuong - oldSL;
                     if (deltaSL != 0)
                     {
-                        ApplyProductAdjustments(new List<(int MaSP, int Delta)> { (newMaSP, deltaSL * newSign) });
+                        var adjustments = new List<(int MaSP, int Delta)> { (newMaSP, deltaSL * newSign) };
+                        if (!ValidateStockForAdjustments(adjustments))
+                        {
+                            return;
+                        }
+
+                        ApplyProductAdjustments(adjustments);
                     }
 
                     // Cập nhật row
@@ -1361,7 +1384,45 @@ namespace LeLeStore
                 adjustments[maSp] = delta;
             }
         }
+        private bool ValidateStockForAdjustments(List<(int MaSP, int Delta)> adjustments)
+        {
+            if (adjustments == null || adjustments.Count == 0)
+            {
+                return true;
+            }
 
+            EnsureLookupDataLoaded();
+
+            var aggregated = new Dictionary<int, int>();
+            foreach (var adjustment in adjustments)
+            {
+                AddProductAdjustment(aggregated, adjustment.MaSP, adjustment.Delta);
+            }
+
+            foreach (var item in aggregated)
+            {
+                if (item.Value >= 0)
+                {
+                    continue;
+                }
+
+                var productRow = gStoreDataSet.SanPham.FindByMaSP(item.Key);
+                if (productRow == null || productRow.RowState == DataRowState.Deleted)
+                {
+                    MessageBox.Show($"Không tìm thấy sản phẩm {item.Key} để kiểm tra tồn kho.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+
+                int projectedQuantity = productRow.SoLuong + item.Value;
+                if (projectedQuantity < 0)
+                {
+                    MessageBox.Show($"Số lượng xuất vượt tồn kho hiện tại ({productRow.SoLuong}) của sản phẩm {item.Key}.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+            }
+
+            return true;
+        }
         private int GetTransactionQuantitySign(int maGd, DataRowVersion version)
         {
             var transactionRow = gStoreDataSet.GiaoDichKho.FindByMaGD(maGd);

@@ -37,6 +37,7 @@
             this.panel1 = new ReaLTaiizor.Controls.Panel();
             this.cbSearch = new System.Windows.Forms.ComboBox();
             this.btnSearch = new ReaLTaiizor.Controls.Button();
+            this.btnHuy = new ReaLTaiizor.Controls.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -57,7 +58,7 @@
             this.btnThanhToan.Image = null;
             this.btnThanhToan.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnThanhToan.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
-            this.btnThanhToan.Location = new System.Drawing.Point(419, 67);
+            this.btnThanhToan.Location = new System.Drawing.Point(385, 67);
             this.btnThanhToan.Name = "btnThanhToan";
             this.btnThanhToan.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.btnThanhToan.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
@@ -111,6 +112,7 @@
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.White;
+            this.panel2.Controls.Add(this.btnHuy);
             this.panel2.Controls.Add(this.lblTotalText);
             this.panel2.Controls.Add(this.btnThanhToan);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -179,6 +181,27 @@
             this.btnSearch.TextAlignment = System.Drawing.StringAlignment.Center;
             this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
+            // btnHuy
+            // 
+            this.btnHuy.BackColor = System.Drawing.Color.Transparent;
+            this.btnHuy.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
+            this.btnHuy.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnHuy.EnteredBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
+            this.btnHuy.EnteredColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
+            this.btnHuy.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnHuy.Image = null;
+            this.btnHuy.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnHuy.InactiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(34)))), ((int)(((byte)(37)))));
+            this.btnHuy.Location = new System.Drawing.Point(622, 67);
+            this.btnHuy.Name = "btnHuy";
+            this.btnHuy.PressedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
+            this.btnHuy.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
+            this.btnHuy.Size = new System.Drawing.Size(175, 64);
+            this.btnHuy.TabIndex = 6;
+            this.btnHuy.Text = "Hủy";
+            this.btnHuy.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.btnHuy.Click += new System.EventHandler(this.btnHuy_Click);
+            // 
             // formPayMent
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -212,5 +235,6 @@
         private ReaLTaiizor.Controls.Panel panel1;
         private System.Windows.Forms.DataGridView dgvInvoice;
         private System.Windows.Forms.ComboBox cbSearch;
+        private ReaLTaiizor.Controls.Button btnHuy;
     }
 }

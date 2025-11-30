@@ -25,6 +25,8 @@ namespace LeLeStore
         private int? _currentEmployeeId;
         private DataTable _invoiceTable;
         private decimal _loyaltyDiscountAmount;
+        private static DataTable _savedInvoiceSnapshot;
+        private static decimal _savedLoyaltyDiscount;
 
         private sealed class ProductDisplayInfo
         {
@@ -222,6 +224,7 @@ namespace LeLeStore
             _invoiceTable.RowChanged += InvoiceTable_RowChanged;
             _invoiceTable.RowDeleted += InvoiceTable_RowDeleted;
             _invoiceTable.ColumnChanged += InvoiceTable_ColumnChanged;
+            RestoreInvoiceState();
         }
 
         private void ConfigureInvoiceGrid()
@@ -536,6 +539,7 @@ namespace LeLeStore
             {
                 lblTotalText.Text = "Tổng Tiền: 0 ₫";
                 _loyaltyDiscountAmount = 0m;
+                PersistInvoiceState();
                 return;
             }
 
@@ -558,6 +562,7 @@ namespace LeLeStore
             }
 
             lblTotalText.Text = totalText;
+            PersistInvoiceState();
         }
         private bool TryGetProductStock(int productId, out int availableQuantity)
         {
@@ -725,6 +730,7 @@ namespace LeLeStore
         protected override void OnFormClosed(FormClosedEventArgs e)
         {
             base.OnFormClosed(e);
+            PersistInvoiceState();
 
             if (_invoiceTable != null)
             {
@@ -827,10 +833,72 @@ namespace LeLeStore
                 loyaltyForm.ShowDialog(this);
             }
         }
+
+        private void PersistInvoiceState()
+        {
+            if (_invoiceTable == null || _invoiceTable.Rows.Count == 0)
+            {
+                _savedInvoiceSnapshot = null;
+                _savedLoyaltyDiscount = 0m;
+                return;
+            }
+
+            _savedInvoiceSnapshot = _invoiceTable.Copy();
+            _savedLoyaltyDiscount = _loyaltyDiscountAmount;
+        }
+
+        private void RestoreInvoiceState()
+        {
+            if (_savedInvoiceSnapshot == null)
+            {
+                return;
+            }
+
+            foreach (DataRow row in _savedInvoiceSnapshot.Rows)
+            {
+                if (row.RowState == DataRowState.Deleted)
+                {
+                    continue;
+                }
+
+                var newRow = _invoiceTable.NewRow();
+                newRow["MaSP"] = row["MaSP"];
+                newRow["TenSP"] = row["TenSP"];
+                newRow["DonGia"] = row["DonGia"];
+                newRow["SoLuong"] = row["SoLuong"];
+                _invoiceTable.Rows.Add(newRow);
+            }
+
+            _loyaltyDiscountAmount = _savedLoyaltyDiscount;
+        }
+
         public void ApplyLoyaltyDiscount(decimal discountAmount)
         {
             _loyaltyDiscountAmount = discountAmount < 0m ? 0m : discountAmount;
             UpdateTotalLabel();
+        }
+
+        private void btnHuy_Click(object sender, EventArgs e)
+        {
+            if (_invoiceTable == null || _invoiceTable.Rows.Count == 0)
+            {
+                _loyaltyDiscountAmount = 0m;
+                UpdateTotalLabel();
+                return;
+            }
+
+            var confirm = MessageBox.Show(
+                "Bạn có chắc chắn muốn hủy hóa đơn hiện tại?",
+                "Xác nhận",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (confirm == DialogResult.Yes)
+            {
+                _invoiceTable.Clear();
+                _loyaltyDiscountAmount = 0m;
+                UpdateTotalLabel();
+            }
         }
     }
 }
