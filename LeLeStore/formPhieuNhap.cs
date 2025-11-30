@@ -566,11 +566,17 @@ namespace LeLeStore
 
             try
             {
+                int sign = InterpretTransactionSign(row.LoaiGD);
+                var adjustments = new List<(int MaSP, int Delta)>();
                 var detailRows = row.GetChiTietGiaoDichKhoRows();
                 if (detailRows.Length > 0)
                 {
                     foreach (var detail in detailRows)
                     {
+                        if (sign != 0)
+                        {
+                            adjustments.Add((detail.MaSP, -detail.SoLuong * sign));
+                        }
                         detail.Delete();
                     }
 
@@ -578,6 +584,7 @@ namespace LeLeStore
                     chiTietGiaoDichKhoTableAdapter.Update(gStoreDataSet.ChiTietGiaoDichKho);
                     chiTietGiaoDichKhoBindingSource.ResetBindings(false);
                 }
+                ApplyProductAdjustments(adjustments);
                 view.Delete();
                 giaoDichBindingSource.EndEdit();
                 giaoDichKhoTableAdapter.Update(gStoreDataSet.GiaoDichKho);
