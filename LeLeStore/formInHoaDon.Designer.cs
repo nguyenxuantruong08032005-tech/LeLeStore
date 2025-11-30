@@ -35,6 +35,7 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.btnInHoaDon = new ReaLTaiizor.Controls.Button();
             this.panel1 = new ReaLTaiizor.Controls.Panel();
+            this.cboMaNV = new System.Windows.Forms.ComboBox();
             this.cbPhuongThucTT = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
             this.btnChietKhau = new ReaLTaiizor.Controls.Button();
@@ -54,7 +55,6 @@
             this.lblTotalPayable = new System.Windows.Forms.Label();
             this.btnLuu = new ReaLTaiizor.Controls.Button();
             this.panelGrid = new ReaLTaiizor.Controls.Panel();
-            this.cboMaNV = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
@@ -67,7 +67,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(402, 3);
+            this.label1.Location = new System.Drawing.Point(428, 3);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(259, 46);
             this.label1.TabIndex = 0;
@@ -162,6 +162,14 @@
             this.panel1.TabIndex = 7;
             this.panel1.Text = "panel1";
             this.panel1.Click += new System.EventHandler(this.panel1_Click);
+            // 
+            // cboMaNV
+            // 
+            this.cboMaNV.FormattingEnabled = true;
+            this.cboMaNV.Location = new System.Drawing.Point(449, 93);
+            this.cboMaNV.Name = "cboMaNV";
+            this.cboMaNV.Size = new System.Drawing.Size(249, 28);
+            this.cboMaNV.TabIndex = 15;
             // 
             // cbPhuongThucTT
             // 
@@ -394,14 +402,6 @@
             this.panelGrid.Size = new System.Drawing.Size(1249, 284);
             this.panelGrid.SmoothingType = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             this.panelGrid.TabIndex = 11;
-            // 
-            // cboMaNV
-            // 
-            this.cboMaNV.FormattingEnabled = true;
-            this.cboMaNV.Location = new System.Drawing.Point(449, 93);
-            this.cboMaNV.Name = "cboMaNV";
-            this.cboMaNV.Size = new System.Drawing.Size(249, 28);
-            this.cboMaNV.TabIndex = 15;
             // 
             // formInHoaDon
             // 

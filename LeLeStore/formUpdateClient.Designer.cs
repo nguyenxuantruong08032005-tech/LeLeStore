@@ -119,7 +119,7 @@
             this.diemTichLuyDataGridViewTextBoxColumn,
             this.maNhanVienDataGridViewTextBoxColumn});
             this.dataGridView1.DataSource = this.khachHangBindingSource;
-            this.dataGridView1.Location = new System.Drawing.Point(40, 308);
+            this.dataGridView1.Location = new System.Drawing.Point(31, 282);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 62;
             this.dataGridView1.RowTemplate.Height = 28;

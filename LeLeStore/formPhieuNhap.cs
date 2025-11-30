@@ -566,10 +566,22 @@ namespace LeLeStore
 
             try
             {
+                var detailRows = row.GetChiTietGiaoDichKhoRows();
+                if (detailRows.Length > 0)
+                {
+                    foreach (var detail in detailRows)
+                    {
+                        detail.Delete();
+                    }
+
+                    chiTietGiaoDichKhoBindingSource.EndEdit();
+                    chiTietGiaoDichKhoTableAdapter.Update(gStoreDataSet.ChiTietGiaoDichKho);
+                    chiTietGiaoDichKhoBindingSource.ResetBindings(false);
+                }
                 view.Delete();
                 giaoDichBindingSource.EndEdit();
                 giaoDichKhoTableAdapter.Update(gStoreDataSet.GiaoDichKho);
-
+                RefreshDetails(false);
                 RefreshTransactions(false);
                 if (giaoDichBindingSource.Count > 0)
                     giaoDichBindingSource.Position = Math.Min(desiredPos, giaoDichBindingSource.Count - 1);
