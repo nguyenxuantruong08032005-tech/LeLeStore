@@ -466,7 +466,12 @@ namespace LeLeStore
                 MessageBox.Show("Không có nhân viên được chọn để xóa.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
-
+            int maNhanVien = currentRow.MaNhanVien;
+            if (!CanDeleteNhanVien(maNhanVien, out string message))
+            {
+                MessageBox.Show(message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
 
 
             int deletedId = currentRow.MaNhanVien;
@@ -497,7 +502,68 @@ namespace LeLeStore
 
 
 
-       
+        private bool CanDeleteNhanVien(int maNhanVien, out string errorMessage)
+        {
+            try
+            {
+                var references = new List<string>();
+
+                using (var hoaDonAdapter = new GStoreDataSetTableAdapters.HoaDonTableAdapter())
+                {
+                    if (hoaDonAdapter.GetData().Any(row => row.MaNhanVien == maNhanVien))
+                    {
+                        references.Add("Hóa đơn");
+                    }
+                }
+
+                using (var giaoDichKhoAdapter = new GStoreDataSetTableAdapters.GiaoDichKhoTableAdapter())
+                {
+                    if (giaoDichKhoAdapter.GetData().Any(row => row.MaNhanVien == maNhanVien))
+                    {
+                        references.Add("Giao dịch kho");
+                    }
+                }
+
+                using (var nhaCungCapAdapter = new GStoreDataSetTableAdapters.NhaCungCapTableAdapter())
+                {
+                    if (nhaCungCapAdapter.GetData().Any(row => row.MaNhanVien == maNhanVien))
+                    {
+                        references.Add("Nhà cung cấp");
+                    }
+                }
+
+                using (var khachHangAdapter = new GStoreDataSetTableAdapters.KhachHangTableAdapter())
+                {
+                    if (khachHangAdapter.GetData().Any(row => !row.IsMaNhanVienNull() && row.MaNhanVien == maNhanVien))
+                    {
+                        references.Add("Khách hàng");
+                    }
+                }
+
+                using (var sanPhamAdapter = new GStoreDataSetTableAdapters.SanPhamTableAdapter())
+                {
+                    if (sanPhamAdapter.GetData().Any(row => !row.IsMaNhanVienNull() && row.MaNhanVien == maNhanVien))
+                    {
+                        references.Add("Sản phẩm");
+                    }
+                }
+
+                if (references.Count > 0)
+                {
+                    errorMessage = "Không thể xóa nhân viên vì đang được sử dụng trong: " + string.Join(", ", references) + ".";
+                    return false;
+                }
+
+                errorMessage = string.Empty;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                errorMessage = "Không thể kiểm tra ràng buộc xóa nhân viên. Chi tiết: " + ex.Message;
+                return false;
+            }
+        }
+
 
         private bool CommitChanges(Func<int?> selectIdProvider)
         {

@@ -22,6 +22,7 @@ namespace LeLeStore
         private readonly string _username;
         private readonly GStoreDataSetTableAdapters.NhanVienTableAdapter _nhanVienTableAdapter = new GStoreDataSetTableAdapters.NhanVienTableAdapter();
         private readonly GStoreDataSetTableAdapters.NguoiDungTableAdapter _nguoiDungTableAdapter = new GStoreDataSetTableAdapters.NguoiDungTableAdapter();
+        private readonly GStoreDataSetTableAdapters.SanPhamTableAdapter _sanPhamTableAdapter = new GStoreDataSetTableAdapters.SanPhamTableAdapter();
         private SupplierOperation _currentOperation = SupplierOperation.None;
         private bool IsEditingOperation => _currentOperation == SupplierOperation.Add || _currentOperation == SupplierOperation.Edit;
         public formSupplier(string username = "")
@@ -417,12 +418,18 @@ namespace LeLeStore
                 MessageBox.Show("Vui lòng chọn nhà cung cấp cần xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
+            int key = row.MaNCC;
 
+            if (SupplierHasProducts(key))
+            {
+                MessageBox.Show("Không thể xóa nhà cung cấp vì vẫn còn có sản phẩm trong cửa hàng.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             var confirm = MessageBox.Show("Bạn có chắc chắn muốn xóa nhà cung cấp này?", "Xác nhận",
                                           MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (confirm != DialogResult.Yes) return;
 
-            int key = row.MaNCC;
+          
             // Sau khi xóa, sẽ đưa con trỏ về bản ghi trước đó
             int desiredPos = Math.Max(0, nhaCungCapBindingSource.Position - 1);
 
@@ -460,7 +467,22 @@ namespace LeLeStore
                 return rv.Row as GStoreDataSet.NhaCungCapRow;
             return null;
         }
+        private bool SupplierHasProducts(int maNcc)
+        {
+            try
+            {
+                gStoreDataSet.SanPham.Clear();
+                _sanPhamTableAdapter.ClearBeforeFill = true;
+                _sanPhamTableAdapter.Fill(gStoreDataSet.SanPham);
 
+                return gStoreDataSet.SanPham.Any(row => !row.IsMaNCCNull() && row.MaNCC == maNcc);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Không thể kiểm tra sản phẩm của nhà cung cấp.\n{ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return true;
+            }
+        }
         private void RefreshDataAndRestoreByKey(int? keyToFocus)
         {
             // Fill lại nhưng không làm mất vị trí bản ghi mong muốn
