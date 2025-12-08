@@ -239,6 +239,20 @@ namespace LeLeStore
 
             return true;
         }
+        private bool IsUserReferencedByEmployee(int userId)
+        {
+            using (var connection = new SqlConnection(nguoiDungTableAdapter.Connection.ConnectionString))
+            using (var command = new SqlCommand("SELECT COUNT(*) FROM NhanVien WHERE MaNguoiDung = @MaNguoiDung", connection))
+            {
+                command.Parameters.AddWithValue("@MaNguoiDung", userId);
+
+                connection.Open();
+                var referenceCount = (int)command.ExecuteScalar();
+
+                return referenceCount > 0;
+            }
+        }
+
         private bool ValidatePasswordComposition()
         {
             var password = txtMK.Text ?? string.Empty;
@@ -279,6 +293,18 @@ namespace LeLeStore
         {
             if (nguoiDungBindingSource.Current is DataRowView currentRow)
             {
+                if (!int.TryParse(currentRow["MaNguoiDung"].ToString(), out var userId))
+                {
+                    MessageBox.Show("Không xác định được mã người dùng để xóa.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                if (IsUserReferencedByEmployee(userId))
+                {
+                    MessageBox.Show("Không thể xóa người dùng vì đang được tham chiếu bởi nhân viên.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 DialogResult result = MessageBox.Show("Bạn chắc chắn muốn xóa người dùng này ?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (result == DialogResult.Yes)
                 {
