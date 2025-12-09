@@ -626,7 +626,7 @@ namespace LeLeStore
 
         private int? GetCustomerLoyaltyPoints()
         {
-            if (_currentCustomerRow != null && !_currentCustomerRow.IsDiemTichLuyNull())
+            if (_currentCustomerRow != null && !_currentCustomerRow.IsNull(_currentCustomerRow.Table.Columns["DiemTichLuy"]))
             {
                 return _currentCustomerRow.DiemTichLuy;
             }
@@ -670,14 +670,14 @@ namespace LeLeStore
                     cursorY += titleHeight + 12;
 
                     double infoLineHeight = GetLineHeight(graphics, labelFont);
-                    graphics.DrawString(ToPdfText($"Ma hoa don: {GetInvoiceIdentifier()}"), labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
+                    graphics.DrawString(ToPdfText($"- Ma hoa don: {GetInvoiceIdentifier()}"), labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
 
                     cursorY += infoLineHeight;
 
-                    graphics.DrawString(ToPdfText($"Ngay lap: {dateTimePicker1.Value:dd/MM/yyyy HH:mm}"), labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
+                    graphics.DrawString(ToPdfText($"- Ngay lap: {dateTimePicker1.Value:dd/MM/yyyy HH:mm}"), labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
                     cursorY += infoLineHeight;
 
-                    graphics.DrawString(ToPdfText($"Ma nhan vien: {cboMaNV.Text}"), labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
+                    graphics.DrawString(ToPdfText($"- Ma nhan vien: {cboMaNV.Text}"), labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
                     cursorY += infoLineHeight;
 
                     var hasCustomerPhone = !string.IsNullOrWhiteSpace(customerPhoneNumber);
@@ -685,18 +685,18 @@ namespace LeLeStore
 
                     if (hasCustomerPhone || hasCustomerPoints)
                     {
-                        graphics.DrawString(ToPdfText("Khach hang"), labelBoldFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
+                        graphics.DrawString(ToPdfText("- Khach hang:"), labelBoldFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
                         cursorY += infoLineHeight;
 
                         if (hasCustomerPhone)
                         {
-                            graphics.DrawString(ToPdfText($"So dien thoai: {customerPhoneNumber}"), labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
+                            graphics.DrawString(ToPdfText($"  +So dien thoai: {customerPhoneNumber}"), labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
                             cursorY += infoLineHeight;
                         }
 
                         if (hasCustomerPoints)
                         {
-                            graphics.DrawString(ToPdfText($"Diem tich luy: {customerLoyaltyPoints.Value.ToString("N0", _currencyCulture)}"), labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
+                            graphics.DrawString(ToPdfText($"  +Diem tich luy: {customerLoyaltyPoints.Value.ToString("N0", _currencyCulture)}"), labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
                             cursorY += infoLineHeight;
                         }
 
@@ -704,7 +704,7 @@ namespace LeLeStore
                     }
                     cursorY += infoLineHeight * 0.5;
                     var paymentMethod = ToPdfText(GetSelectedPaymentMethodForDisplay());
-                    graphics.DrawString(ToPdfText($"Phuong thuc thanh toan: {paymentMethod}"), labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
+                    graphics.DrawString(ToPdfText($"- Phuong thuc thanh toan: {paymentMethod}"), labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
                     cursorY += infoLineHeight * 1.5;
                     double qrBottomY = cursorY; // lưu chiều cao thấp nhất mà QR chiếm
 
