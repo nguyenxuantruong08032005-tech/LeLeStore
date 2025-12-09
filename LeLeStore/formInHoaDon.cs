@@ -615,15 +615,34 @@ namespace LeLeStore
 
         }
 
+        private string GetCustomerPhoneNumber()
+        {
+            if (_currentCustomerRow != null && !_currentCustomerRow.IsSoDienThoaiNull())
+            {
+                return _currentCustomerRow.SoDienThoai;
+            }
+            return string.Empty;
+        }
+
+        private int? GetCustomerLoyaltyPoints()
+        {
+            if (_currentCustomerRow != null && !_currentCustomerRow.IsDiemTichLuyNull())
+            {
+                return _currentCustomerRow.DiemTichLuy;
+            }
+
+            return null;
+        }
+
         private void ExportInvoiceToPdf(string filePath)
         {
-           
-
             var lines = _invoiceLines.ToList();
             var summary = CalculateFinancialSummary();
             var subtotalAmount = summary.Subtotal;
             var discountAmount = summary.Discount;
             var totalAmount = summary.Total;
+            var customerPhoneNumber = GetCustomerPhoneNumber();
+            var customerLoyaltyPoints = GetCustomerLoyaltyPoints();
 
             using (var document = new PdfDocument())
             {
@@ -659,8 +678,31 @@ namespace LeLeStore
                     cursorY += infoLineHeight;
 
                     graphics.DrawString(ToPdfText($"Ma nhan vien: {cboMaNV.Text}"), labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
-                    cursorY += infoLineHeight * 1.5;
+                    cursorY += infoLineHeight;
 
+                    var hasCustomerPhone = !string.IsNullOrWhiteSpace(customerPhoneNumber);
+                    var hasCustomerPoints = customerLoyaltyPoints.HasValue;
+
+                    if (hasCustomerPhone || hasCustomerPoints)
+                    {
+                        graphics.DrawString(ToPdfText("Khach hang"), labelBoldFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
+                        cursorY += infoLineHeight;
+
+                        if (hasCustomerPhone)
+                        {
+                            graphics.DrawString(ToPdfText($"So dien thoai: {customerPhoneNumber}"), labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
+                            cursorY += infoLineHeight;
+                        }
+
+                        if (hasCustomerPoints)
+                        {
+                            graphics.DrawString(ToPdfText($"Diem tich luy: {customerLoyaltyPoints.Value.ToString("N0", _currencyCulture)}"), labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
+                            cursorY += infoLineHeight;
+                        }
+
+                        cursorY += infoLineHeight * 0.5;
+                    }
+                    cursorY += infoLineHeight * 0.5;
                     var paymentMethod = ToPdfText(GetSelectedPaymentMethodForDisplay());
                     graphics.DrawString(ToPdfText($"Phuong thuc thanh toan: {paymentMethod}"), labelFont, XBrushes.Black, new XRect(left, cursorY, availableWidth, infoLineHeight), XStringFormats.TopLeft);
                     cursorY += infoLineHeight * 1.5;
